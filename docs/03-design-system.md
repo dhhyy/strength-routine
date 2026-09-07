@@ -64,12 +64,17 @@
 | 수치·데이터·라틴 | IBM Plex Mono | `mono()` |
 | 한글·본문 | IBM Plex Sans KR | `kr()` |
 
+2026-09-07: 두 폰트의 400·500·600·700 TTF를 `assets/fonts/`에 포함해 첫 실행에도 네트워크 없이 렌더한다. OFL은 앱 라이선스 화면에 등록한다. 출처·해시는 [폰트 기록](../research/2026-09-07/fonts.md)을 따른다.
+
+`AppType` 역할 토큰: title 24/700, heading 18/600, body 14/400, caption 12/400(muted), action 14/600, number 18/600(mono). 숫자 입력은 number, 한글 라벨은 caption을 사용한다.
+
 **⚠️ IBM Plex Mono엔 한글 글리프가 없다.** 한글은 반드시 `kr()`. 숫자 정렬 열은 `mono`(tabular). 큰 숫자는 `AppGradients.numberInk` + `ShaderMask`.
 
 ---
 
 ## 5. 간격 · 형태 · 깊이
 - **간격** `AppSpace` `4·8·12·16·20·24`. 마진 흩뿌리지 말 것.
+- **크기** `AppSize`: touch 48(최소 주요 터치 높이), icon 24, emptyIcon 40.
 - **모서리** `AppRadius`: `panel 20` · `ctrl 14` · `pill` · `bar 6`. (v2는 v1보다 부드럽게)
 - **경계**: `hair`(반투명). 하드 라인 지양.
 - **깊이**: 글래스(`AppGradients.glass` + `BackdropFilter` blur) + `AppShadow.card` + 액센트 글로우. **"모든 게 카드가 아니다"** — 깊이는 은은하게, 한 곳에 몰지 않게 균형.
@@ -102,6 +107,24 @@
 **규칙**: 컴포넌트는 격리·재사용. 화면 전용 스타일을 하드코딩하지 말고 토큰/파라미터로.
 
 > **화면 조립 공통 컴포넌트** (`components.dart`): `ScreenScaffold`(화면 골격) · `PillChip`(필터 칩) · `CalendarPanel` · `TrendChart` · `ProgressRing` · `ExerciseTile` · `HabitTile` · `SettingTile` · `AddButton` · `RoundNavButton`.
+
+### 9/7 프로그램·기록 구성 요소
+
+화면 전용 흐름은 별도 파일로 격리하고 기존 GlassPanel 및 토큰을 공유한다.
+
+| 구성 요소 | 위치 | 상태·역할 |
+|---|---|---|
+| `FlowPage` | `flow_components.dart` | 앱바·안전 영역·키보드 대응 스크롤 골격 |
+| `StatePanel` | `flow_components.dart` | 빈 목록/실패/완료의 아이콘·설명·다음 행동 |
+| `PrimaryAction` | `flow_components.dart` | 48 최소 높이, 진행 중 중복 입력 차단 |
+| `ConsoleField` | `flow_components.dart` | 숫자/메모 입력, 오류 메시지, 비활성 상태 |
+| `ProgramScreen` / `ProgramDetailScreen` | `program_screen.dart` | 목록·검색·작성자·기간·주차별 운동 구성 |
+| `ProgramSetupScreen` / `RecentRecordEditor` | `program_screen.dart` | 최근 기록·시작일·운동요일·중량 단위·명시 기준값 |
+| `PlanReviewScreen` | `program_screen.dart` | 실제 날짜와 목표를 확인한 뒤 최종 저장 |
+| `WorkoutSetRow` / `SetEditor` | `workout_screen.dart` | 목표/실제 분리, kg/lb·초안/완료/제외, 입력·오류·재시도 |
+| `SavedRecordsScreen` | `training_screens.dart` | 실제 기록·활성 계획 날짜 탐색, 미래/보관 기록 읽기 전용 |
+
+설계 근거와 렌더 검증은 [DESIGN.md](../DESIGN.md), [9/7 작업 기록](2026-09-07-work-log.md)에 남긴다.
 
 ---
 
@@ -138,5 +161,6 @@
 - 이 문서(토큰)와 코드는 항상 일치.
 
 ## 변경 이력
+- v0.3 (2026-09-07): 프로그램 선택→결과 확인→실제 세트 기록 구성 요소와 로컬 폰트 등록.
 - v0.2 (2026-09-05): Console v2 — 그라디언트·글래스·은은한 깊이·점진적 노출 반영. `05` 철학 연결.
 - v0.1: 최초 (플랫 Console).
