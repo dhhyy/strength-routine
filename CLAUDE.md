@@ -1,11 +1,18 @@
 # strength_routine — 작업 규칙 (자동 로드)
 
+## 이어서 작업할 때 먼저 읽기
+
+- [9/7 Claude 인수인계](docs/2026-09-07-claude-handoff.md) → [9/7 작업·인터뷰 기록](docs/2026-09-07-work-log.md) → [프로젝트 개요](docs/00-overview.md).
+- 이후 날짜의 작업 문서가 있으면 함께 확인한다. 최신 사용자 확정 사항이 초기 초안보다 우선한다.
+- 9/7 핵심: 트레이너의 완성 프로그램을 사용자가 선택하고 **운동·세트 구성은 유지**, **중량·시작일·요일만 개인화**한다. 트레이너 등록 도구는 사용자 별도 후속 개발이다.
+- 날짜별로 인터뷰·결정·작업·검증·재개 지점을 남긴다. 미응답 질문과 제안 수치를 임의로 확정하지 않는다.
+
 **UI/디자인 작업을 시작하기 전에 반드시 `design` 스킬을 먼저 사용한다.**
 벗어나야 할 이유가 있으면 먼저 사용자에게 확인한다.
 
 ## 정본(SSOT) — 항상 일치시킨다
 - **왜(불변)**: `docs/05-design-philosophy.md`
-- **어떻게(토큰/가변)**: `docs/03-design-system.md` (요구사항 `docs/01-requirements.md`, 엔진 `docs/02-engine-logic.md`)
+- **어떻게(토큰/가변)**: `docs/03-design-system.md` (요구사항 `docs/01-requirements.md`, 엔진 명세 `docs/06-engine-spec.md`, 배경 초안 `docs/02-engine-logic.md`)
 - **코드**: `lib/tokens.dart`·`theme.dart`·`widgets.dart`
 - 코드 토큰/위젯을 바꾸면 `docs/03-design-system.md`도 갱신한다.
 
