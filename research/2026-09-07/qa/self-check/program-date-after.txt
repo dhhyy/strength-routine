@@ -1,0 +1,6 @@
+00:00 +0: loading /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart
+00:00 +0: 다음 날 시작일 선택기를 열어도 취소는 기존 날짜를 유지한다
+00:04 +1: 기기 날짜가 과거로 바뀐 뒤 시작일 선택기를 열어도 취소는 기존 날짜를 유지한다
+00:05 +2: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+00:34 +3: 프로그램 목록 로딩 실패는 재시도로 회복한다
+00:35 +4: All tests passed!

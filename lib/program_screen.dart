@@ -174,10 +174,12 @@ class ProgramDetailScreen extends StatelessWidget {
 class ProgramSetupScreen extends StatefulWidget {
   final TrainingController controller;
   final TrainingProgram program;
+  final DateTime Function()? now;
   const ProgramSetupScreen({
     super.key,
     required this.controller,
     required this.program,
+    this.now,
   });
   @override
   State<ProgramSetupScreen> createState() => _ProgramSetupScreenState();
@@ -198,7 +200,7 @@ class _ProgramSetupScreenState extends State<ProgramSetupScreen> {
   @override
   void initState() {
     super.initState();
-    _start = calendarDate(DateTime.now());
+    _start = calendarDate(widget.now?.call() ?? DateTime.now());
     for (final exercise in widget.program.sessions.expand((s) => s.exercises)) {
       if (exercise.mainLift != null) _requiredLifts.add(exercise.mainLift!);
     }
@@ -312,12 +314,25 @@ class _ProgramSetupScreenState extends State<ProgramSetupScreen> {
               onPressed: _busy || _pendingPlan != null
                   ? null
                   : () async {
-                      final today = DateTime.now();
+                      final today = widget.now?.call() ?? DateTime.now();
+                      final firstDate = DateTime(
+                        today.year,
+                        today.month,
+                        today.day,
+                      );
+                      final lastDate = DateTime(today.year + 2);
+                      final selectedDate = DateUtils.dateOnly(_start);
+                      // 표시일만 보정하고 기존 시작일은 선택을 확인할 때 바꾼다.
+                      final initialDate = selectedDate.isBefore(firstDate)
+                          ? firstDate
+                          : selectedDate.isAfter(lastDate)
+                          ? lastDate
+                          : selectedDate;
                       final date = await showDatePicker(
                         context: context,
-                        initialDate: _start,
-                        firstDate: DateTime(today.year, today.month, today.day),
-                        lastDate: DateTime(today.year + 2),
+                        initialDate: initialDate,
+                        firstDate: firstDate,
+                        lastDate: lastDate,
                       );
                       if (date != null && mounted) {
                         setState(() => _start = calendarDate(date));

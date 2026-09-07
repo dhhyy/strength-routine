@@ -1,0 +1,140 @@
+00:00 +0: loading /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart
+00:00 +0: 다음 날 시작일 선택기를 열어도 취소는 기존 날짜를 유지한다
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following assertion was thrown running a test:
+initialDate 2026-09-07 00:00:00.000 must be on or after firstDate 2026-09-08 00:00:00.000.
+'package:flutter/src/material/date_picker.dart':
+Failed assertion: line 235 pos 5: 'initialDate == null || !initialDate.isBefore(firstDate)'
+
+When the exception was thrown, this was the stack:
+#2      showDatePicker (package:flutter/src/material/date_picker.dart:235:5)
+#3      _ProgramSetupScreenState.build.<anonymous closure> (package:strength_routine/program_screen.dart:318:42)
+#4      _InkResponseState.handleTap (package:flutter/src/material/ink_well.dart:1203:21)
+#5      GestureRecognizer.invokeCallback (package:flutter/src/gestures/recognizer.dart:345:24)
+#6      TapGestureRecognizer.handleTapUp (package:flutter/src/gestures/tap.dart:737:11)
+#7      BaseTapGestureRecognizer._checkUp (package:flutter/src/gestures/tap.dart:362:5)
+#8      BaseTapGestureRecognizer.acceptGesture (package:flutter/src/gestures/tap.dart:332:7)
+#9      GestureArenaManager.sweep (package:flutter/src/gestures/arena.dart:173:27)
+#10     GestureBinding.handleEvent (package:flutter/src/gestures/binding.dart:534:20)
+#11     GestureBinding.dispatchEvent (package:flutter/src/gestures/binding.dart:499:22)
+#12     RendererBinding.dispatchEvent (package:flutter/src/rendering/binding.dart:473:11)
+#13     GestureBinding._handlePointerEventImmediately (package:flutter/src/gestures/binding.dart:437:7)
+#14     GestureBinding.handlePointerEvent (package:flutter/src/gestures/binding.dart:394:5)
+#15     TestWidgetsFlutterBinding.handlePointerEventForSource.<anonymous closure> (package:flutter_test/src/binding.dart:678:42)
+#16     TestWidgetsFlutterBinding.withPointerEventSource (package:flutter_test/src/binding.dart:688:11)
+#17     TestWidgetsFlutterBinding.handlePointerEventForSource (package:flutter_test/src/binding.dart:678:5)
+#18     WidgetTester.sendEventToBinding.<anonymous closure> (package:flutter_test/src/widget_tester.dart:870:15)
+#21     TestAsyncUtils.guard (package:flutter_test/src/test_async_utils.dart:74:41)
+#22     WidgetTester.sendEventToBinding (package:flutter_test/src/widget_tester.dart:869:27)
+#23     TestGesture.up.<anonymous closure> (package:flutter_test/src/test_pointer.dart:538:26)
+#26     TestAsyncUtils.guard (package:flutter_test/src/test_async_utils.dart:74:41)
+#27     TestGesture.up (package:flutter_test/src/test_pointer.dart:531:27)
+#28     WidgetController.tapAt.<anonymous closure> (package:flutter_test/src/controller.dart:1113:21)
+<asynchronous suspension>
+#29     TestAsyncUtils.guard.<anonymous closure> (package:flutter_test/src/test_async_utils.dart:130:27)
+<asynchronous suspension>
+#30     main.<anonymous closure> (file:///Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart:60:7)
+<asynchronous suspension>
+#31     testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:193:15)
+<asynchronous suspension>
+#32     TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1064:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided 7 frames from class _AssertionError, dart:async, and package:stack_trace)
+
+The test description was:
+  다음 날 시작일 선택기를 열어도 취소는 기존 날짜를 유지한다
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:02 +0 -1: 다음 날 시작일 선택기를 열어도 취소는 기존 날짜를 유지한다 [E]
+  Test failed. See exception logs above.
+  The test description was: 다음 날 시작일 선택기를 열어도 취소는 기존 날짜를 유지한다
+
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following StateError was thrown running a test (but after the test had completed):
+Bad state: No element
+
+When the exception was thrown, this was the stack:
+#0      Iterable.single (dart:core/iterable.dart:694:25)
+#1      WidgetController.widget (package:flutter_test/src/controller.dart:804:30)
+#2      main.<anonymous closure> (file:///Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart:63:29)
+<asynchronous suspension>
+#3      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:193:15)
+<asynchronous suspension>
+#4      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1064:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+════════════════════════════════════════════════════════════════════════════════════════════════════
+  Test failed. See exception logs above.
+  The test description was: 다음 날 시작일 선택기를 열어도 취소는 기존 날짜를 유지한다
+
+00:03 +0 -1: 기기 날짜가 과거로 바뀐 뒤 시작일 선택기를 열어도 취소는 기존 날짜를 유지한다
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following assertion was thrown running a test:
+initialDate 2026-09-07 00:00:00.000 must be on or before lastDate 2025-01-01 00:00:00.000.
+'package:flutter/src/material/date_picker.dart':
+Failed assertion: line 239 pos 5: 'initialDate == null || !initialDate.isAfter(lastDate)'
+
+When the exception was thrown, this was the stack:
+#2      showDatePicker (package:flutter/src/material/date_picker.dart:239:5)
+#3      _ProgramSetupScreenState.build.<anonymous closure> (package:strength_routine/program_screen.dart:318:42)
+#4      _InkResponseState.handleTap (package:flutter/src/material/ink_well.dart:1203:21)
+#5      GestureRecognizer.invokeCallback (package:flutter/src/gestures/recognizer.dart:345:24)
+#6      TapGestureRecognizer.handleTapUp (package:flutter/src/gestures/tap.dart:737:11)
+#7      BaseTapGestureRecognizer._checkUp (package:flutter/src/gestures/tap.dart:362:5)
+#8      BaseTapGestureRecognizer.acceptGesture (package:flutter/src/gestures/tap.dart:332:7)
+#9      GestureArenaManager.sweep (package:flutter/src/gestures/arena.dart:173:27)
+#10     GestureBinding.handleEvent (package:flutter/src/gestures/binding.dart:534:20)
+#11     GestureBinding.dispatchEvent (package:flutter/src/gestures/binding.dart:499:22)
+#12     RendererBinding.dispatchEvent (package:flutter/src/rendering/binding.dart:473:11)
+#13     GestureBinding._handlePointerEventImmediately (package:flutter/src/gestures/binding.dart:437:7)
+#14     GestureBinding.handlePointerEvent (package:flutter/src/gestures/binding.dart:394:5)
+#15     TestWidgetsFlutterBinding.handlePointerEventForSource.<anonymous closure> (package:flutter_test/src/binding.dart:678:42)
+#16     TestWidgetsFlutterBinding.withPointerEventSource (package:flutter_test/src/binding.dart:688:11)
+#17     TestWidgetsFlutterBinding.handlePointerEventForSource (package:flutter_test/src/binding.dart:678:5)
+#18     WidgetTester.sendEventToBinding.<anonymous closure> (package:flutter_test/src/widget_tester.dart:870:15)
+#21     TestAsyncUtils.guard (package:flutter_test/src/test_async_utils.dart:74:41)
+#22     WidgetTester.sendEventToBinding (package:flutter_test/src/widget_tester.dart:869:27)
+#23     TestGesture.up.<anonymous closure> (package:flutter_test/src/test_pointer.dart:538:26)
+#26     TestAsyncUtils.guard (package:flutter_test/src/test_async_utils.dart:74:41)
+#27     TestGesture.up (package:flutter_test/src/test_pointer.dart:531:27)
+#28     WidgetController.tapAt.<anonymous closure> (package:flutter_test/src/controller.dart:1113:21)
+<asynchronous suspension>
+#29     TestAsyncUtils.guard.<anonymous closure> (package:flutter_test/src/test_async_utils.dart:130:27)
+<asynchronous suspension>
+#30     main.<anonymous closure> (file:///Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart:60:7)
+<asynchronous suspension>
+#31     testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:193:15)
+<asynchronous suspension>
+#32     TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1064:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided 7 frames from class _AssertionError, dart:async, and package:stack_trace)
+
+The test description was:
+  기기 날짜가 과거로 바뀐 뒤 시작일 선택기를 열어도 취소는 기존 날짜를 유지한다
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:04 +0 -2: 기기 날짜가 과거로 바뀐 뒤 시작일 선택기를 열어도 취소는 기존 날짜를 유지한다 [E]
+  Test failed. See exception logs above.
+  The test description was: 기기 날짜가 과거로 바뀐 뒤 시작일 선택기를 열어도 취소는 기존 날짜를 유지한다
+
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following StateError was thrown running a test (but after the test had completed):
+Bad state: No element
+
+When the exception was thrown, this was the stack:
+#0      Iterable.single (dart:core/iterable.dart:694:25)
+#1      WidgetController.widget (package:flutter_test/src/controller.dart:804:30)
+#2      main.<anonymous closure> (file:///Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart:63:29)
+<asynchronous suspension>
+#3      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:193:15)
+<asynchronous suspension>
+#4      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1064:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+════════════════════════════════════════════════════════════════════════════════════════════════════
+  Test failed. See exception logs above.
+  The test description was: 기기 날짜가 과거로 바뀐 뒤 시작일 선택기를 열어도 취소는 기존 날짜를 유지한다
+
+00:04 +0 -2: Some tests failed.

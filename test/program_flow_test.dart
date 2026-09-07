@@ -14,6 +14,76 @@ Finder field(String label) => find.byWidgetPredicate(
 );
 
 void main() {
+  for (final scenario in [
+    (
+      name: '다음 날',
+      now: DateTime(2026, 9, 8, 0, 1),
+      displayed: DateTime(2026, 9, 8),
+    ),
+    (
+      name: '기기 날짜가 과거로 바뀐 뒤',
+      now: DateTime(2023, 9, 7),
+      displayed: DateTime(2025),
+    ),
+  ]) {
+    testWidgets('${scenario.name} 시작일 선택기를 열어도 취소는 기존 날짜를 유지한다', (
+      tester,
+    ) async {
+      final directory = (await tester.runAsync(
+        () => Directory.systemTemp.createTemp('strength-program-date-'),
+      ))!;
+      final controller = (await tester.runAsync(() async {
+        final c = TrainingController(
+          store: LocalTrainingStore(File('${directory.path}/state.json')),
+          loadPrograms: () async => [],
+        );
+        await c.initialize();
+        return c;
+      }))!;
+      addTearDown(() async {
+        controller.dispose();
+        await directory.delete(recursive: true);
+      });
+      var now = DateTime(2026, 9, 7, 23, 59);
+      const originalDate = '2026-09-07';
+      await tester.pumpWidget(
+        MaterialApp(
+          home: ProgramSetupScreen(
+            controller: controller,
+            program: fixtureProgram(),
+            now: () => now,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text(originalDate), findsOneWidget);
+
+      now = scenario.now;
+      await tester.tap(find.text(originalDate));
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
+      final dialog = tester.widget<DatePickerDialog>(
+        find.byType(DatePickerDialog),
+      );
+      expect(dialog.initialDate, scenario.displayed);
+      final labels = MaterialLocalizations.of(
+        tester.element(find.byType(DatePickerDialog)),
+      );
+      await tester.tap(find.text(labels.cancelButtonLabel));
+      await tester.pumpAndSettle();
+      expect(find.text(originalDate), findsOneWidget);
+      expect(controller.state.activePlan, isNull);
+
+      await tester.tap(find.text(originalDate));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(labels.okButtonLabel));
+      await tester.pumpAndSettle();
+      expect(find.text(isoDate(scenario.displayed)), findsOneWidget);
+      expect(controller.state.activePlan, isNull);
+      expect(tester.takeException(), isNull);
+    });
+  }
+
   testWidgets('프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다', (tester) async {
     final directory = await tester.runAsync(
       () => Directory.systemTemp.createTemp('strength-program-ui-'),
