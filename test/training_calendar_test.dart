@@ -188,4 +188,49 @@ void main() {
     expect(stored!.toJson(), state.toJson());
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets('모든 세트를 제외해도 실제 운동 완료로 표시하지 않는다', (tester) async {
+    final session = plan.sessions.first;
+    var state = TrainingAppState(onboarded: true, activePlan: plan);
+    for (final set in session.exercises.expand((e) => e.sets)) {
+      state = state.withSetActual(set.id, SetActual.skipped());
+    }
+    controller.state = state;
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: buildConsoleTheme(),
+        home: ActiveTodayScreen(controller: controller, today: session.date),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('운동 완료'), findsNothing);
+    expect(find.text('모든 세트 기록됨'), findsOneWidget);
+    expect(find.text('실제 수행 0세트 · 제외 3세트'), findsOneWidget);
+  });
+
+  testWidgets('중량 0의 실제 수행과 제외를 따로 집계한다', (tester) async {
+    final session = plan.sessions.first;
+    final sets = session.exercises.single.sets;
+    controller.state = TrainingAppState(onboarded: true, activePlan: plan)
+        .withSetActual(
+          sets[0].id,
+          SetActual.completed(
+            weight: 0,
+            unit: WeightUnit.kg,
+            repetitions: 5,
+            rir: 0,
+          ),
+        )
+        .withSetActual(sets[1].id, SetActual.skipped());
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: buildConsoleTheme(),
+        home: ActiveTodayScreen(controller: controller, today: session.date),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('필수 세트 기록됨'), findsOneWidget);
+    expect(find.text('실제 수행 1세트 · 제외 1세트'), findsOneWidget);
+    expect(find.text('운동 완료'), findsNothing);
+  });
 }

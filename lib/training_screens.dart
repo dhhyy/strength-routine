@@ -107,8 +107,19 @@ class _SessionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final sets = session.exercises.expand((e) => e.sets).toList();
-    final done = sets
+    final recorded = sets
         .where((s) => controller.state.setActuals.containsKey(s.id))
+        .length;
+    final performed = sets
+        .where(
+          (s) =>
+              controller.state.setActuals[s.id]?.status ==
+              SetActualStatus.completed,
+        )
+        .length;
+    final skipped = recorded - performed;
+    final drafts = sets
+        .where((s) => controller.state.setDrafts.containsKey(s.id))
         .length;
     final complete = controller.state.isSessionComplete(session.id);
     return GlassPanel(
@@ -128,10 +139,21 @@ class _SessionCard extends StatelessWidget {
           ),
           const SizedBox(height: AppSpace.x4),
           Text(
-            complete ? '운동 완료' : '$done / ${sets.length}세트 기록',
+            recorded == sets.length
+                ? '모든 세트 기록됨'
+                : complete
+                ? '필수 세트 기록됨'
+                : '$recorded / ${sets.length}세트 기록',
             style: AppType.caption.copyWith(
-              color: complete ? AppColors.good : AppColors.muted,
+              color: complete && performed > 0
+                  ? AppColors.good
+                  : AppColors.muted,
             ),
+          ),
+          const SizedBox(height: AppSpace.x2),
+          Text(
+            '실제 수행 $performed세트 · 제외 $skipped세트${drafts > 0 ? ' · 작성 중 $drafts세트' : ''}',
+            style: AppType.caption,
           ),
           const SizedBox(height: AppSpace.x4),
           PrimaryAction(
