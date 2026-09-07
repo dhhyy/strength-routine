@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 /// 디자인 토큰 — 앱의 모든 스타일은 여기서만 온다. (가변 레이어 / 단일 진실 공급원)
 /// 스타일을 바꾸려면 이 파일만 교체한다. 나머지 코드는 그대로 상속받는다.
@@ -55,38 +54,63 @@ class AppRadius {
   static const panel = 20.0, ctrl = 14.0, pill = 999.0, bar = 6.0;
 }
 
+/// 프로그램/기록 플로우의 공통 크기와 타이포.
+class AppSize {
+  static const touch = 48.0;
+  static const icon = 24.0;
+  static const emptyIcon = 40.0;
+}
+
+class AppType {
+  static TextStyle get title => kr(size: 24, weight: FontWeight.w700);
+  static TextStyle get heading => kr(size: 18, weight: FontWeight.w600);
+  static TextStyle get body => kr(size: 14);
+  static TextStyle get caption => kr(size: 12, color: AppColors.muted);
+  static TextStyle get action => kr(size: 14, weight: FontWeight.w600);
+  static TextStyle get number => mono(size: 18, weight: FontWeight.w600);
+}
+
 /// 그라디언트 — 깊이감의 재료.
 class AppGradients {
   static const accent = LinearGradient(
-    begin: Alignment.topLeft, end: Alignment.bottomRight,
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
     colors: [AppColors.accentA, AppColors.accentB],
   );
   static const good = LinearGradient(
-    begin: Alignment.centerLeft, end: Alignment.centerRight,
+    begin: Alignment.centerLeft,
+    end: Alignment.centerRight,
     colors: [AppColors.goodA, AppColors.goodB],
   );
   static const glass = LinearGradient(
-    begin: Alignment.topCenter, end: Alignment.bottomCenter,
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
     colors: [AppColors.glassTop, AppColors.glassBot],
   );
   static const numberInk = LinearGradient(
-    begin: Alignment.topCenter, end: Alignment.bottomCenter,
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
     colors: [Color(0xFFF2F6F9), Color(0xFFAEB9C4)],
   );
   static const chartArea = LinearGradient(
-    begin: Alignment.topCenter, end: Alignment.bottomCenter,
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
     colors: [Color(0x405CD0EC), Color(0x005CD0EC)],
   );
   static const thumb = LinearGradient(
-    begin: Alignment.topLeft, end: Alignment.bottomRight,
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
     colors: [Color(0x285CD0EC), Color(0x143AA6C9)],
   );
   static const screen = RadialGradient(
-    center: Alignment(0.0, -1.0), radius: 1.2,
-    colors: [AppColors.bgLift, AppColors.bgDeep], stops: [0.0, 0.55],
+    center: Alignment(0.0, -1.0),
+    radius: 1.2,
+    colors: [AppColors.bgLift, AppColors.bgDeep],
+    stops: [0.0, 0.55],
   );
   static const glow = RadialGradient(
-    center: Alignment(0.35, -0.92), radius: 0.7,
+    center: Alignment(0.35, -0.92),
+    radius: 0.7,
     colors: [Color(0x1A5CD0EC), Color(0x005CD0EC)],
   );
 }
@@ -94,13 +118,26 @@ class AppGradients {
 /// 그림자 — 은은한 입체감.
 class AppShadow {
   static const List<BoxShadow> card = [
-    BoxShadow(color: Color(0x99000000), blurRadius: 30, spreadRadius: -16, offset: Offset(0, 12)),
+    BoxShadow(
+      color: Color(0x99000000),
+      blurRadius: 30,
+      spreadRadius: -16,
+      offset: Offset(0, 12),
+    ),
   ];
   static const List<BoxShadow> control = [
-    BoxShadow(color: Color(0x59000000), blurRadius: 10, spreadRadius: -3, offset: Offset(0, 3)),
+    BoxShadow(
+      color: Color(0x59000000),
+      blurRadius: 10,
+      spreadRadius: -3,
+      offset: Offset(0, 3),
+    ),
   ];
-  static List<BoxShadow> glow(Color color, {double blur = 16, double spread = -4}) =>
-      [BoxShadow(color: color, blurRadius: blur, spreadRadius: spread)];
+  static List<BoxShadow> glow(
+    Color color, {
+    double blur = 16,
+    double spread = -4,
+  }) => [BoxShadow(color: color, blurRadius: blur, spreadRadius: spread)];
 }
 
 /// 수치용 모노스페이스 (tabular 정렬). Latin/숫자 전용.
@@ -109,10 +146,13 @@ TextStyle mono({
   FontWeight weight = FontWeight.w500,
   Color color = AppColors.ink,
   double spacing = 0,
-}) =>
-    GoogleFonts.getFont('IBM Plex Mono',
-            fontSize: size, fontWeight: weight, color: color, letterSpacing: spacing)
-        .copyWith(fontFeatures: const [FontFeature.tabularFigures()]);
+}) => TextStyle(
+  fontFamily: 'IBM Plex Mono',
+  fontSize: size,
+  fontWeight: weight,
+  color: color,
+  letterSpacing: spacing,
+).copyWith(fontFeatures: const [FontFeature.tabularFigures()]);
 
 /// 한글/본문용 (IBM Plex Sans KR).
 TextStyle kr({
@@ -121,6 +161,11 @@ TextStyle kr({
   Color color = AppColors.ink,
   double spacing = 0,
   FontStyle style = FontStyle.normal,
-}) =>
-    GoogleFonts.getFont('IBM Plex Sans KR',
-        fontSize: size, fontWeight: weight, color: color, letterSpacing: spacing, fontStyle: style);
+}) => TextStyle(
+  fontFamily: 'IBM Plex Sans KR',
+  fontSize: size,
+  fontWeight: weight,
+  color: color,
+  letterSpacing: spacing,
+  fontStyle: style,
+);
