@@ -41,6 +41,12 @@ class _HabitsScreenState extends State<HabitsScreen>
   }
 
   @override
+  void didUpdateWidget(covariant HabitsScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _refreshToday();
+  }
+
+  @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _name.dispose();

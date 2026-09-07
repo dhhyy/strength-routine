@@ -1,0 +1,36 @@
+Command: flutter test test/habits_screen_test.dart --reporter expanded --plain-name 'tab entry after midnight follows today and preserves a selected past day'
+Working directory: /Users/yudongheon/Documents/vibe-design/apps/strength_routine
+Observation date: 2026-09-07
+State: new HomeShell regression test, before didUpdateWidget fix
+Provenance: retained terminal transcript from exec/write_stdin outputs (session 24431)
+
+00:00 +0: loading /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/habits_screen_test.dart
+00:00 +0: tab entry after midnight follows today and preserves a selected past day
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: exactly one matching candidate
+  Actual: _TextWidgetFinder:<Found 0 widgets with text "2026-09-08": []>
+   Which: means none were found but one was expected
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/habits_screen_test.dart:285:7)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:193:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1064:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/habits_screen_test.dart line 285
+The test description was:
+  tab entry after midnight follows today and preserves a selected past day
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:08 +0 -1: tab entry after midnight follows today and preserves a selected past day [E]
+  Test failed. See exception logs above.
+  The test description was: tab entry after midnight follows today and preserves a selected past day
+
+00:08 +0 -1: Some tests failed.
+
+Exit code: 1

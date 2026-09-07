@@ -1,0 +1,11 @@
+Command: flutter test test/habits_screen_test.dart --reporter expanded --plain-name 'tab entry after midnight follows today and preserves a selected past day'
+Working directory: /Users/yudongheon/Documents/vibe-design/apps/strength_routine
+Observation date: 2026-09-07
+State: same HomeShell regression test, after didUpdateWidget fix
+Provenance: retained terminal transcript from exec/write_stdin outputs (session 57569)
+
+00:00 +0: loading /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/habits_screen_test.dart
+00:00 +0: tab entry after midnight follows today and preserves a selected past day
+00:03 +1: All tests passed!
+
+Exit code: 0

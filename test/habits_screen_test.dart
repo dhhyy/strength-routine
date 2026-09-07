@@ -1,9 +1,12 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:strength_routine/app/training_controller.dart';
 import 'package:strength_routine/data/local_habit_store.dart';
+import 'package:strength_routine/data/local_training_store.dart';
 import 'package:strength_routine/domain/habit_record.dart';
 import 'package:strength_routine/habits_screen.dart';
+import 'package:strength_routine/main.dart';
 import 'package:strength_routine/theme.dart';
 
 void main() {
@@ -219,6 +222,90 @@ void main() {
       );
       expect(afterCheck!.isCompleted('midnight', previousDay), isTrue);
       expect(afterCheck.isCompleted('midnight', now), isTrue);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets(
+    'tab entry after midnight follows today and preserves a selected past day',
+    (tester) async {
+      final previousDay = now;
+      final archivedDay = now.subtract(const Duration(days: 1));
+      final original = HabitState()
+          .add(
+            HabitDefinition(
+              id: 'active',
+              name: '탭 복귀 검증',
+              createdDate: archivedDay,
+            ),
+          )
+          .add(
+            HabitDefinition(
+              id: 'archived',
+              name: '보관 이력 검증',
+              createdDate: archivedDay,
+              archived: true,
+            ),
+          )
+          .setCompleted('active', previousDay, true, asOf: now)
+          .setCompleted('archived', archivedDay, true, asOf: now);
+      await tester.runAsync(() => LocalHabitStore(file).save(original));
+      final controller = TrainingController(
+        store: LocalTrainingStore(File('${directory.path}/training.json')),
+        loadPrograms: () async => [],
+      )..loading = false;
+      addTearDown(controller.dispose);
+      tester.view.devicePixelRatio = 1;
+      tester.view.physicalSize = const Size(375, 812);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      addTearDown(tester.view.resetPhysicalSize);
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: buildConsoleTheme(),
+          home: HomeShell(
+            controller: controller,
+            habitStore: LocalHabitStore(file),
+            now: () => now,
+          ),
+        ),
+      );
+      await tester.tap(find.text('습관'));
+      await flush(tester);
+      expect(find.text('2026-09-07'), findsOneWidget);
+      expect(
+        tester.widget<CheckboxListTile>(find.byType(CheckboxListTile)).value,
+        isTrue,
+      );
+      await tester.tap(find.text('검색'));
+      await tester.pumpAndSettle();
+
+      now = now.add(const Duration(days: 1));
+      await tester.tap(find.text('습관'));
+      await tester.pumpAndSettle();
+      expect(find.text('2026-09-08'), findsOneWidget);
+      expect(
+        tester.widget<CheckboxListTile>(find.byType(CheckboxListTile)).value,
+        isFalse,
+      );
+
+      await tester.tap(find.byTooltip('이전 날짜'));
+      await tester.pumpAndSettle();
+      expect(find.text('2026-09-07'), findsOneWidget);
+      await tester.tap(find.text('검색'));
+      await tester.pumpAndSettle();
+      now = now.add(const Duration(days: 1));
+      await tester.tap(find.text('습관'));
+      await tester.pumpAndSettle();
+      expect(find.text('2026-09-07'), findsOneWidget);
+      expect(find.text('선택한 날 체크한 습관'), findsOneWidget);
+      expect(
+        tester.widget<CheckboxListTile>(find.byType(CheckboxListTile)).value,
+        isTrue,
+      );
+      final restored = await tester.runAsync(
+        () => LocalHabitStore(file).load(),
+      );
+      expect(restored!.toJson(), original.toJson());
       expect(tester.takeException(), isNull);
     },
   );
