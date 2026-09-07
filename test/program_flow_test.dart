@@ -36,7 +36,7 @@ void main() {
     await tester.pumpWidget(
       StrengthApp(
         controller: c,
-        habitStore: LocalHabitStore(File('${directory!.path}/habits.json')),
+        habitStore: LocalHabitStore(File('${directory.path}/habits.json')),
       ),
     );
     await flushController(tester, c);
@@ -170,7 +170,7 @@ void main() {
     await tester.pumpWidget(
       StrengthApp(
         controller: reopened,
-        habitStore: LocalHabitStore(File('${directory!.path}/habits.json')),
+        habitStore: LocalHabitStore(File('${directory.path}/habits.json')),
       ),
     );
     await flushController(tester, reopened);

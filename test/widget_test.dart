@@ -46,7 +46,7 @@ void main() {
     expect(find.text('프로그램 선택하기'), findsOneWidget);
     expect(find.text('백스쿼트'), findsNothing);
     final restored = await tester.runAsync(
-      () => LocalTrainingStore(File('${directory!.path}/state.json')).load(),
+      () => LocalTrainingStore(File('${directory.path}/state.json')).load(),
     );
     expect(restored!.onboarded, isTrue);
 
