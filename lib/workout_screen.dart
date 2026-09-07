@@ -70,7 +70,12 @@ class WorkoutScreen extends StatelessWidget {
             ],
           ),
           if (readOnly)
-            Text('계획과 기록을 확인하는 화면이에요.', style: AppType.caption)
+            Text(
+              sets.any((set) => controller.state.setDrafts.containsKey(set.id))
+                  ? '작성 중인 세트를 눌러 남겨 둔 초안을 확인할 수 있어요.'
+                  : '계획과 기록을 확인하는 화면이에요.',
+              style: AppType.caption,
+            )
           else
             Text(
               '세트를 눌러 실제 중량과 반복을 기록해 주세요.',
@@ -135,8 +140,18 @@ class WorkoutScreen extends StatelessWidget {
                       hasDraft: controller.state.setDrafts.containsKey(
                         exercise.sets[index].id,
                       ),
+                      readOnly: readOnly,
                       onPressed: readOnly
-                          ? null
+                          ? (controller.state.setDrafts.containsKey(
+                                  exercise.sets[index].id,
+                                )
+                                ? () => _openDraft(
+                                    context,
+                                    exercise,
+                                    exercise.sets[index],
+                                    index + 1,
+                                  )
+                                : null)
                           : () => _editSet(
                               context,
                               exercise,
@@ -159,6 +174,32 @@ class WorkoutScreen extends StatelessWidget {
       );
     },
   );
+
+  Future<void> _openDraft(
+    BuildContext context,
+    PlannedExercise exercise,
+    PlannedSet set,
+    int number,
+  ) async {
+    final draft = controller.state.setDrafts[set.id];
+    if (draft == null) return;
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      backgroundColor: AppColors.bgLift,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(AppRadius.panel),
+        ),
+      ),
+      builder: (_) => WorkoutDraftPreview(
+        exerciseName: exercise.name,
+        number: number,
+        draft: draft,
+      ),
+    );
+  }
 
   Future<void> _editSet(
     BuildContext context,
@@ -251,6 +292,7 @@ class WorkoutSetRow extends StatelessWidget {
   final PlannedSet set;
   final SetActual? actual;
   final bool hasDraft;
+  final bool readOnly;
   final VoidCallback? onPressed;
 
   const WorkoutSetRow({
@@ -259,6 +301,7 @@ class WorkoutSetRow extends StatelessWidget {
     required this.set,
     required this.actual,
     required this.hasDraft,
+    this.readOnly = false,
     this.onPressed,
   });
 
@@ -267,7 +310,7 @@ class WorkoutSetRow extends StatelessWidget {
     final done = actual?.status == SetActualStatus.completed;
     final skipped = actual?.status == SetActualStatus.skipped;
     final label = hasDraft
-        ? (actual == null ? '입력 중' : '수정 중')
+        ? (readOnly ? '초안 보기' : (actual == null ? '입력 중' : '수정 중'))
         : done
         ? '완료'
         : skipped
@@ -350,7 +393,9 @@ class WorkoutSetRow extends StatelessWidget {
                 Column(
                   children: [
                     Icon(
-                      done
+                      readOnly && hasDraft
+                          ? Icons.visibility_outlined
+                          : done
                           ? Icons.check_circle
                           : skipped
                           ? Icons.remove_circle_outline
@@ -371,6 +416,69 @@ class WorkoutSetRow extends StatelessWidget {
       ),
     );
   }
+}
+
+/// 실제 기록으로 반영하지 않은 입력 원문을 변경 없이 확인한다.
+class WorkoutDraftPreview extends StatelessWidget {
+  final String exerciseName;
+  final int number;
+  final Map<String, String> draft;
+
+  const WorkoutDraftPreview({
+    super.key,
+    required this.exerciseName,
+    required this.number,
+    required this.draft,
+  });
+
+  @override
+  Widget build(BuildContext context) => SafeArea(
+    top: false,
+    child: SingleChildScrollView(
+      padding: const EdgeInsets.all(AppSpace.x6),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text('$exerciseName · $number세트', style: AppType.heading),
+          const SizedBox(height: AppSpace.x2),
+          Text('작성 중인 초안 · 읽기 전용', style: AppType.body),
+          const SizedBox(height: AppSpace.x2),
+          Text('이 초안은 완료 기록에 반영되지 않았어요.', style: AppType.caption),
+          const SizedBox(height: AppSpace.x6),
+          for (final entry in const {
+            'weight': '중량',
+            'unit': '단위',
+            'repetitions': '반복',
+            'rir': 'RIR',
+            'note': '메모',
+          }.entries) ...[
+            Text(
+              entry.value,
+              style: entry.key == 'rir'
+                  ? mono(color: AppColors.muted)
+                  : AppType.caption,
+            ),
+            const SizedBox(height: AppSpace.x2),
+            Text(
+              draft[entry.key]?.isNotEmpty == true
+                  ? draft[entry.key]!
+                  : '입력 없음',
+              key: ValueKey('draft-preview-${entry.key}'),
+              style:
+                  entry.key != 'note' &&
+                      (double.tryParse(draft[entry.key] ?? '') != null ||
+                          const ['kg', 'lb'].contains(draft[entry.key]))
+                  ? AppType.number
+                  : AppType.body,
+            ),
+            const SizedBox(height: AppSpace.x4),
+          ],
+          PrimaryAction(label: '닫기', onPressed: () => Navigator.pop(context)),
+        ],
+      ),
+    ),
+  );
 }
 
 class _TargetLine extends StatelessWidget {

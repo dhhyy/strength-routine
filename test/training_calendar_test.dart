@@ -101,7 +101,7 @@ void main() {
     );
     await restoreCalendar(tester, state);
     expect(controller.state.setActuals, isEmpty);
-    await openDate(tester, '9월 9일, 운동 계획 있음', '운동 기록하기');
+    await openDate(tester, '9월 9일, 운동 기록 있음', '운동 기록하기');
     expect(
       tester.widget<WorkoutScreen>(find.byType(WorkoutScreen)).readOnly,
       isFalse,
@@ -171,7 +171,7 @@ void main() {
         )
         .withActivePlan(next);
     await restoreCalendar(tester, state);
-    await openDate(tester, '9월 9일, 운동 기록 있음', '계획 미리보기');
+    await openDate(tester, '9월 9일, 운동 기록 있음', '기록 확인하기');
     expect(
       tester.widget<WorkoutScreen>(find.byType(WorkoutScreen)).readOnly,
       isTrue,
@@ -232,5 +232,45 @@ void main() {
     expect(find.text('필수 세트 기록됨'), findsOneWidget);
     expect(find.text('실제 수행 1세트 · 제외 1세트'), findsOneWidget);
     expect(find.text('운동 완료'), findsNothing);
+  });
+
+  testWidgets('프로그램 교체 후 재실행해도 보관 초안 원문을 열람한다', (tester) async {
+    final set = plan.sessions.first.exercises.single.sets.first;
+    final next = createActivePlan(
+      id: 'next-plan',
+      program: fixtureProgram(),
+      startDate: DateTime.utc(2026, 9, 21),
+      weekdays: [1, 3],
+      incrementKg: 2.5,
+      baselines: plan.baselines,
+    );
+    final state = TrainingAppState(onboarded: true, activePlan: plan)
+        .withSetDraft(set.id, {
+          'weight': '87.',
+          'repetitions': '4',
+          'rir': '-',
+          'unit': 'lb',
+          'note': '이전 프로그램의 미완성 입력',
+        })
+        .withActivePlan(next);
+    await restoreCalendar(tester, state);
+    await openDate(tester, '9월 9일, 운동 기록 있음', '기록 확인하기');
+    expect(
+      tester.widget<WorkoutScreen>(find.byType(WorkoutScreen)).readOnly,
+      isTrue,
+    );
+    await tester.tap(find.byType(WorkoutSetRow).first);
+    await tester.pumpAndSettle();
+    expect(find.text('작성 중인 초안 · 읽기 전용'), findsOneWidget);
+    expect(find.text('87.'), findsOneWidget);
+    expect(find.text('-'), findsOneWidget);
+    expect(find.text('이전 프로그램의 미완성 입력'), findsOneWidget);
+    expect(find.byType(TextFormField), findsNothing);
+    expect(controller.state.toJson(), state.toJson());
+    expect(
+      (await tester.runAsync(() => LocalTrainingStore(file).load()))!.toJson(),
+      state.toJson(),
+    );
+    expect(tester.takeException(), isNull);
   });
 }

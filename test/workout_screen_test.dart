@@ -109,6 +109,108 @@ void main() {
   Finder editorAction(String label) =>
       find.descendant(of: find.byType(SetEditor), matching: find.text(label));
 
+  testWidgets('보관 초안의 입력 원문은 읽기 전용으로 열고 저장 상태를 바꾸지 않는다', (tester) async {
+    final setId = plan.sessions.single.exercises.single.sets.first.id;
+    final rawDraft = {
+      'weight': '42.',
+      'unit': 'lb',
+      'repetitions': '0',
+      'rir': '0',
+      'note': '첫 줄\n 둘째 줄  ',
+    };
+    controller.state = TrainingAppState(
+      onboarded: true,
+      planHistory: [plan],
+      setDrafts: {setId: rawDraft},
+    );
+    await tester.runAsync(() => controller.update((state) => state));
+    final stateBefore = controller.state.toJson();
+    final fileBefore = await tester.runAsync(file.readAsString);
+    await pumpWorkout(tester, readOnly: true);
+    expect(find.text('초안 보기'), findsOneWidget);
+    expect(
+      tester.widget<WorkoutSetRow>(find.byType(WorkoutSetRow).last).onPressed,
+      isNull,
+    );
+    await tester.tap(find.byType(WorkoutSetRow).first);
+    await tester.pumpAndSettle();
+    expect(find.byType(WorkoutDraftPreview), findsOneWidget);
+    expect(find.byType(SetEditor), findsNothing);
+    expect(find.byType(TextFormField), findsNothing);
+    expect(find.text('작성 중인 초안 · 읽기 전용'), findsOneWidget);
+    expect(find.text('이 초안은 완료 기록에 반영되지 않았어요.'), findsOneWidget);
+    for (final entry in rawDraft.entries) {
+      expect(
+        tester
+            .widget<Text>(find.byKey(ValueKey('draft-preview-${entry.key}')))
+            .data,
+        entry.value,
+      );
+    }
+    for (final label in ['세트 완료', '수정한 기록 저장', '이번 세트 제외', '저장하고 다음 세트']) {
+      expect(find.text(label), findsNothing);
+    }
+    await tester.ensureVisible(find.text('닫기'));
+    await tester.tap(find.text('닫기'));
+    await tester.pumpAndSettle();
+    expect(find.byType(WorkoutDraftPreview), findsNothing);
+    expect(controller.state.toJson(), stateBefore);
+    expect(await tester.runAsync(file.readAsString), fileBefore);
+    expect(controller.state.setActuals, isEmpty);
+    expect(controller.saving, isFalse);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('기존 실제값과 보관 수정 초안을 섞지 않고 누락된 초안 필드는 비워 보여준다', (tester) async {
+    final setId = plan.sessions.single.exercises.single.sets.first.id;
+    controller.state = TrainingAppState(
+      onboarded: true,
+      planHistory: [plan],
+      setActuals: {
+        setId: SetActual.completed(
+          weight: 50,
+          unit: WeightUnit.kg,
+          repetitions: 5,
+          rir: 2,
+          note: '이전 완료 메모',
+        ),
+      },
+      setDrafts: {
+        setId: {'weight': '입력 중', 'unit': '', 'note': ''},
+      },
+    );
+    final stateBefore = controller.state.toJson();
+    await pumpWorkout(tester, readOnly: true);
+    await tester.tap(find.byType(WorkoutSetRow).first);
+    await tester.pumpAndSettle();
+    expect(find.byType(WorkoutDraftPreview), findsOneWidget);
+    expect(
+      tester
+          .widget<Text>(find.byKey(const ValueKey('draft-preview-weight')))
+          .data,
+      '입력 중',
+    );
+    for (final key in ['unit', 'repetitions', 'rir', 'note']) {
+      expect(
+        tester.widget<Text>(find.byKey(ValueKey('draft-preview-$key'))).data,
+        '입력 없음',
+      );
+    }
+    expect(
+      find.descendant(
+        of: find.byType(WorkoutDraftPreview),
+        matching: find.text('이전 완료 메모'),
+      ),
+      findsNothing,
+    );
+    await tester.ensureVisible(find.text('닫기'));
+    await tester.tap(find.text('닫기'));
+    await tester.pumpAndSettle();
+    expect(controller.state.toJson(), stateBefore);
+    expect(await tester.runAsync(file.exists), isFalse);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('저장 후 다음은 완료·제외를 건너뛰고 다음 운동의 기존 초안을 복원한다', (tester) async {
     final originalProgram = plan.program;
     final originalSession = originalProgram.sessions.single;
@@ -488,6 +590,7 @@ void main() {
     await tester.tap(find.byType(WorkoutSetRow).first);
     await tester.pumpAndSettle();
     expect(find.byType(SetEditor), findsNothing);
+    expect(find.byType(WorkoutDraftPreview), findsNothing);
     expect(controller.state.setActuals, isEmpty);
     await pumpWorkout(tester);
     await tester.tap(find.byType(WorkoutSetRow).first);

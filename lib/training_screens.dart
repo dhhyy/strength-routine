@@ -157,7 +157,9 @@ class _SessionCard extends StatelessWidget {
           ),
           const SizedBox(height: AppSpace.x4),
           PrimaryAction(
-            label: readOnly ? '계획 미리보기' : (complete ? '기록 확인하기' : '운동 기록하기'),
+            label: readOnly
+                ? (recorded > 0 || drafts > 0 ? '기록 확인하기' : '계획 미리보기')
+                : (complete ? '기록 확인하기' : '운동 기록하기'),
             onPressed: () => Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (_) => WorkoutScreen(
@@ -207,7 +209,11 @@ class _SavedRecordsScreenState extends State<SavedRecordsScreen> {
         .where(
           (s) => s.exercises
               .expand((e) => e.sets)
-              .any((set) => c.state.setActuals.containsKey(set.id)),
+              .any(
+                (set) =>
+                    c.state.setActuals.containsKey(set.id) ||
+                    c.state.setDrafts.containsKey(set.id),
+              ),
         )
         .toList();
     final activeIds =
@@ -330,7 +336,7 @@ class _SavedRecordsScreenState extends State<SavedRecordsScreen> {
             ],
           ),
         ),
-        Text('• 기록한 운동   · 예정된 운동', style: AppType.caption),
+        Text('계획한 날짜별 기록 · 작성 중인 입력도 포함', style: AppType.caption),
         Text('${_selected.month}월 ${_selected.day}일', style: AppType.heading),
         if (selectedSessions.isEmpty)
           const StatePanel(

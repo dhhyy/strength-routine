@@ -121,7 +121,9 @@
 | `ProgramScreen` / `ProgramDetailScreen` | `program_screen.dart` | 목록·검색·작성자·기간·주차별 운동 구성 |
 | `ProgramSetupScreen` / `RecentRecordEditor` | `program_screen.dart` | 최근 기록·시작일·운동요일·중량 단위·명시 기준값 |
 | `PlanReviewScreen` | `program_screen.dart` | 실제 날짜와 목표를 확인한 뒤 최종 저장 |
+| `WorkoutDraftPreview` | `workout_screen.dart` | 보관 초안 원문 열람, 읽기 전용·미완료 표시, 닫기만 제공 |
 | `WorkoutSetRow` / `SetEditor` | `workout_screen.dart` | 목표/실제 분리, kg/lb·초안/완료/제외, 입력·오류·재시도, 저장 후 다음 미기록 세트·닫기 재시도 |
+| `HabitsScreen` | `habits_screen.dart` | 사용자 습관 추가·날짜별 체크·보관/활성화, 실제 완료 수와 저장 실패 재시도 |
 | `SearchScreen` / 운동 구성 상세 | `search_screen.dart` | 실제 프로그램·진행/보관 계획 검색, 출처별 읽기 전용 세트 구성 |
 | `SavedRecordsScreen` | `training_screens.dart` | 실제 기록·활성 계획 날짜 탐색, 미래/보관 기록 읽기 전용 |
 
