@@ -9,6 +9,23 @@ import 'flow_components.dart';
 import 'tokens.dart';
 import 'widgets.dart';
 
+enum _SetEditorResult { saved, savedAndNext, closed }
+
+typedef _SessionSet = ({PlannedExercise exercise, PlannedSet set, int number});
+
+_SessionSet? _nextUnrecordedSet(
+  List<_SessionSet> sets,
+  String currentSetId,
+  Map<String, SetActual> actuals,
+) {
+  final current = sets.indexWhere((entry) => entry.set.id == currentSetId);
+  if (current < 0) return null;
+  for (final entry in sets.skip(current + 1)) {
+    if (!actuals.containsKey(entry.set.id)) return entry;
+  }
+  return null;
+}
+
 /// 트레이너가 정한 운동 순서와 목표를 보존하며 실제 수행만 기록한다.
 class WorkoutScreen extends StatelessWidget {
   final TrainingController controller;
@@ -149,26 +166,56 @@ class WorkoutScreen extends StatelessWidget {
     PlannedSet set,
     int number,
   ) async {
-    final saved = await showModalBottomSheet<bool>(
-      context: context,
-      isScrollControlled: true,
-      useSafeArea: true,
-      isDismissible: false,
-      enableDrag: false,
-      backgroundColor: AppColors.bgLift,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(AppRadius.panel),
+    final orderedSets = <_SessionSet>[
+      for (final exercise in session.exercises)
+        for (var index = 0; index < exercise.sets.length; index++)
+          (exercise: exercise, set: exercise.sets[index], number: index + 1),
+    ];
+    _SessionSet current = (exercise: exercise, set: set, number: number);
+    var saved = false;
+    while (context.mounted) {
+      final editing = current;
+      final result = await showModalBottomSheet<_SetEditorResult>(
+        context: context,
+        isScrollControlled: true,
+        useSafeArea: true,
+        isDismissible: false,
+        enableDrag: false,
+        backgroundColor: AppColors.bgLift,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(AppRadius.panel),
+          ),
         ),
-      ),
-      builder: (_) => SetEditor(
-        controller: controller,
-        exerciseName: exercise.name,
-        set: set,
-        number: number,
-      ),
-    );
-    if (saved != true ||
+        builder: (_) => SetEditor(
+          key: ValueKey(editing.set.id),
+          controller: controller,
+          exerciseName: editing.exercise.name,
+          set: editing.set,
+          number: editing.number,
+          hasNextSet:
+              _nextUnrecordedSet(
+                orderedSets,
+                editing.set.id,
+                controller.state.setActuals,
+              ) !=
+              null,
+        ),
+      );
+      saved =
+          saved ||
+          result == _SetEditorResult.saved ||
+          result == _SetEditorResult.savedAndNext;
+      if (!context.mounted || result != _SetEditorResult.savedAndNext) break;
+      final next = _nextUnrecordedSet(
+        orderedSets,
+        current.set.id,
+        controller.state.setActuals,
+      );
+      if (next == null) break;
+      current = next;
+    }
+    if (!saved ||
         !context.mounted ||
         !controller.state.isSessionComplete(session.id) ||
         controller.state.completionNotified.contains(session.id)) {
@@ -363,12 +410,14 @@ class SetEditor extends StatefulWidget {
   final String exerciseName;
   final PlannedSet set;
   final int number;
+  final bool hasNextSet;
   const SetEditor({
     super.key,
     required this.controller,
     required this.exerciseName,
     required this.set,
     required this.number,
+    this.hasNextSet = false,
   });
 
   @override
@@ -379,7 +428,8 @@ class _SetEditorState extends State<SetEditor> {
   final _form = GlobalKey<FormState>();
   late final TextEditingController _weight, _repetitions, _rir, _note;
   late WeightUnit _unit;
-  bool _committing = false, _closeAfterRetry = false, _hasChanges = false;
+  bool _committing = false, _hasChanges = false, _finished = false;
+  _SetEditorResult? _resultAfterRetry;
 
   @override
   void initState() {
@@ -426,7 +476,7 @@ class _SetEditorState extends State<SetEditor> {
 
   void _changed(String _) {
     _hasChanges = true;
-    _closeAfterRetry = false;
+    _resultAfterRetry = null;
     final draft = _draft;
     unawaited(
       widget.controller.update(
@@ -435,7 +485,8 @@ class _SetEditorState extends State<SetEditor> {
     );
   }
 
-  Future<void> _complete() async {
+  Future<void> _complete({bool advance = false}) async {
+    if (_committing || _finished) return;
     if (!_form.currentState!.validate()) return;
     final rir = _rir.text.trim();
     await _commit(
@@ -446,13 +497,17 @@ class _SetEditorState extends State<SetEditor> {
         rir: rir.isEmpty ? null : double.parse(rir),
         note: _note.text.trim(),
       ),
+      advance: advance,
     );
   }
 
-  Future<void> _commit(SetActual? actual) async {
+  Future<void> _commit(SetActual? actual, {bool advance = false}) async {
+    if (_committing || _finished) return;
     setState(() {
       _committing = true;
-      _closeAfterRetry = true;
+      _resultAfterRetry = advance
+          ? _SetEditorResult.savedAndNext
+          : _SetEditorResult.saved;
     });
     final draft = _draft;
     final saved = await widget.controller.update((state) {
@@ -464,32 +519,47 @@ class _SetEditorState extends State<SetEditor> {
     if (!mounted) return;
     setState(() => _committing = false);
     if (saved && widget.controller.saveError == null) {
-      Navigator.pop(context, true);
+      _finish(_resultAfterRetry!);
     }
   }
 
   Future<void> _retry() async {
+    if (_committing || _finished) return;
     setState(() => _committing = true);
     final saved = await widget.controller.retrySave();
     if (!mounted) return;
     setState(() => _committing = false);
-    if (saved && _closeAfterRetry) Navigator.pop(context, true);
+    if (saved &&
+        widget.controller.saveError == null &&
+        _resultAfterRetry != null) {
+      _finish(_resultAfterRetry!);
+    }
+  }
+
+  void _finish(_SetEditorResult result) {
+    if (_finished) return;
+    _finished = true;
+    Navigator.pop(context, result);
   }
 
   Future<void> _close() async {
+    if (_committing || _finished) return;
     FocusScope.of(context).unfocus();
     if (!_hasChanges && widget.controller.saveError == null) {
-      Navigator.pop(context, false);
+      _finish(_SetEditorResult.closed);
       return;
     }
-    setState(() => _committing = true);
+    setState(() {
+      _committing = true;
+      _resultAfterRetry = _SetEditorResult.closed;
+    });
     final draft = _draft;
     final saved = await widget.controller.update(
       (state) => state.withSetDraft(widget.set.id, draft),
     );
     if (!mounted) return;
     setState(() => _committing = false);
-    if (saved) Navigator.pop(context, false);
+    if (saved) _finish(_SetEditorResult.closed);
   }
 
   @override
@@ -650,8 +720,28 @@ class _SetEditorState extends State<SetEditor> {
                           ? '수정한 기록 저장'
                           : '세트 완료',
                       busy: _committing,
-                      onPressed: _complete,
+                      onPressed: () => _complete(),
                     ),
+                    if (widget.hasNextSet) ...[
+                      const SizedBox(height: AppSpace.x2),
+                      OutlinedButton(
+                        onPressed: _committing
+                            ? null
+                            : () => _complete(advance: true),
+                        style: OutlinedButton.styleFrom(
+                          minimumSize: const Size(
+                            double.infinity,
+                            AppSize.touch,
+                          ),
+                          foregroundColor: AppColors.ink,
+                          side: const BorderSide(color: AppColors.hairStrong),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(AppRadius.ctrl),
+                          ),
+                        ),
+                        child: Text('저장하고 다음 세트', style: AppType.action),
+                      ),
+                    ],
                     const SizedBox(height: AppSpace.x2),
                     TextButton(
                       onPressed: _committing

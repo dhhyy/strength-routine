@@ -106,6 +106,221 @@ void main() {
     matching: find.byType(TextFormField),
   );
 
+  Finder editorAction(String label) =>
+      find.descendant(of: find.byType(SetEditor), matching: find.text(label));
+
+  testWidgets('저장 후 다음은 완료·제외를 건너뛰고 다음 운동의 기존 초안을 복원한다', (tester) async {
+    final originalProgram = plan.program;
+    final originalSession = originalProgram.sessions.single;
+    plan = createActivePlan(
+      id: plan.id,
+      program: TrainingProgram(
+        id: originalProgram.id,
+        version: originalProgram.version,
+        title: originalProgram.title,
+        trainerName: originalProgram.trainerName,
+        description: originalProgram.description,
+        weeks: originalProgram.weeks,
+        sessions: [
+          ProgramSession(
+            id: originalSession.id,
+            week: originalSession.week,
+            dayOrder: originalSession.dayOrder,
+            title: originalSession.title,
+            exercises: [
+              ...originalSession.exercises,
+              ProgramExercise(
+                id: 'next-exercise',
+                name: '다음 운동 벤치프레스',
+                sets: [
+                  for (var index = 1; index <= 2; index++)
+                    ProgramSet(
+                      id: 'next-$index',
+                      repetitions: 6,
+                      load: LoadPrescription.fixedKg(30),
+                    ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
+      startDate: plan.startDate,
+      weekdays: plan.weekdays,
+      incrementKg: plan.incrementKg,
+    );
+    final sets = plan.sessions.single.exercises.expand((e) => e.sets).toList();
+    final planSnapshot = plan.toJson();
+    controller.state = TrainingAppState(onboarded: true, activePlan: plan)
+        .withSetActual(
+          sets[1].id,
+          SetActual.completed(weight: 45, unit: WeightUnit.kg, repetitions: 5),
+        )
+        .withSetActual(sets[2].id, const SetActual.skipped(note: '기존 제외'))
+        .withSetDraft(sets[3].id, {
+          'weight': '44.',
+          'unit': 'lb',
+          'repetitions': '4',
+          'rir': '0',
+          'note': '작성 중인 마지막 세트',
+        });
+    await pumpWorkout(tester);
+    await tester.tap(find.byType(WorkoutSetRow).first);
+    await tester.pumpAndSettle();
+    await tester.enterText(input('set-weight'), '0');
+    await tester.enterText(input('set-repetitions'), '5');
+    await flushSave(tester);
+    await tester.ensureVisible(editorAction('저장하고 다음 세트'));
+    await tester.tap(editorAction('저장하고 다음 세트'));
+    await flushSave(tester);
+
+    expect(find.byType(SetEditor), findsOneWidget);
+    expect(tester.widget<SetEditor>(find.byType(SetEditor)).set.id, sets[3].id);
+    expect(find.text('다음 운동 벤치프레스 · 2세트'), findsOneWidget);
+    for (final entry in {
+      'set-weight': '44.',
+      'set-repetitions': '4',
+      'set-rir': '0',
+      'set-note': '작성 중인 마지막 세트',
+    }.entries) {
+      expect(
+        tester.widget<TextFormField>(input(entry.key)).controller!.text,
+        entry.value,
+      );
+    }
+    expect(
+      tester
+          .widget<SegmentedButton<WeightUnit>>(
+            find.byKey(const ValueKey('set-weight-unit')),
+          )
+          .selected,
+      {WeightUnit.lb},
+    );
+    expect(editorAction('저장하고 다음 세트'), findsNothing);
+    expect(controller.state.setActuals[sets.first.id]!.weight, 0);
+    expect(controller.state.setActuals[sets[2].id]!.note, '기존 제외');
+    expect(controller.state.setActuals.containsKey(sets.last.id), isFalse);
+    expect(plan.toJson(), planSnapshot);
+    final saved = (await tester.runAsync(
+      () => LocalTrainingStore(file).load(),
+    ))!;
+    expect(saved.setDrafts[sets.last.id]!['weight'], '44.');
+
+    await tester.ensureVisible(editorAction('세트 완료'));
+    await tester.tap(editorAction('세트 완료'));
+    await flushSave(tester);
+    expect(find.byType(SetEditor), findsNothing);
+    expect(find.text('운동 기록을 저장했어요'), findsOneWidget);
+    await tester.tap(find.text('확인'));
+    await tester.pumpAndSettle();
+    expect(find.byType(SetEditor), findsNothing);
+    expect(controller.state.setActuals[sets.last.id]!.unit, WeightUnit.lb);
+    expect(controller.state.setDrafts, isEmpty);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('다음 세트 이동은 검증·저장 실패에서 멈추고 중복 재시도에도 한 번만 열린다', (tester) async {
+    final sets = plan.sessions.single.exercises.single.sets;
+    await pumpWorkout(tester);
+    await tester.tap(find.byType(WorkoutSetRow).first);
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(editorAction('저장하고 다음 세트'));
+    await tester.tap(editorAction('저장하고 다음 세트'));
+    await tester.pumpAndSettle();
+    expect(
+      tester.widget<SetEditor>(find.byType(SetEditor)).set.id,
+      sets.first.id,
+    );
+    expect(controller.state.setActuals, isEmpty);
+    expect(find.text('0 이상의 중량을 입력해 주세요.'), findsOneWidget);
+    await tester.enterText(input('set-weight'), '45');
+    await tester.enterText(input('set-repetitions'), '4');
+    await flushSave(tester);
+    await tester.runAsync(() async {
+      await file.delete();
+      await Directory(file.path).create();
+    });
+    await tester.ensureVisible(editorAction('저장하고 다음 세트'));
+    await tester.tap(editorAction('저장하고 다음 세트'));
+    await tester.tap(editorAction('저장하고 다음 세트'));
+    await flushSave(tester);
+    expect(
+      tester.widget<SetEditor>(find.byType(SetEditor)).set.id,
+      sets.first.id,
+    );
+    expect(
+      tester.widget<TextFormField>(input('set-weight')).controller!.text,
+      '45',
+    );
+    expect(controller.saveError, isNotNull);
+    await tester.runAsync(() => Directory(file.path).delete());
+    await tester.ensureVisible(editorAction('저장 다시 시도'));
+    await tester.tap(editorAction('저장 다시 시도'));
+    await tester.tap(editorAction('저장 다시 시도'));
+    await flushSave(tester);
+    expect(find.byType(SetEditor), findsOneWidget);
+    expect(
+      tester.widget<SetEditor>(find.byType(SetEditor)).set.id,
+      sets.last.id,
+    );
+    expect(
+      tester.widget<TextFormField>(input('set-weight')).controller!.text,
+      isEmpty,
+    );
+    expect(controller.state.setActuals.length, 1);
+    expect(controller.state.setActuals.containsKey(sets.last.id), isFalse);
+    await tester.tap(find.byTooltip('기록 초안 저장하고 닫기'));
+    await tester.pumpAndSettle();
+    expect(find.byType(SetEditor), findsNothing);
+    expect(find.text('운동 기록을 저장했어요'), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('마지막 세트 저장은 앞쪽 미기록을 자동 처리하지 않고 목록으로 돌아간다', (tester) async {
+    final sets = plan.sessions.single.exercises.single.sets;
+    await pumpWorkout(tester);
+    await tester.tap(find.byType(WorkoutSetRow).last);
+    await tester.pumpAndSettle();
+    expect(editorAction('저장하고 다음 세트'), findsNothing);
+    await tester.enterText(input('set-weight'), '50');
+    await tester.enterText(input('set-repetitions'), '5');
+    await flushSave(tester);
+    await tester.ensureVisible(editorAction('세트 완료'));
+    await tester.tap(editorAction('세트 완료'));
+    await flushSave(tester);
+    expect(find.byType(SetEditor), findsNothing);
+    expect(controller.state.setActuals.containsKey(sets.first.id), isFalse);
+    expect(controller.state.setActuals.containsKey(sets.last.id), isTrue);
+    expect(find.text('운동 기록을 저장했어요'), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('초안 저장 후 닫기 실패를 재시도하면 초안을 보존하고 닫힌다', (tester) async {
+    await pumpWorkout(tester);
+    await tester.tap(find.byType(WorkoutSetRow).first);
+    await tester.pumpAndSettle();
+    await tester.enterText(input('set-weight'), '42.');
+    await flushSave(tester);
+    await tester.runAsync(() async {
+      await file.delete();
+      await Directory(file.path).create();
+    });
+    await tester.tap(find.byTooltip('기록 초안 저장하고 닫기'));
+    await flushSave(tester);
+    expect(find.byType(SetEditor), findsOneWidget);
+    await tester.runAsync(() => Directory(file.path).delete());
+    await tester.ensureVisible(editorAction('저장 다시 시도'));
+    await tester.tap(editorAction('저장 다시 시도'));
+    await flushSave(tester);
+    expect(find.byType(SetEditor), findsNothing);
+    final restored = (await tester.runAsync(
+      () => LocalTrainingStore(file).load(),
+    ))!;
+    expect(restored.setActuals, isEmpty);
+    expect(restored.setDrafts.values.single['weight'], '42.');
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('중량 처방을 실제 기록으로 채우지 않고 입력 초안을 새 저장소로 복원한다', (tester) async {
     await pumpWorkout(tester);
     await tester.tap(find.byType(WorkoutSetRow).first);
@@ -283,6 +498,9 @@ void main() {
     await tester.ensureVisible(find.text('세트 완료'));
     await tester.pumpAndSettle();
     expect(find.text('세트 완료').hitTestable(), findsOneWidget);
+    await tester.ensureVisible(editorAction('저장하고 다음 세트'));
+    await tester.pumpAndSettle();
+    expect(editorAction('저장하고 다음 세트').hitTestable(), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 

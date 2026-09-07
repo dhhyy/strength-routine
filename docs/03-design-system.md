@@ -121,7 +121,7 @@
 | `ProgramScreen` / `ProgramDetailScreen` | `program_screen.dart` | 목록·검색·작성자·기간·주차별 운동 구성 |
 | `ProgramSetupScreen` / `RecentRecordEditor` | `program_screen.dart` | 최근 기록·시작일·운동요일·중량 단위·명시 기준값 |
 | `PlanReviewScreen` | `program_screen.dart` | 실제 날짜와 목표를 확인한 뒤 최종 저장 |
-| `WorkoutSetRow` / `SetEditor` | `workout_screen.dart` | 목표/실제 분리, kg/lb·초안/완료/제외, 입력·오류·재시도 |
+| `WorkoutSetRow` / `SetEditor` | `workout_screen.dart` | 목표/실제 분리, kg/lb·초안/완료/제외, 입력·오류·재시도, 저장 후 다음 미기록 세트·닫기 재시도 |
 | `SavedRecordsScreen` | `training_screens.dart` | 실제 기록·활성 계획 날짜 탐색, 미래/보관 기록 읽기 전용 |
 
 설계 근거와 렌더 검증은 [DESIGN.md](../DESIGN.md), [9/7 작업 기록](2026-09-07-work-log.md)에 남긴다.
