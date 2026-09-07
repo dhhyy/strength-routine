@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:strength_routine/app/training_controller.dart';
 import 'package:strength_routine/data/local_training_store.dart';
+import 'package:strength_routine/data/local_habit_store.dart';
 import 'package:strength_routine/domain/training_program.dart';
 import 'package:strength_routine/main.dart';
 import 'package:strength_routine/onboarding_screen.dart';
@@ -25,8 +26,13 @@ void main() {
       controller.dispose();
       await directory!.delete(recursive: true);
     });
-    await tester.pumpWidget(StrengthApp(controller: controller));
-    await tester.pumpAndSettle();
+    await tester.pumpWidget(
+      StrengthApp(
+        controller: controller,
+        habitStore: LocalHabitStore(File('${directory!.path}/habits.json')),
+      ),
+    );
+    await flushController(tester, controller);
 
     expect(find.byType(OnboardingScreen), findsOneWidget);
     expect(find.byType(HomeShell), findsNothing);
@@ -69,7 +75,12 @@ void main() {
       controller.dispose();
       await directory.delete(recursive: true);
     });
-    await tester.pumpWidget(StrengthApp(controller: controller));
+    await tester.pumpWidget(
+      StrengthApp(
+        controller: controller,
+        habitStore: LocalHabitStore(File('${directory.path}/habits.json')),
+      ),
+    );
     await flushController(tester, controller);
     expect(find.text('기록을 불러오지 못했어요'), findsOneWidget);
     expect(find.byType(OnboardingScreen), findsNothing);
@@ -92,12 +103,16 @@ Future<void> flushController(
   WidgetTester tester,
   TrainingController controller,
 ) async {
-  // 실제 파일 I/O 완료와 fake-async 마이크로태스크를 번갈아 처리한다.
+  // 운동·습관 파일 I/O와 fake-async 마이크로태스크를 번갈아 처리한다.
   for (var attempt = 0; attempt < 200; attempt++) {
     await tester.pump();
     if (!controller.saving &&
         !controller.loading &&
-        !controller.catalogLoading) {
+        !controller.catalogLoading &&
+        find
+            .byType(LinearProgressIndicator, skipOffstage: false)
+            .evaluate()
+            .isEmpty) {
       break;
     }
     await tester.runAsync(
@@ -107,6 +122,10 @@ Future<void> flushController(
   expect(
     controller.saving || controller.loading || controller.catalogLoading,
     isFalse,
+  );
+  expect(
+    find.byType(LinearProgressIndicator, skipOffstage: false),
+    findsNothing,
   );
   await tester.pumpAndSettle();
 }

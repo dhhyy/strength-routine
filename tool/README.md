@@ -1,6 +1,6 @@
 # 시뮬레이터 검증 진입점
 
-`qa_preview.dart`는 화면과 영구 저장을 검증하는 합성 프로그램을 주입한다. 실제 훈련 처방이 아니며 `assets/programs.json`과 일반 실행의 `training-state.json`을 변경하지 않는다. QA 상태는 같은 앱 지원 폴더의 `qa-training-state.json`에 보관한다.
+`qa_preview.dart`는 화면과 영구 저장을 검증하는 합성 프로그램을 주입한다. 실제 훈련 처방이 아니며 `assets/programs.json`과 일반 실행의 `training-state.json`을 변경하지 않는다. QA 운동 상태는 같은 앱 지원 폴더의 `qa-training-state.json`, QA 습관은 `qa-habits-state.json`에 분리해 보관한다. 일반 실행의 `habits-state.json`은 사용하지 않는다.
 
 **[macOS zsh · 앱 폴더]**
 

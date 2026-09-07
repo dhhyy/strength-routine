@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:strength_routine/app/training_controller.dart';
 import 'package:strength_routine/data/local_training_store.dart';
+import 'package:strength_routine/data/local_habit_store.dart';
 import 'package:strength_routine/domain/recent_lift_record.dart';
 import 'package:strength_routine/domain/training_program.dart';
 import 'package:strength_routine/main.dart';
@@ -54,5 +55,12 @@ Future<void> main() async {
       ),
     ],
   );
-  runApp(StrengthApp(controller: controller));
+  runApp(
+    StrengthApp(
+      controller: controller,
+      habitStore: LocalHabitStore(
+        File('${directory.path}/qa-habits-state.json'),
+      ),
+    ),
+  );
 }

@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'app/training_controller.dart';
 import 'data/local_training_store.dart';
+import 'data/local_habit_store.dart';
 import 'flow_components.dart';
 import 'theme.dart';
 import 'tokens.dart';
@@ -28,20 +29,22 @@ void main() {
 class StrengthApp extends StatelessWidget {
   final TrainingController? controller;
   final DateTime Function()? now;
-  const StrengthApp({super.key, this.controller, this.now});
+  final LocalHabitStore? habitStore;
+  const StrengthApp({super.key, this.controller, this.now, this.habitStore});
   @override
   Widget build(BuildContext context) => MaterialApp(
     title: '오늘 루틴',
     debugShowCheckedModeBanner: false,
     theme: buildConsoleTheme(),
-    home: RootGate(controller: controller, now: now),
+    home: RootGate(controller: controller, now: now, habitStore: habitStore),
   );
 }
 
 class RootGate extends StatefulWidget {
   final TrainingController? controller;
   final DateTime Function()? now;
-  const RootGate({super.key, this.controller, this.now});
+  final LocalHabitStore? habitStore;
+  const RootGate({super.key, this.controller, this.now, this.habitStore});
   @override
   State<RootGate> createState() => _RootGateState();
 }
@@ -133,7 +136,11 @@ class _RootGateState extends State<RootGate> {
             onDone: () => c.update((state) => state.copyWith(onboarded: true)),
           );
         }
-        return HomeShell(controller: c, now: widget.now);
+        return HomeShell(
+          controller: c,
+          now: widget.now,
+          habitStore: widget.habitStore,
+        );
       },
     );
   }
@@ -142,7 +149,13 @@ class _RootGateState extends State<RootGate> {
 class HomeShell extends StatefulWidget {
   final TrainingController controller;
   final DateTime Function()? now;
-  const HomeShell({super.key, required this.controller, this.now});
+  final LocalHabitStore? habitStore;
+  const HomeShell({
+    super.key,
+    required this.controller,
+    this.now,
+    this.habitStore,
+  });
   @override
   State<HomeShell> createState() => _HomeShellState();
 }
@@ -201,7 +214,7 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
                 ActiveTodayScreen(controller: c, today: today),
                 SavedRecordsScreen(controller: c, today: today),
                 SearchScreen(controller: c),
-                const HabitsScreen(),
+                HabitsScreen(store: widget.habitStore, now: widget.now),
                 CurrentProfileScreen(controller: c),
               ],
             ),

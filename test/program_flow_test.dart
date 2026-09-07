@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:strength_routine/app/training_controller.dart';
 import 'package:strength_routine/data/local_training_store.dart';
+import 'package:strength_routine/data/local_habit_store.dart';
 import 'package:strength_routine/domain/training_program.dart';
 import 'package:strength_routine/main.dart';
 import 'package:strength_routine/program_screen.dart';
@@ -32,8 +33,13 @@ void main() {
       c.dispose();
       await directory.delete(recursive: true);
     });
-    await tester.pumpWidget(StrengthApp(controller: c));
-    await tester.pumpAndSettle();
+    await tester.pumpWidget(
+      StrengthApp(
+        controller: c,
+        habitStore: LocalHabitStore(File('${directory!.path}/habits.json')),
+      ),
+    );
+    await flushController(tester, c);
     await tester.tap(find.text('프로그램 선택하기'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('프로그램 보기'));
@@ -161,8 +167,13 @@ void main() {
       return controller;
     }))!;
     addTearDown(reopened.dispose);
-    await tester.pumpWidget(StrengthApp(controller: reopened));
-    await tester.pumpAndSettle();
+    await tester.pumpWidget(
+      StrengthApp(
+        controller: reopened,
+        habitStore: LocalHabitStore(File('${directory!.path}/habits.json')),
+      ),
+    );
+    await flushController(tester, reopened);
     expect(reopened.state.activePlan!.program.title, 'Test fixture');
     expect(reopened.state.activePlan!.toJson(), c.state.activePlan!.toJson());
     expect(reopened.state.recentRecords.single.weight, 100);
@@ -211,7 +222,11 @@ Future<void> flushController(
     await tester.pump();
     if (!controller.saving &&
         !controller.loading &&
-        !controller.catalogLoading) {
+        !controller.catalogLoading &&
+        find
+            .byType(LinearProgressIndicator, skipOffstage: false)
+            .evaluate()
+            .isEmpty) {
       break;
     }
     await tester.runAsync(
@@ -221,6 +236,10 @@ Future<void> flushController(
   expect(
     controller.saving || controller.loading || controller.catalogLoading,
     isFalse,
+  );
+  expect(
+    find.byType(LinearProgressIndicator, skipOffstage: false),
+    findsNothing,
   );
   await tester.pumpAndSettle();
 }
