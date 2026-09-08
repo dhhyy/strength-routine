@@ -226,3 +226,24 @@
 | 도움말/구독 준비 | `support_screen.dart`, `subscription_screen.dart`: 실제 로컬 FAQ ExpansionTile과 준비 상태. 미연결 구매·문의 버튼 없음 |
 
 하단 5탭을 유지한다. 기록 탭은 추세·조정으로, 프로필은 설정·도움말·구독 안내로 연결한다. 관리자 도구는 소비자 탭에 넣지 않는다. 토큰 수치를 새로 만들지 않고 기존 AppSpace/AppSize/AppType/AppColors로 조립했다. [렌더와 테스트](2026-09-08-feature-verification.md)에 최초 문제·수정·재검증을 남긴다.
+
+## 9/8 Three.js 랜딩 시안 구성 요소
+
+`landing/concepts/`의 정적 웹 구성 요소다. 앱 토큰을 매핑한 기존 `landing/tokens.css`를 상속하고 `concepts/tokens.css`에 제목·수치·본문 폭·장면 높이·겹침 역할을 선언한다. 3D 재질은 CSS의 `bg`, `bg-lift`, `ink`, `muted`, `accent`, `good`, `hair-strong`, `cta-ink`를 읽는다. 캔버스 내 지오메트리 좌표·조명 강도는 CSS 여백 토큰과 구분한다.
+
+`Strength Latin`은 별도 폰트가 아니라 번들 IBM Plex Mono의 ASCII 글자·숫자 범위 별칭이다. 한글·공백·문장부호는 IBM Plex Sans KR, 수치 전용 output/mono 클래스는 IBM Plex Mono를 사용한다. 1440/390/320px의 실제 렌더에서 혼합 문장의 줄바꿈을 확인한다.
+
+| 구성 요소 / 선택자 | 역할·상태 |
+|---|---|
+| `.topbar`, `.wrap`, `.btn`, `.feature-strip`, `.footer` | 공유 탐색·본문 폭·주/보조 행동·제품 흐름·체험 고지; 반응형·초점·비활성 |
+| `.concept-link`, `.concept-thumbnail` | 비교용 목차; 실제 렌더 이미지와 각 독립 시안 링크 |
+| `.scene`, `.scene-status`, `.scene-controls` | 3D 호스트·로딩·실패·복구; 캔버스 대신 읽을 설명, 회전·시점 초기화 버튼 |
+| `.load-hero`, `.load-readout`, `.load-controls` | 바벨 무대·총중량·슬라이더/±·초기화; 20/120kg 경계 |
+| `.catalog-layout`, `.program-choice`, `.catalog-detail` | 실제 프로그램 목록·선택 공간·기간/빈도/운동 상세; 로딩·실패·재시도·페이지 순환 |
+| `.calendar-stage`, `.weekdays`, `.calendar-console`, `.schedule-table` | 주간 패턴·요일 버튼·시작일·전체 일정; 선택 수 오류·날짜 오류·닫기 |
+| `.session-visual`, `.session-counter`, `.record-set`, `.record-fields` | 실제 입력·세트별 완료 표시·집계; 검증 오류·읽기 전용·수정·다음 초점 |
+| `#record-status`, `#record-reset-dialog` | 저장 성공/차단/손상/삭제 실패; 취소·Escape 보존, 해당 체험 키만 초기화 |
+| `.insights-stage`, `.chart-legend`, `.chart-readout`, `.change-row` | 과거/오늘/미래 그래프와 숫자 비교; 미래만 적용·되돌림·범례 동기화 |
+| `#adjust-dialog`, `#adjust-history` | 적용 전후 검토·취소·적용 결과·되돌리기 안내 |
+
+전체 장면은 자동 반복 회전하지 않고 입력 후에만 필요한 프레임을 렌더한다. 클릭/탭 대안과 키보드 접근을 제공하며 감소된 모션에서는 보간을 끈다. 로딩 실패 때도 DOM 입력을 유지한다. 캔버스는 보조 표현이고 의미 있는 수치·선택·오류는 HTML에 둔다. 구체적인 조작 계약과 렌더 수정·검증 범위는 [시안 보고서](2026-09-08-interactive-landing-concepts.md)를 따른다.

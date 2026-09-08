@@ -1,0 +1,512 @@
+[
+  {
+    "route": "01-load",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "before": {
+      "mode": "load",
+      "weight": 60,
+      "rotation": 0,
+      "ready": true,
+      "paused": false,
+      "calls": 119,
+      "geometries": 64,
+      "textures": 3
+    },
+    "after": {
+      "mode": "load",
+      "weight": 90,
+      "rotation": 0,
+      "ready": true,
+      "paused": false,
+      "calls": 135,
+      "geometries": 72,
+      "textures": 3
+    },
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "route": "02-atlas",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "before": {
+      "mode": "atlas",
+      "selected": 0,
+      "rotation": 0,
+      "ready": true,
+      "paused": false,
+      "calls": 100,
+      "geometries": 53,
+      "textures": 3
+    },
+    "after": {
+      "mode": "atlas",
+      "selected": 3,
+      "rotation": 0,
+      "ready": true,
+      "paused": false,
+      "calls": 100,
+      "geometries": 53,
+      "textures": 3
+    },
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "route": "03-schedule",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "before": {
+      "mode": "schedule",
+      "days": [
+        0,
+        2,
+        4
+      ],
+      "rotation": 0,
+      "ready": true,
+      "paused": false,
+      "calls": 100,
+      "geometries": 71,
+      "textures": 3
+    },
+    "after": {
+      "mode": "schedule",
+      "days": [
+        1,
+        3,
+        5
+      ],
+      "rotation": 0,
+      "ready": true,
+      "paused": false,
+      "calls": 100,
+      "geometries": 71,
+      "textures": 3
+    },
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "route": "04-session",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "before": {
+      "mode": "session",
+      "completed": 0,
+      "completedSets": [
+        false,
+        false
+      ],
+      "rotation": 0,
+      "ready": true,
+      "paused": false,
+      "calls": 47,
+      "geometries": 29,
+      "textures": 3
+    },
+    "after": {
+      "mode": "session",
+      "completed": 2,
+      "completedSets": [
+        true,
+        true
+      ],
+      "rotation": 0,
+      "ready": true,
+      "paused": false,
+      "calls": 55,
+      "geometries": 33,
+      "textures": 3
+    },
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "route": "05-insights",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "before": {
+      "mode": "insights",
+      "applied": false,
+      "rotation": 0,
+      "ready": true,
+      "paused": false,
+      "calls": 51,
+      "geometries": 38,
+      "textures": 3
+    },
+    "after": {
+      "mode": "insights",
+      "applied": true,
+      "rotation": 0,
+      "ready": true,
+      "paused": false,
+      "calls": 51,
+      "geometries": 38,
+      "textures": 3
+    },
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "route": "gallery",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "overflow": false,
+    "links": 5
+  },
+  {
+    "route": "01-load",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "before": {
+      "mode": "load",
+      "weight": 60,
+      "rotation": 0,
+      "ready": true,
+      "paused": false,
+      "calls": 119,
+      "geometries": 64,
+      "textures": 3
+    },
+    "after": {
+      "mode": "load",
+      "weight": 90,
+      "rotation": 0,
+      "ready": true,
+      "paused": false,
+      "calls": 135,
+      "geometries": 72,
+      "textures": 3
+    },
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "route": "02-atlas",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "before": {
+      "mode": "atlas",
+      "selected": 0,
+      "rotation": 0,
+      "ready": true,
+      "paused": false,
+      "calls": 100,
+      "geometries": 53,
+      "textures": 3
+    },
+    "after": {
+      "mode": "atlas",
+      "selected": 3,
+      "rotation": 0,
+      "ready": true,
+      "paused": false,
+      "calls": 100,
+      "geometries": 53,
+      "textures": 3
+    },
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "route": "03-schedule",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "before": {
+      "mode": "schedule",
+      "days": [
+        0,
+        2,
+        4
+      ],
+      "rotation": 0,
+      "ready": true,
+      "paused": false,
+      "calls": 100,
+      "geometries": 71,
+      "textures": 3
+    },
+    "after": {
+      "mode": "schedule",
+      "days": [
+        1,
+        3,
+        5
+      ],
+      "rotation": 0,
+      "ready": true,
+      "paused": false,
+      "calls": 100,
+      "geometries": 71,
+      "textures": 3
+    },
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "route": "04-session",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "before": {
+      "mode": "session",
+      "completed": 0,
+      "completedSets": [
+        false,
+        false
+      ],
+      "rotation": 0,
+      "ready": true,
+      "paused": false,
+      "calls": 47,
+      "geometries": 29,
+      "textures": 3
+    },
+    "after": {
+      "mode": "session",
+      "completed": 2,
+      "completedSets": [
+        true,
+        true
+      ],
+      "rotation": 0,
+      "ready": true,
+      "paused": false,
+      "calls": 55,
+      "geometries": 33,
+      "textures": 3
+    },
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "route": "05-insights",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "before": {
+      "mode": "insights",
+      "applied": false,
+      "rotation": 0,
+      "ready": true,
+      "paused": false,
+      "calls": 51,
+      "geometries": 38,
+      "textures": 3
+    },
+    "after": {
+      "mode": "insights",
+      "applied": true,
+      "rotation": 0,
+      "ready": true,
+      "paused": false,
+      "calls": 51,
+      "geometries": 38,
+      "textures": 3
+    },
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "route": "gallery",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "overflow": false,
+    "links": 5
+  },
+  {
+    "route": "01-load",
+    "viewport": {
+      "width": 320,
+      "height": 844
+    },
+    "before": {
+      "mode": "load",
+      "weight": 60,
+      "rotation": 0,
+      "ready": true,
+      "paused": false,
+      "calls": 119,
+      "geometries": 64,
+      "textures": 3
+    },
+    "after": {
+      "mode": "load",
+      "weight": 60,
+      "rotation": 0,
+      "ready": true,
+      "paused": false,
+      "calls": 119,
+      "geometries": 64,
+      "textures": 3
+    },
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "route": "02-atlas",
+    "viewport": {
+      "width": 320,
+      "height": 844
+    },
+    "before": {
+      "mode": "atlas",
+      "selected": 0,
+      "rotation": 0,
+      "ready": true,
+      "paused": false,
+      "calls": 100,
+      "geometries": 53,
+      "textures": 3
+    },
+    "after": {
+      "mode": "atlas",
+      "selected": 0,
+      "rotation": 0,
+      "ready": true,
+      "paused": false,
+      "calls": 100,
+      "geometries": 53,
+      "textures": 3
+    },
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "route": "03-schedule",
+    "viewport": {
+      "width": 320,
+      "height": 844
+    },
+    "before": {
+      "mode": "schedule",
+      "days": [
+        0,
+        2,
+        4
+      ],
+      "rotation": 0,
+      "ready": true,
+      "paused": false,
+      "calls": 100,
+      "geometries": 71,
+      "textures": 3
+    },
+    "after": {
+      "mode": "schedule",
+      "days": [
+        0,
+        2,
+        4
+      ],
+      "rotation": 0,
+      "ready": true,
+      "paused": false,
+      "calls": 100,
+      "geometries": 71,
+      "textures": 3
+    },
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "route": "04-session",
+    "viewport": {
+      "width": 320,
+      "height": 844
+    },
+    "before": {
+      "mode": "session",
+      "completed": 0,
+      "completedSets": [
+        false,
+        false
+      ],
+      "rotation": 0,
+      "ready": true,
+      "paused": false,
+      "calls": 47,
+      "geometries": 29,
+      "textures": 3
+    },
+    "after": {
+      "mode": "session",
+      "completed": 0,
+      "completedSets": [
+        false,
+        false
+      ],
+      "rotation": 0,
+      "ready": true,
+      "paused": false,
+      "calls": 47,
+      "geometries": 29,
+      "textures": 3
+    },
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "route": "05-insights",
+    "viewport": {
+      "width": 320,
+      "height": 844
+    },
+    "before": {
+      "mode": "insights",
+      "applied": false,
+      "rotation": 0,
+      "ready": true,
+      "paused": false,
+      "calls": 51,
+      "geometries": 38,
+      "textures": 3
+    },
+    "after": {
+      "mode": "insights",
+      "applied": false,
+      "rotation": 0,
+      "ready": true,
+      "paused": false,
+      "calls": 51,
+      "geometries": 38,
+      "textures": 3
+    },
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "route": "gallery",
+    "viewport": {
+      "width": 320,
+      "height": 844
+    },
+    "overflow": false,
+    "links": 5
+  }
+]

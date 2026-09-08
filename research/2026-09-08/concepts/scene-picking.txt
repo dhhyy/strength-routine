@@ -1,0 +1,1 @@
+PASS: 2 actual 3D object picks update their DOM controls and content.

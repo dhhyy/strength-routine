@@ -1,0 +1,200 @@
+[
+  {
+    "route": "01-load",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "errors": [],
+    "state": {
+      "mode": "load",
+      "weight": 60,
+      "rotation": 0,
+      "ready": true,
+      "paused": false,
+      "calls": 119,
+      "geometries": 64,
+      "textures": 3
+    },
+    "overflow": false
+  },
+  {
+    "route": "02-atlas",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "errors": [],
+    "state": {
+      "mode": "atlas",
+      "selected": 0,
+      "rotation": 0,
+      "ready": true,
+      "paused": false,
+      "calls": 108,
+      "geometries": 61,
+      "textures": 3
+    },
+    "overflow": false
+  },
+  {
+    "route": "03-schedule",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "errors": [],
+    "state": {
+      "mode": "schedule",
+      "days": [
+        0,
+        2,
+        4
+      ],
+      "rotation": 0,
+      "ready": true,
+      "paused": false,
+      "calls": 97,
+      "geometries": 67,
+      "textures": 3
+    },
+    "overflow": false
+  },
+  {
+    "route": "04-session",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "errors": [],
+    "state": {
+      "mode": "session",
+      "completed": 0,
+      "rotation": 0,
+      "ready": true,
+      "paused": false,
+      "calls": 57,
+      "geometries": 37,
+      "textures": 3
+    },
+    "overflow": false
+  },
+  {
+    "route": "05-insights",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "errors": [],
+    "state": {
+      "mode": "insights",
+      "applied": false,
+      "rotation": 0,
+      "ready": true,
+      "paused": false,
+      "calls": 45,
+      "geometries": 31,
+      "textures": 3
+    },
+    "overflow": false
+  },
+  {
+    "route": "01-load",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "errors": [],
+    "state": {
+      "mode": "load",
+      "weight": 60,
+      "rotation": 0,
+      "ready": true,
+      "paused": false,
+      "calls": 119,
+      "geometries": 64,
+      "textures": 3
+    },
+    "overflow": false
+  },
+  {
+    "route": "02-atlas",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "errors": [],
+    "state": {
+      "mode": "atlas",
+      "selected": 0,
+      "rotation": 0,
+      "ready": true,
+      "paused": false,
+      "calls": 108,
+      "geometries": 61,
+      "textures": 3
+    },
+    "overflow": false
+  },
+  {
+    "route": "03-schedule",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "errors": [],
+    "state": {
+      "mode": "schedule",
+      "days": [
+        0,
+        2,
+        4
+      ],
+      "rotation": 0,
+      "ready": true,
+      "paused": false,
+      "calls": 97,
+      "geometries": 67,
+      "textures": 3
+    },
+    "overflow": false
+  },
+  {
+    "route": "04-session",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "errors": [],
+    "state": {
+      "mode": "session",
+      "completed": 0,
+      "rotation": 0,
+      "ready": true,
+      "paused": false,
+      "calls": 57,
+      "geometries": 37,
+      "textures": 3
+    },
+    "overflow": false
+  },
+  {
+    "route": "05-insights",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "errors": [],
+    "state": {
+      "mode": "insights",
+      "applied": false,
+      "rotation": 0,
+      "ready": true,
+      "paused": false,
+      "calls": 45,
+      "geometries": 31,
+      "textures": 3
+    },
+    "overflow": false
+  }
+]

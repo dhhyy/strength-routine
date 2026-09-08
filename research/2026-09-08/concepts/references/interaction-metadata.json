@@ -1,0 +1,30 @@
+[
+  {
+    "name": "three-variants",
+    "url": "https://threejs.org/examples/webgl_loader_gltf_variants.html",
+    "action": "Variant select midnight → beach",
+    "selected": "beach"
+  },
+  {
+    "name": "linear",
+    "url": "https://linear.app/",
+    "errors": [
+      "Error: Minified React error #418; visit https://react.dev/errors/418?args[]=HTML&args[]= for the full message or use the non-minified dev environment for full errors and additional"
+    ],
+    "headings": [
+      "The product development system for teams and agentsThe product developmentsystem for teams and agentsThe product development system for teams and agents",
+      "A new species of product tool. Purpose-built for modern teams with AI workflows at its core, Linear sets a new standard for planning and building products.",
+      "Intakeand integrations",
+      "Planningand monitoring",
+      "AI andautomations",
+      "Build, review,and ship",
+      "Changelog",
+      "Built for the future. Available today."
+    ]
+  },
+  {
+    "name": "apple",
+    "controls": [],
+    "labels": []
+  }
+]

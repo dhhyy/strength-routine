@@ -1,0 +1,72 @@
+{
+  "browser": "151.0.7922.34",
+  "viewport": [
+    1440,
+    1000
+  ],
+  "checks": [
+    {
+      "route": "02-atlas",
+      "pointer": {
+        "x": 1120,
+        "y": 520
+      },
+      "before": {
+        "mode": "atlas",
+        "selected": 0,
+        "rotation": 0,
+        "ready": true,
+        "paused": false,
+        "calls": 100,
+        "geometries": 53,
+        "textures": 3
+      },
+      "after": {
+        "mode": "atlas",
+        "selected": 4,
+        "rotation": 0,
+        "ready": true,
+        "paused": false,
+        "calls": 100,
+        "geometries": 53,
+        "textures": 3
+      },
+      "status": "passed"
+    },
+    {
+      "route": "03-schedule",
+      "pointer": {
+        "x": 493,
+        "y": 540
+      },
+      "before": {
+        "mode": "schedule",
+        "days": [
+          0,
+          2,
+          4
+        ],
+        "rotation": 0,
+        "ready": true,
+        "paused": false,
+        "calls": 100,
+        "geometries": 71,
+        "textures": 3
+      },
+      "after": {
+        "mode": "schedule",
+        "days": [
+          2,
+          4
+        ],
+        "rotation": 0,
+        "ready": true,
+        "paused": false,
+        "calls": 100,
+        "geometries": 71,
+        "textures": 3
+      },
+      "status": "passed"
+    }
+  ]
+}

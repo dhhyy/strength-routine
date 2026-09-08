@@ -1,0 +1,60 @@
+PASS route-load load: HTTP, document mode, visible main, rendered WebGL
+PASS route-atlas atlas: HTTP, document mode, visible main, rendered WebGL
+PASS route-schedule schedule: HTTP, document mode, visible main, rendered WebGL
+PASS route-session session: HTTP, document mode, visible main, rendered WebGL
+PASS route-insights insights: HTTP, document mode, visible main, rendered WebGL
+PASS fonts Local KR/Mono fonts load and are assigned to Korean body and numeric output
+PASS load-step Plus/minus update total, range, and 3D weight together
+PASS load-keyboard Range keyboard input changes accessible value and scene
+PASS load-bounds-reset 20/120 bounds disable only the unavailable step; reset restores 60
+PASS load-pointer Pointer drag changes angle while pointer is held; reset restores zero
+PASS atlas-1 Program 1: selected button, full title, exercises, and scene match catalog
+PASS atlas-2 Program 2: selected button, full title, exercises, and scene match catalog
+PASS atlas-3 Program 3: selected button, full title, exercises, and scene match catalog
+PASS atlas-4 Program 4: selected button, full title, exercises, and scene match catalog
+PASS atlas-5 Program 5: selected button, full title, exercises, and scene match catalog
+PASS atlas-pagination Program next/previous wrap with title and 3D selection
+PASS atlas-schedule-link Selected program ID survives the real schedule navigation link
+PASS schedule-default Three-day program starts with three matching DOM and 3D weekdays
+PASS schedule-invalid-count Removing one weekday exposes 2/3 error and blocks schedule dialog
+PASS schedule-restore Restoring the weekday clears error and enables schedule preview
+PASS schedule-four-weeks Changed start date yields every trainer session in order on selected weekdays
+PASS session-empty-invalid Empty completion is rejected without creating performed sets
+PASS session-negative-invalid Negative weight and zero repetitions remain editable drafts
+PASS session-rir-invalid RIR above ten blocks completion with an RIR field error
+PASS session-zero-valid Zero kg and RIR zero complete, persist exact strings, and focus next set
+PASS session-second-complete Two valid completions produce count two and matching 3D state
+PASS session-edit Editing a completed set reopens only that set and reduces completion count
+PASS session-reload-draft Reload preserves raw unfinished input alongside completed second set
+PASS session-reset-cancel Cancel reset leaves draft, completed set, and local storage unchanged
+PASS session-reset-confirm Confirmed reset clears only this demo key, preserving unrelated storage
+PASS session-second-only Completing only set two marks the second 3D record, not the first
+PASS insights-review-cancel Review alone and cancel preserve future target 60 and original past value
+PASS insights-apply Apply changes both future targets to 57.5; past remains 60
+PASS insights-undo Undo restores 60, preserves past, and prevents repeating the same suggestion
+PASS insights-reset Start over resets demo controls and allows a fresh review
+PASS overflow-390-load load: no horizontal document overflow at 390px
+PASS overflow-390-atlas atlas: no horizontal document overflow at 390px
+PASS overflow-390-schedule schedule: no horizontal document overflow at 390px
+PASS overflow-390-session session: no horizontal document overflow at 390px
+PASS overflow-390-insights insights: no horizontal document overflow at 390px
+PASS dialog-width-390 Schedule and adjustment dialogs keep content and controls inside 390px viewport
+PASS overflow-320-load load: no horizontal document overflow at 320px
+PASS overflow-320-atlas atlas: no horizontal document overflow at 320px
+PASS overflow-320-schedule schedule: no horizontal document overflow at 320px
+PASS overflow-320-session session: no horizontal document overflow at 320px
+PASS overflow-320-insights insights: no horizontal document overflow at 320px
+PASS dialog-width-320 Schedule and adjustment dialogs keep content and controls inside 320px viewport
+PASS reduced-selection Reduced motion keeps program selection and scene synchronization usable
+PASS webgl-fallback-load WebGL creation failure shows fallback and keeps real load DOM controls working
+PASS webgl-fallback-atlas Catalog selection and schedule link work without WebGL
+PASS catalog-abort Catalog fetch failure exposes retry rather than fabricated programs
+PASS catalog-retry Removing the network fault and clicking retry restores five usable programs
+PASS storage-write-failure Write failure retains typed values and accurately reports unsaved state
+PASS storage-memory-continue After write failure, in-memory edit and completion remain usable without claiming save
+PASS corrupt-storage-preserved Unreadable saved demo remains untouched while new input stays in memory
+PASS webgl-context-restore Real context loss/recovery restores scene and rotation controls while preserving DOM changes
+PASS scene-pause-resume Hidden scene pauses while DOM controls still change data; restoring visibility resumes
+PASS scene-resize-resources Repeated weight changes and resize keep one canvas and bounded reported resources
+PASS no-uncaught-normal-errors Normal, reduced-motion, and handled storage paths have no uncaught page exceptions
+{"output":"/Users/yudongheon/Documents/vibe-design/apps/strength_routine/research/2026-09-08/concepts/browser-check.json","ok":true,"total":59,"passed":59,"failed":0,"fatal":null,"durationMs":63860}
