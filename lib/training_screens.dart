@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'app/training_controller.dart';
+import 'training_insights_screen.dart';
 import 'domain/training_program.dart';
 import 'flow_components.dart';
 import 'program_screen.dart';
@@ -179,10 +180,12 @@ class _SessionCard extends StatelessWidget {
 class SavedRecordsScreen extends StatefulWidget {
   final TrainingController controller;
   final DateTime today;
+  final DateTime Function()? now;
   const SavedRecordsScreen({
     super.key,
     required this.controller,
     required this.today,
+    this.now,
   });
   @override
   State<SavedRecordsScreen> createState() => _SavedRecordsScreenState();
@@ -227,6 +230,17 @@ class _SavedRecordsScreenState extends State<SavedRecordsScreen> {
     return FlowPage(
       title: '기록',
       children: [
+        PrimaryAction(
+          label: '기록 추세·중량 조절',
+          onPressed: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => TrainingInsightsScreen(
+                controller: c,
+                now: widget.now,
+              ),
+            ),
+          ),
+        ),
         GlassPanel(
           child: Column(
             children: [

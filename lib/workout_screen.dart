@@ -136,6 +136,9 @@ class WorkoutScreen extends StatelessWidget {
                     WorkoutSetRow(
                       number: index + 1,
                       set: exercise.sets[index],
+                      targetKg: controller.state.effectiveTargetKg(
+                        exercise.sets[index],
+                      ),
                       actual: actuals[exercise.sets[index].id],
                       hasDraft: controller.state.setDrafts.containsKey(
                         exercise.sets[index].id,
@@ -294,6 +297,7 @@ class WorkoutSetRow extends StatelessWidget {
   final bool hasDraft;
   final bool readOnly;
   final VoidCallback? onPressed;
+  final double? targetKg;
 
   const WorkoutSetRow({
     super.key,
@@ -303,6 +307,7 @@ class WorkoutSetRow extends StatelessWidget {
     required this.hasDraft,
     this.readOnly = false,
     this.onPressed,
+    this.targetKg,
   });
 
   @override
@@ -347,7 +352,7 @@ class WorkoutSetRow extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _TargetLine(set: set),
+                      _TargetLine(set: set, targetKg: targetKg),
                       const SizedBox(height: AppSpace.x2),
                       if (done)
                         Text.rich(
@@ -483,18 +488,24 @@ class WorkoutDraftPreview extends StatelessWidget {
 
 class _TargetLine extends StatelessWidget {
   final PlannedSet set;
-  const _TargetLine({required this.set});
+  final double? targetKg;
+  const _TargetLine({required this.set, this.targetKg});
 
   @override
   Widget build(BuildContext context) => Text.rich(
     TextSpan(
       children: [
-        TextSpan(text: '목표  ', style: AppType.caption),
-        if (set.targetKg == null)
+        TextSpan(
+          text: targetKg != null && targetKg != set.targetKg
+              ? '조정 목표  '
+              : '목표  ',
+          style: AppType.caption,
+        ),
+        if ((targetKg ?? set.targetKg) == null)
           TextSpan(text: '중량 직접 입력 · ', style: AppType.caption)
         else
           TextSpan(
-            text: '${formatNumber(set.targetKg!)} kg × ',
+            text: '${formatNumber((targetKg ?? set.targetKg)!)} kg × ',
             style: mono(color: AppColors.muted),
           ),
         TextSpan(
@@ -715,7 +726,12 @@ class _SetEditorState extends State<SetEditor> {
                       ],
                     ),
                     const SizedBox(height: AppSpace.x2),
-                    _TargetLine(set: widget.set),
+                    _TargetLine(
+                      set: widget.set,
+                      targetKg: widget.controller.state.effectiveTargetKg(
+                        widget.set,
+                      ),
+                    ),
                     const SizedBox(height: AppSpace.x6),
                     AbsorbPointer(
                       absorbing: _committing,

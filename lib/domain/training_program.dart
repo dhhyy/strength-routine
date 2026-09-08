@@ -526,6 +526,112 @@ final class SetActual {
   };
 }
 
+/// 원본 계획을 바꾸지 않는 사용자 승인 중량 조정 이력.
+final class TargetLoadAdjustment {
+  final String id, planId, exerciseKey, exerciseName, policyId;
+  final DateTime appliedOn;
+  final DateTime? undoneOn;
+  final List<String> evidenceSessionIds;
+  final List<double> evidenceRirGaps;
+  final Map<String, String> evidenceRecords;
+  final Map<String, double> beforeKg, afterKg;
+  TargetLoadAdjustment({
+    required this.id,
+    required this.planId,
+    required this.exerciseKey,
+    required this.exerciseName,
+    required this.policyId,
+    required DateTime appliedOn,
+    DateTime? undoneOn,
+    required List<String> evidenceSessionIds,
+    required List<double> evidenceRirGaps,
+    required Map<String, String> evidenceRecords,
+    required Map<String, double> beforeKg,
+    required Map<String, double> afterKg,
+  }) : appliedOn = calendarDate(appliedOn),
+       undoneOn = undoneOn == null ? null : calendarDate(undoneOn),
+       evidenceSessionIds = List.unmodifiable(evidenceSessionIds),
+       evidenceRirGaps = List.unmodifiable(evidenceRirGaps),
+       evidenceRecords = Map.unmodifiable(evidenceRecords),
+       beforeKg = Map.unmodifiable(beforeKg),
+       afterKg = Map.unmodifiable(afterKg) {
+    for (final value in [id, planId, exerciseKey, exerciseName, policyId]) {
+      _id(value);
+    }
+    _unique(evidenceSessionIds);
+    _check(
+      evidenceRirGaps.length == evidenceSessionIds.length &&
+          evidenceRirGaps.every((gap) => gap.isFinite),
+      'Invalid adjustment evidence',
+    );
+    _check(
+      evidenceRecords.isNotEmpty &&
+          beforeKg.isNotEmpty &&
+          _sameKeys(afterKg.keys, beforeKg.keys.toSet()),
+      'Incomplete adjustment',
+    );
+    for (final key in beforeKg.keys) {
+      _positive(beforeKg[key]!);
+      _positive(afterKg[key]!);
+      _check(afterKg[key]! < beforeKg[key]!, 'Adjustment must reduce load');
+    }
+    _check(
+      this.undoneOn == null || !this.undoneOn!.isBefore(this.appliedOn),
+      'Undo precedes application',
+    );
+  }
+  bool get isUndone => undoneOn != null;
+  TargetLoadAdjustment undone(DateTime asOf) => TargetLoadAdjustment(
+    id: id,
+    planId: planId,
+    exerciseKey: exerciseKey,
+    exerciseName: exerciseName,
+    policyId: policyId,
+    appliedOn: appliedOn,
+    undoneOn: asOf,
+    evidenceSessionIds: evidenceSessionIds,
+    evidenceRirGaps: evidenceRirGaps,
+    evidenceRecords: evidenceRecords,
+    beforeKg: beforeKg,
+    afterKg: afterKg,
+  );
+  Map<String, Object?> toJson() => {
+    'id': id,
+    'planId': planId,
+    'exerciseKey': exerciseKey,
+    'exerciseName': exerciseName,
+    'policyId': policyId,
+    'appliedOn': isoDate(appliedOn),
+    'undoneOn': undoneOn == null ? null : isoDate(undoneOn!),
+    'evidenceSessionIds': evidenceSessionIds,
+    'evidenceRirGaps': evidenceRirGaps,
+    'evidenceRecords': evidenceRecords,
+    'beforeKg': beforeKg,
+    'afterKg': afterKg,
+  };
+  factory TargetLoadAdjustment.fromJson(Map<String, dynamic> j) =>
+      TargetLoadAdjustment(
+        id: j['id'] as String,
+        planId: j['planId'] as String,
+        exerciseKey: j['exerciseKey'] as String,
+        exerciseName: j['exerciseName'] as String,
+        policyId: j['policyId'] as String,
+        appliedOn: parseCalendarDate(j['appliedOn'] as String),
+        undoneOn: j['undoneOn'] == null
+            ? null
+            : parseCalendarDate(j['undoneOn'] as String),
+        evidenceSessionIds: (j['evidenceSessionIds'] as List).cast<String>(),
+        evidenceRirGaps: (j['evidenceRirGaps'] as List).map(_number).toList(),
+        evidenceRecords: _map(j['evidenceRecords']).cast<String, String>(),
+        beforeKg: _map(
+          j['beforeKg'],
+        ).map((key, value) => MapEntry(key, _number(value))),
+        afterKg: _map(
+          j['afterKg'],
+        ).map((key, value) => MapEntry(key, _number(value))),
+      );
+}
+
 final class TrainingAppState {
   final bool onboarded;
   final List<RecentLiftRecord> recentRecords;
@@ -535,6 +641,7 @@ final class TrainingAppState {
   final Map<String, Map<String, String>> setDrafts;
   final Map<String, String> sessionNotes;
   final Set<String> completionNotified;
+  final List<TargetLoadAdjustment> loadAdjustments;
   TrainingAppState({
     this.onboarded = false,
     List<RecentLiftRecord> recentRecords = const [],
@@ -544,6 +651,7 @@ final class TrainingAppState {
     Map<String, Map<String, String>> setDrafts = const {},
     Map<String, String> sessionNotes = const {},
     Set<String> completionNotified = const {},
+    List<TargetLoadAdjustment> loadAdjustments = const [],
   }) : recentRecords = List.unmodifiable(recentRecords),
        planHistory = List.unmodifiable(planHistory),
        setActuals = Map.unmodifiable(setActuals),
@@ -554,7 +662,8 @@ final class TrainingAppState {
          ),
        ),
        sessionNotes = Map.unmodifiable(sessionNotes),
-       completionNotified = Set.unmodifiable(completionNotified) {
+       completionNotified = Set.unmodifiable(completionNotified),
+       loadAdjustments = List.unmodifiable(loadAdjustments) {
     final plans = [...planHistory, if (activePlan != null) activePlan!];
     _check(
       recentRecords.every(
@@ -583,6 +692,53 @@ final class TrainingAppState {
       ),
       'Unknown draft field',
     );
+    _check(
+      loadAdjustments.map((a) => a.id).toSet().length == loadAdjustments.length,
+      'Duplicate load adjustment',
+    );
+    _check(
+      loadAdjustments
+              .map((a) => jsonEncode([a.exerciseKey, a.evidenceSessionIds]))
+              .toSet()
+              .length ==
+          loadAdjustments.length,
+      'Duplicate adjustment evidence',
+    );
+    final effective = {for (final p in plans) ...p.targetKgBySetId};
+    for (final adjustment in loadAdjustments) {
+      final matches = plans.where((p) => p.id == adjustment.planId);
+      _check(matches.length == 1, 'Orphaned load adjustment');
+      final plan = matches.single;
+      final dates = {
+        for (final s in plan.sessions)
+          for (final e in s.exercises)
+            for (final set in e.sets) set.id: s.date,
+      };
+      _check(
+        adjustment.evidenceSessionIds.every(
+              (id) => plan.sessionDates.containsKey(id),
+            ) &&
+            adjustment.evidenceRecords.keys.every(
+              plan.targetKgBySetId.containsKey,
+            ),
+        'Orphaned adjustment evidence',
+      );
+      for (final key in adjustment.afterKg.keys) {
+        _check(
+          dates.containsKey(key) &&
+              dates[key]!.isAfter(adjustment.appliedOn) &&
+              plan.targetKgBySetId[key] != null,
+          'Invalid adjusted set',
+        );
+        if (!adjustment.isUndone) {
+          _check(
+            effective[key] == adjustment.beforeKg[key],
+            'Broken adjustment chain',
+          );
+          effective[key] = adjustment.afterKg[key];
+        }
+      }
+    }
   }
   TrainingAppState copyWith({
     bool? onboarded,
@@ -596,6 +752,7 @@ final class TrainingAppState {
     setDrafts: setDrafts,
     sessionNotes: sessionNotes,
     completionNotified: completionNotified,
+    loadAdjustments: loadAdjustments,
   );
   TrainingAppState withActivePlan(ActiveTrainingPlan plan) => TrainingAppState(
     onboarded: onboarded,
@@ -606,6 +763,7 @@ final class TrainingAppState {
     setDrafts: setDrafts,
     sessionNotes: sessionNotes,
     completionNotified: completionNotified,
+    loadAdjustments: loadAdjustments,
   );
   TrainingAppState withSetActual(String plannedSetId, SetActual? actual) {
     _check(
@@ -629,6 +787,7 @@ final class TrainingAppState {
       setDrafts: drafts,
       sessionNotes: sessionNotes,
       completionNotified: completionNotified,
+      loadAdjustments: loadAdjustments,
     );
   }
 
@@ -655,6 +814,7 @@ final class TrainingAppState {
       setDrafts: drafts,
       sessionNotes: sessionNotes,
       completionNotified: completionNotified,
+      loadAdjustments: loadAdjustments,
     );
   }
 
@@ -668,6 +828,7 @@ final class TrainingAppState {
         setDrafts: setDrafts,
         sessionNotes: {...sessionNotes, sessionId: note},
         completionNotified: completionNotified,
+        loadAdjustments: loadAdjustments,
       );
   TrainingAppState withCompletionNotified(String sessionId) {
     _check(isSessionComplete(sessionId), 'Session is not complete');
@@ -680,8 +841,103 @@ final class TrainingAppState {
       setDrafts: setDrafts,
       sessionNotes: sessionNotes,
       completionNotified: {...completionNotified, sessionId},
+      loadAdjustments: loadAdjustments,
     );
   }
+
+  double? effectiveTargetKg(PlannedSet set) {
+    for (final adjustment in loadAdjustments.reversed) {
+      if (!adjustment.isUndone && adjustment.afterKg.containsKey(set.id)) {
+        return adjustment.afterKg[set.id];
+      }
+    }
+    return set.targetKg;
+  }
+
+  void _requireEditableTargets(TargetLoadAdjustment adjustment, DateTime asOf) {
+    _check(activePlan?.id == adjustment.planId, '현재 진행 중인 계획에서만 변경할 수 있어요.');
+    final dates = {
+      for (final s in activePlan!.sessions)
+        for (final e in s.exercises)
+          for (final set in e.sets) set.id: s.date,
+    };
+    _check(
+      adjustment.afterKg.keys.every(
+        (id) =>
+            dates.containsKey(id) &&
+            dates[id]!.isAfter(calendarDate(asOf)) &&
+            !setActuals.containsKey(id) &&
+            !setDrafts.containsKey(id),
+      ),
+      '오늘·지난 세트 또는 기록·초안이 있는 세트는 바꾸지 않아요.',
+    );
+  }
+
+  TrainingAppState withLoadAdjustment(
+    TargetLoadAdjustment adjustment, {
+    required DateTime asOf,
+  }) {
+    _check(
+      !adjustment.isUndone && adjustment.appliedOn == calendarDate(asOf),
+      '조정 날짜를 다시 확인해 주세요.',
+    );
+    _check(
+      !loadAdjustments.any(
+        (a) =>
+            a.id == adjustment.id ||
+            a.exerciseKey == adjustment.exerciseKey &&
+                jsonEncode(a.evidenceSessionIds) ==
+                    jsonEncode(adjustment.evidenceSessionIds),
+      ),
+      '이미 처리한 제안이에요.',
+    );
+    _requireEditableTargets(adjustment, asOf);
+    _check(
+      adjustment.evidenceRecords.entries.every(
+        (entry) =>
+            !setDrafts.containsKey(entry.key) &&
+            setActuals[entry.key] != null &&
+            jsonEncode(setActuals[entry.key]!.toJson()) == entry.value,
+      ),
+      '근거 기록이 바뀌었어요. 제안을 다시 확인해 주세요.',
+    );
+    return _withAdjustments([...loadAdjustments, adjustment]);
+  }
+
+  TrainingAppState undoLoadAdjustment(String id, {required DateTime asOf}) {
+    final matches = loadAdjustments.where((a) => a.id == id);
+    _check(matches.length == 1, '조정 이력을 찾을 수 없어요.');
+    final adjustment = matches.single;
+    _check(!adjustment.isUndone, '이미 되돌린 제안이에요.');
+    _requireEditableTargets(adjustment, asOf);
+    final index = loadAdjustments.indexOf(adjustment);
+    _check(
+      !loadAdjustments
+          .skip(index + 1)
+          .any(
+            (a) =>
+                !a.isUndone &&
+                a.afterKg.keys.any(adjustment.afterKg.containsKey),
+          ),
+      '이후 조정을 먼저 되돌려 주세요.',
+    );
+    return _withAdjustments([
+      for (final a in loadAdjustments) a.id == id ? a.undone(asOf) : a,
+    ]);
+  }
+
+  TrainingAppState _withAdjustments(List<TargetLoadAdjustment> adjustments) =>
+      TrainingAppState(
+        onboarded: onboarded,
+        recentRecords: recentRecords,
+        activePlan: activePlan,
+        planHistory: planHistory,
+        setActuals: setActuals,
+        setDrafts: setDrafts,
+        sessionNotes: sessionNotes,
+        completionNotified: completionNotified,
+        loadAdjustments: adjustments,
+      );
 
   bool isSessionComplete(String sessionId) {
     final matching = [
@@ -706,6 +962,7 @@ final class TrainingAppState {
     'setDrafts': setDrafts,
     'sessionNotes': sessionNotes,
     'completionNotified': completionNotified.toList(),
+    'loadAdjustments': loadAdjustments.map((a) => a.toJson()).toList(),
   };
   factory TrainingAppState.fromJson(Map<String, dynamic> j) => TrainingAppState(
     onboarded: j['onboarded'] as bool,
@@ -728,6 +985,11 @@ final class TrainingAppState {
     completionNotified: (j['completionNotified'] as List)
         .cast<String>()
         .toSet(),
+    loadAdjustments: j.containsKey('loadAdjustments')
+        ? (j['loadAdjustments'] as List)
+              .map((v) => TargetLoadAdjustment.fromJson(_map(v)))
+              .toList()
+        : const [],
   );
 }
 

@@ -34,7 +34,7 @@ final class LocalTrainingStore {
       }
       final envelope =
           jsonDecode(await file.readAsString()) as Map<String, dynamic>;
-      if (envelope['schemaVersion'] != 1) {
+      if (envelope['schemaVersion'] != 1 && envelope['schemaVersion'] != 2) {
         throw const FormatException('Unsupported local state schema');
       }
       return TrainingAppState.fromJson(
@@ -54,7 +54,7 @@ final class LocalTrainingStore {
       '${file.path}.tmp.$pid.${DateTime.now().microsecondsSinceEpoch}.${_temporaryId++}',
     );
     try {
-      final text = jsonEncode({'schemaVersion': 1, 'state': state.toJson()});
+      final text = jsonEncode({'schemaVersion': 2, 'state': state.toJson()});
       await file.parent.create(recursive: true);
       await temporary.writeAsString(text, flush: true);
       await temporary.rename(file.path);

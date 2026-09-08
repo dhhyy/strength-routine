@@ -212,7 +212,11 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
               index: _index,
               children: [
                 ActiveTodayScreen(controller: c, today: today),
-                SavedRecordsScreen(controller: c, today: today),
+                SavedRecordsScreen(
+                  controller: c,
+                  today: today,
+                  now: widget.now,
+                ),
                 SearchScreen(controller: c),
                 HabitsScreen(store: widget.habitStore, now: widget.now),
                 CurrentProfileScreen(controller: c),
