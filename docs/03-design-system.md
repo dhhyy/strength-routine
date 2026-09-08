@@ -117,13 +117,13 @@
 
 | 컴포넌트 | 용도 | 변형 |
 |---|---|---|
-| `GlassPanel` | 깊이의 기본 단위(그라디언트+블러+섀도우) | glow 추가 가능 |
+| `GlassPanel` | 깊이의 기본 단위(그라디언트+블러+섀도우) | 기본 padding `AppSpace.x4`, glow 추가 가능 |
 | `ConsoleTopBar` | 날짜 + 이전/다음 | — |
 | `StatusBand` | 국면 + 게이지 2 | — |
 | `GaugeBar` | 가로 게이지(그라디언트+글로우) | accent/good |
 | `QuoteLine` | 명언 | — |
 | `RoleChip` | 역할 태그 | mainVolume(그라디언트) / techMaintain / accessory |
-| `HeroCard` | 메인 리프트(큰 그라디언트 숫자·점진 노출·글로우 CTA) | — |
+| `HeroCard` | 메인 리프트(큰 그라디언트 숫자·점진 노출·글로우 CTA) | padding `AppSpace.x5` |
 | `CollapsedRow` | 보조/기술유지(요약+규칙이유+미니점) | — |
 | `NavigationBar`(테마) | 하단 5탭 | — |
 

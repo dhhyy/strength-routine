@@ -13,7 +13,7 @@ class GlassPanel extends StatelessWidget {
   const GlassPanel({
     super.key,
     required this.child,
-    this.padding = const EdgeInsets.all(16),
+    this.padding = const EdgeInsets.all(AppSpace.x4),
     this.glow = const [],
   });
 
@@ -233,7 +233,7 @@ class HeroCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GlassPanel(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(AppSpace.x5),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
