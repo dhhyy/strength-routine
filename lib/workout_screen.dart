@@ -6,6 +6,8 @@ import 'app/training_controller.dart';
 import 'domain/recent_lift_record.dart';
 import 'domain/training_program.dart';
 import 'flow_components.dart';
+import 'prescription_widgets.dart';
+import 'rest_timer_panel.dart';
 import 'tokens.dart';
 import 'widgets.dart';
 
@@ -50,6 +52,7 @@ class WorkoutScreen extends StatelessWidget {
   Widget build(BuildContext context) => AnimatedBuilder(
     animation: controller,
     builder: (context, _) {
+      final restPanelKey = GlobalKey();
       final sets = session.exercises
           .expand((exercise) => exercise.sets)
           .toList();
@@ -146,6 +149,12 @@ class WorkoutScreen extends StatelessWidget {
               message: '프로그램 구성을 확인해 주세요.',
               icon: Icons.info_outline,
             ),
+          if (!readOnly)
+            RestTimerPanel(
+              key: restPanelKey,
+              controller: controller,
+              sessionId: session.id,
+            ),
           for (final exercise in session.exercises)
             GlassPanel(
               padding: const EdgeInsets.all(AppSpace.x4),
@@ -153,6 +162,7 @@ class WorkoutScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(exercise.name, style: AppType.heading),
+                  SupersetNote(group: exercise.supersetGroup),
                   const SizedBox(height: AppSpace.x2),
                   Text(
                     '${exercise.sets.length}세트 · 목표는 프로그램 기준',
@@ -195,6 +205,60 @@ class WorkoutScreen extends StatelessWidget {
                               index + 1,
                             ),
                     ),
+                    if (!locked &&
+                        (exercise.sets[index].restSeconds ?? 0) > 0 &&
+                        actuals[exercise.sets[index].id]?.status ==
+                            SetActualStatus.completed &&
+                        !controller.state.setDrafts.containsKey(
+                          exercise.sets[index].id,
+                        ))
+                      AnimatedBuilder(
+                        animation: controller.restTimer,
+                        builder: (context, _) => TextButton.icon(
+                          key: ValueKey(
+                            'rest-start-${exercise.sets[index].id}',
+                          ),
+                          onPressed:
+                              controller.saving ||
+                                  controller.saveError != null ||
+                                  controller.restTimer.busy ||
+                                  controller.restTimer.loadError != null ||
+                                  controller.restTimer.saveError != null
+                              ? null
+                              : () async {
+                                  await startSetRest(
+                                    context,
+                                    controller,
+                                    session,
+                                    exercise,
+                                    exercise.sets[index],
+                                    index + 1,
+                                  );
+                                  if (!context.mounted) return;
+                                  // The lazy list may have disposed its top panel.
+                                  // Reveal the beginning first so it is mounted.
+                                  Scrollable.of(context).position.jumpTo(0);
+                                  await WidgetsBinding.instance.endOfFrame;
+                                  final panelContext =
+                                      restPanelKey.currentContext;
+                                  if (panelContext != null &&
+                                      panelContext.mounted) {
+                                    await Scrollable.ensureVisible(
+                                      panelContext,
+                                    );
+                                  }
+                                },
+                          icon: const Icon(
+                            Icons.timer_outlined,
+                            color: AppColors.accent,
+                            size: AppSize.icon,
+                          ),
+                          label: Text(
+                            '${index + 1}세트 휴식 시작 · ${exercise.sets[index].restSeconds}초',
+                            style: AppType.action,
+                          ),
+                        ),
+                      ),
                   ],
                 ],
               ),
@@ -305,11 +369,7 @@ class WorkoutScreen extends StatelessWidget {
     PlannedSet set,
     int number,
   ) async {
-    final orderedSets = <_SessionSet>[
-      for (final exercise in session.exercises)
-        for (var index = 0; index < exercise.sets.length; index++)
-          (exercise: exercise, set: exercise.sets[index], number: index + 1),
-    ];
+    final orderedSets = session.executionSets;
     _SessionSet current = (exercise: exercise, set: set, number: number);
     var saved = false;
     while (context.mounted) {
@@ -776,37 +836,41 @@ class WorkoutDraftPreview extends StatelessWidget {
 class _TargetLine extends StatelessWidget {
   final PlannedSet set;
   final double? targetKg;
-  const _TargetLine({required this.set, this.targetKg});
+  final bool explain;
+  const _TargetLine({required this.set, this.targetKg, this.explain = false});
 
   @override
-  Widget build(BuildContext context) => Text.rich(
-    TextSpan(
-      children: [
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text.rich(
         TextSpan(
-          text: targetKg != null && targetKg != set.targetKg
-              ? '조정 목표  '
-              : '목표  ',
-          style: AppType.caption,
+          children: [
+            TextSpan(
+              text: targetKg != null && targetKg != set.targetKg
+                  ? '조정 목표  '
+                  : '목표  ',
+              style: AppType.caption,
+            ),
+            if ((targetKg ?? set.targetKg) == null)
+              TextSpan(text: '중량 직접 입력 · ', style: AppType.caption)
+            else
+              TextSpan(
+                text:
+                    '${formatNumber((targetKg ?? set.targetKg)!)} kg${set.isAmrap ? ' · ' : ' × '}',
+                style: mono(color: AppColors.muted),
+              ),
+            ...repetitionSpans(set.template),
+            if (set.rir != null)
+              TextSpan(
+                text: ' · RIR ${formatNumber(set.rir!)}',
+                style: mono(color: AppColors.muted),
+              ),
+          ],
         ),
-        if ((targetKg ?? set.targetKg) == null)
-          TextSpan(text: '중량 직접 입력 · ', style: AppType.caption)
-        else
-          TextSpan(
-            text: '${formatNumber((targetKg ?? set.targetKg)!)} kg × ',
-            style: mono(color: AppColors.muted),
-          ),
-        TextSpan(
-          text: '${set.repetitions}',
-          style: mono(color: AppColors.muted),
-        ),
-        TextSpan(text: '회', style: AppType.caption),
-        if (set.rir != null)
-          TextSpan(
-            text: ' · RIR ${formatNumber(set.rir!)}',
-            style: mono(color: AppColors.muted),
-          ),
-      ],
-    ),
+      ),
+      SetPrescriptionNotes(set: set.template, explain: explain),
+    ],
   );
 }
 
@@ -1104,6 +1168,7 @@ class _SetEditorState extends State<SetEditor> {
                     const SizedBox(height: AppSpace.x2),
                     _TargetLine(
                       set: widget.set,
+                      explain: true,
                       targetKg: widget.controller.state.effectiveTargetKg(
                         widget.set,
                       ),

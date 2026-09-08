@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'app/training_controller.dart';
 import 'domain/training_program.dart';
 import 'flow_components.dart';
+import 'prescription_widgets.dart';
 import 'tokens.dart';
 import 'widgets.dart';
 
@@ -232,6 +233,7 @@ class _ExercisePlanDetail extends StatelessWidget {
           ],
         ),
       ),
+      SupersetNote(group: entry.exercise.supersetGroup),
       for (var i = 0; i < entry.exercise.sets.length; i++)
         GlassPanel(
           child: Column(
@@ -246,11 +248,7 @@ class _ExercisePlanDetail extends StatelessWidget {
                 TextSpan(
                   style: AppType.body,
                   children: [
-                    TextSpan(
-                      text: '${entry.exercise.sets[i].repetitions}',
-                      style: mono(),
-                    ),
-                    const TextSpan(text: '회'),
+                    ...repetitionSpans(entry.exercise.sets[i]),
                     if (entry.exercise.sets[i].rir != null)
                       TextSpan(
                         text:
@@ -260,6 +258,7 @@ class _ExercisePlanDetail extends StatelessWidget {
                   ],
                 ),
               ),
+              SetPrescriptionNotes(set: entry.exercise.sets[i], explain: true),
               const SizedBox(height: AppSpace.x2),
               Text.rich(
                 TextSpan(

@@ -3,6 +3,7 @@ import 'app/training_controller.dart';
 import 'domain/recent_lift_record.dart';
 import 'domain/training_program.dart';
 import 'flow_components.dart';
+import 'prescription_widgets.dart';
 import 'tokens.dart';
 import 'widgets.dart';
 
@@ -152,11 +153,25 @@ class ProgramDetailScreen extends StatelessWidget {
               for (final exercise in session.exercises) ...[
                 const SizedBox(height: AppSpace.x4),
                 Text(exercise.name, style: AppType.body),
+                SupersetNote(group: exercise.supersetGroup),
                 const SizedBox(height: AppSpace.x1),
                 Text(
-                  '${exercise.sets.length}세트 · ${exercise.sets.map((s) => '${s.repetitions}회').join(' / ')}',
+                  '${exercise.sets.length}세트 · ${exercise.sets.map(repetitionLabel).join(' / ')}',
                   style: AppType.caption,
                 ),
+                for (var i = 0; i < exercise.sets.length; i++)
+                  if (exercise.sets[i].restSeconds != null ||
+                      exercise.sets[i].tempo != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: AppSpace.x2),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('${i + 1}세트', style: AppType.caption),
+                          SetPrescriptionNotes(set: exercise.sets[i]),
+                        ],
+                      ),
+                    ),
               ],
             ],
           ),
@@ -527,12 +542,14 @@ class _PlanReviewScreenState extends State<PlanReviewScreen> {
               for (final exercise in session.exercises) ...[
                 const SizedBox(height: AppSpace.x4),
                 Text(exercise.name, style: AppType.body),
+                SupersetNote(group: exercise.supersetGroup),
                 for (var i = 0; i < exercise.sets.length; i++) ...[
                   const SizedBox(height: AppSpace.x2),
                   Text(
-                    '${i + 1}세트 · ${exercise.sets[i].targetKg == null ? '중량 직접 기록' : '${formatNumber(exercise.sets[i].targetKg!)} kg'} · ${exercise.sets[i].repetitions}회${exercise.sets[i].rir == null ? '' : ' · RIR ${formatNumber(exercise.sets[i].rir!)}'}${exercise.sets[i].isRequired ? '' : ' · 선택'}',
+                    '${i + 1}세트 · ${exercise.sets[i].targetKg == null ? '중량 직접 기록' : '${formatNumber(exercise.sets[i].targetKg!)} kg'} · ${repetitionLabel(exercise.sets[i].template)}${exercise.sets[i].rir == null ? '' : ' · RIR ${formatNumber(exercise.sets[i].rir!)}'}${exercise.sets[i].isRequired ? '' : ' · 선택'}',
                     style: AppType.caption,
                   ),
+                  SetPrescriptionNotes(set: exercise.sets[i].template),
                 ],
               ],
             ],
