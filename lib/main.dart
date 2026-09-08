@@ -74,6 +74,7 @@ class _RootGateState extends State<RootGate> {
         } else {
           final directory = await getApplicationSupportDirectory();
           _controller = TrainingController(
+            now: widget.now,
             store: LocalTrainingStore(
               File('${directory.path}/training-state.json'),
             ),

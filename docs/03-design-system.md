@@ -247,3 +247,21 @@
 | `#adjust-dialog`, `#adjust-history` | 적용 전후 검토·취소·적용 결과·되돌리기 안내 |
 
 전체 장면은 자동 반복 회전하지 않고 입력 후에만 필요한 프레임을 렌더한다. 클릭/탭 대안과 키보드 접근을 제공하며 감소된 모션에서는 보간을 끈다. 로딩 실패 때도 DOM 입력을 유지한다. 캔버스는 보조 표현이고 의미 있는 수치·선택·오류는 HTML에 둔다. 구체적인 조작 계약과 렌더 수정·검증 범위는 [시안 보고서](2026-09-08-interactive-landing-concepts.md)를 따른다.
+
+## 9/8 실제 수행일·기록 마감 구성 요소
+
+기존 Flutter Console v2를 확장한다. 새 색·간격·폰트 토큰은 추가하지 않았고, FlowPage·GlassPanel·ConsoleField·PrimaryAction을 화면 안에서 조립한다. 아래 사적 위젯은 해당 화면의 조립 단위이며 공용 스타일 정본을 새로 만들지 않는다.
+
+| 구성 요소 | 코드·상태·상호작용 |
+|---|---|
+| 수행일 선택 | `SetEditor`, 키 `set-performed-date-picker`: 확인 가능한 실제 날짜, 변경/날짜 지정, 날짜 선택 취소, 과거 미상, 잘못된 원문, 미래 날짜 차단. 날짜는 mono, 설명은 KR |
+| 날짜 초안 미리보기 | `WorkoutDraftPreview`: 보관 초안의 `performedDate` 원문을 기존 중량/반복/RIR/메모와 함께 조회; 저장·정정 행동 없음 |
+| 기록 요약 | `_SessionSummaryView`: 실제 수행·제외·미기록·초안·필수 미기록·실제 날짜 목록·미상 수를 구분; 초안 수를 수행량에 더하지 않음 |
+| 마감·재개 | `WorkoutScreen`, 키 `session-lifecycle-action`: ‘기록 마감’/‘기록 다시 열기’, 조건 부족·미저장·진행 중 비활성, 마감 뒤 세트 잠금 |
+| 확인창 | `_SessionLifecycleDialog`: bgLift·기존 action 토큰·스크롤 가능한 요약, 취소/저장 중/실패/동일 동작 재시도. 마감 시각과 운동 종료 시각의 의미를 구별 |
+| 기록 기준 선택 | `SavedRecordsScreen`, 키 `record-date-basis`: 예정일/수행일 SegmentedButton. accentSoft·fill·hairStrong으로 선택/비선택 구별 |
+| 날짜 셀 | 기존 7열 달력, 날짜와 기록 표시를 세로 배치. 셀 높이는 `MediaQuery.textScalerOf(context).scale(AppSize.touch)`로 큰 글자에 대응; 글자를 잘라내거나 축소하지 않음 |
+| 날짜별 세션 카드 | `_SessionCard`: 원래 예정일·세션 전체 수·선택한 날 실제 수행 수·마감/재개/과거 미상. 같은 세션의 여러 실제 날짜에서도 동일 ID로 상세 조회 |
+| 과거 세션 메모 | `WorkoutScreen`의 GlassPanel: 저장된 비어 있지 않은 세션 메모의 원문·줄바꿈 유지. 보관 메모만 있는 세션도 달력에서 접근 |
+
+375×812·1.5배 글자·300px 키보드 inset 조건에서 실제 번들 폰트로 렌더한다. 초기에 정사각 날짜 셀에서 두 줄이 7.9px 넘친 것을 확인해 셀 높이 계산을 수정했다. 최종 이미지·시험 범위는 [수행일·마감 검증](2026-09-08-session-lifecycle-verification.md)을 따른다. 해당 이미지는 실제 기기 캡처가 아닌 headless 위젯 렌더다.

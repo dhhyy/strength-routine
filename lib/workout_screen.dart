@@ -41,6 +41,11 @@ class WorkoutScreen extends StatelessWidget {
     this.defaultUnit = WeightUnit.kg,
   });
 
+  bool get _readOnly =>
+      readOnly ||
+      !(controller.state.activePlan?.sessions.any((s) => s.id == session.id) ??
+          false);
+
   @override
   Widget build(BuildContext context) => AnimatedBuilder(
     animation: controller,
@@ -55,18 +60,26 @@ class WorkoutScreen extends StatelessWidget {
       final skipped = sets
           .where((set) => actuals[set.id]?.status == SetActualStatus.skipped)
           .length;
+      final readOnly = _readOnly;
+      final closed = controller.state.isSessionClosed(session.id);
+      final locked = readOnly || closed || controller.sessionActionPending;
+      final summary = controller.state.sessionSummary(session.id);
+      final lifecycle = controller.state.sessionEvents
+          .where((e) => e.sessionId == session.id)
+          .lastOrNull;
       return FlowPage(
         title: readOnly ? '운동 상세' : '운동 기록',
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Text('계획한 날짜', style: AppType.caption),
               Text(isoDate(session.date), style: AppType.number),
               const SizedBox(height: AppSpace.x2),
               Text(session.title, style: AppType.title),
               const SizedBox(height: AppSpace.x3),
               Text(
-                '완료 $completed · 제외 $skipped · 전체 ${sets.length}세트',
+                '실제 수행 $completed · 제외 $skipped · 전체 ${sets.length}세트',
                 style: AppType.body.copyWith(color: AppColors.inkDim),
               ),
             ],
@@ -78,10 +91,28 @@ class WorkoutScreen extends StatelessWidget {
                   : '계획과 기록을 확인하는 화면이에요.',
               style: AppType.caption,
             )
+          else if (closed)
+            Text('마감한 기록이에요. 수정하려면 먼저 기록을 다시 열어 주세요.', style: AppType.body)
           else
             Text(
               '세트를 눌러 실제 중량과 반복을 기록해 주세요.',
               style: AppType.body.copyWith(color: AppColors.inkDim),
+            ),
+          if (controller.state.sessionNotes[session.id]?.trim().isNotEmpty ??
+              false)
+            GlassPanel(
+              padding: const EdgeInsets.all(AppSpace.x4),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text('세션 메모', style: AppType.caption),
+                  const SizedBox(height: AppSpace.x2),
+                  Text(
+                    controller.state.sessionNotes[session.id]!,
+                    style: AppType.body,
+                  ),
+                ],
+              ),
             ),
           if (controller.saveError != null)
             StatePanel(
@@ -145,8 +176,8 @@ class WorkoutScreen extends StatelessWidget {
                       hasDraft: controller.state.setDrafts.containsKey(
                         exercise.sets[index].id,
                       ),
-                      readOnly: readOnly,
-                      onPressed: readOnly
+                      readOnly: locked,
+                      onPressed: locked
                           ? (controller.state.setDrafts.containsKey(
                                   exercise.sets[index].id,
                                 )
@@ -168,17 +199,79 @@ class WorkoutScreen extends StatelessWidget {
                 ],
               ),
             ),
-          if (controller.state.isSessionComplete(session.id))
+          if (!closed && controller.state.isSessionComplete(session.id))
             StatePanel(
               title: '모든 필수 세트가 기록됐어요',
               message:
-                  '완료 $completed세트 · 제외 $skipped세트${readOnly ? '' : '\n기록한 세트를 눌러 수정할 수 있어요.'}',
+                  '완료 $completed세트 · 제외 $skipped세트${readOnly ? '' : '\n아직 마감 전이에요. 기록한 세트를 눌러 수정할 수 있어요.'}',
               icon: Icons.task_alt,
             ),
+          GlassPanel(
+            padding: const EdgeInsets.all(AppSpace.x4),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(closed ? '기록을 마감했어요' : '기록 요약', style: AppType.heading),
+                const SizedBox(height: AppSpace.x4),
+                _SessionSummaryView(summary: summary),
+                if (lifecycle != null) ...[
+                  const SizedBox(height: AppSpace.x4),
+                  Text(
+                    closed ? '마감 시각 · 기기 시간' : '다시 연 시각 · 기기 시간',
+                    style: AppType.caption,
+                  ),
+                  Text(_eventTime(lifecycle.at), style: AppType.number),
+                  Text('마감 시각은 운동 종료 시각과 달라요.', style: AppType.caption),
+                ] else if (controller.state.legacySessionIds.contains(
+                  session.id,
+                )) ...[
+                  const SizedBox(height: AppSpace.x4),
+                  Text('이전 기록 · 마감 여부 미확인', style: AppType.caption),
+                ],
+                if (!readOnly) ...[
+                  const SizedBox(height: AppSpace.x4),
+                  if (!closed && !summary.canClose)
+                    Text(
+                      '필수 미기록 ${summary.requiredUnrecordedSets}세트 · 초안 ${summary.draftSets}세트를 먼저 확인해 주세요.',
+                      style: AppType.caption,
+                    ),
+                  if (!closed && controller.saveError != null)
+                    Text('마감 전에 미저장 기록의 저장을 완료해 주세요.', style: AppType.caption),
+                  PrimaryAction(
+                    key: const ValueKey('session-lifecycle-action'),
+                    label: closed ? '기록 다시 열기' : '기록 마감',
+                    busy: controller.sessionActionPending,
+                    onPressed:
+                        controller.saving ||
+                            controller.saveError != null ||
+                            (!closed && !summary.canClose)
+                        ? null
+                        : () => _reviewLifecycle(context, reopen: closed),
+                  ),
+                ],
+              ],
+            ),
+          ),
         ],
       );
     },
   );
+
+  Future<void> _reviewLifecycle(
+    BuildContext context, {
+    required bool reopen,
+  }) async {
+    if (_readOnly || controller.sessionActionPending) return;
+    await showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => _SessionLifecycleDialog(
+        controller: controller,
+        sessionId: session.id,
+        reopen: reopen,
+      ),
+    );
+  }
 
   Future<void> _openDraft(
     BuildContext context,
@@ -220,6 +313,11 @@ class WorkoutScreen extends StatelessWidget {
     _SessionSet current = (exercise: exercise, set: set, number: number);
     var saved = false;
     while (context.mounted) {
+      if (_readOnly ||
+          controller.state.isSessionClosed(session.id) ||
+          controller.sessionActionPending) {
+        break;
+      }
       final editing = current;
       final result = await showModalBottomSheet<_SetEditorResult>(
         context: context,
@@ -292,6 +390,177 @@ class WorkoutScreen extends StatelessWidget {
   }
 }
 
+String _eventTime(DateTime at) {
+  final local = at.toLocal();
+  String two(int value) => value.toString().padLeft(2, '0');
+  return '${isoDate(local)} ${two(local.hour)}:${two(local.minute)}:${two(local.second)}';
+}
+
+class _SessionSummaryView extends StatelessWidget {
+  final SessionSummary summary;
+  const _SessionSummaryView({required this.summary});
+
+  @override
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Wrap(
+        spacing: AppSpace.x4,
+        runSpacing: AppSpace.x2,
+        children: [
+          for (final entry in {
+            '실제 수행': summary.performedSets,
+            '제외': summary.skippedSets,
+            '미기록': summary.unrecordedSets,
+            '초안': summary.draftSets,
+            '수행일 미상': summary.unknownDateSets,
+          }.entries)
+            Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(text: '${entry.key} ', style: AppType.body),
+                  TextSpan(text: '${entry.value}', style: AppType.number),
+                  TextSpan(text: '세트', style: AppType.body),
+                ],
+              ),
+            ),
+        ],
+      ),
+      const SizedBox(height: AppSpace.x4),
+      Text('실제 수행일', style: AppType.caption),
+      if (summary.performedDates.isEmpty)
+        Text(
+          summary.performedSets == 0 ? '실제 수행 기록 없음' : '알려진 수행일 없음',
+          style: AppType.body,
+        )
+      else
+        Wrap(
+          spacing: AppSpace.x4,
+          runSpacing: AppSpace.x2,
+          children: [
+            for (final date in summary.performedDates)
+              Text(isoDate(date), style: AppType.number),
+          ],
+        ),
+      if (summary.unrecordedSets > 0) ...[
+        const SizedBox(height: AppSpace.x2),
+        Text('미기록 세트는 수행이나 제외로 바뀌지 않아요.', style: AppType.caption),
+      ],
+    ],
+  );
+}
+
+class _SessionLifecycleDialog extends StatefulWidget {
+  final TrainingController controller;
+  final String sessionId;
+  final bool reopen;
+  const _SessionLifecycleDialog({
+    required this.controller,
+    required this.sessionId,
+    required this.reopen,
+  });
+
+  @override
+  State<_SessionLifecycleDialog> createState() =>
+      _SessionLifecycleDialogState();
+}
+
+class _SessionLifecycleDialogState extends State<_SessionLifecycleDialog> {
+  static int _sequence = 0;
+  String? _eventId, _error;
+  DateTime? _at;
+  bool _busy = false;
+
+  Future<void> _confirm() async {
+    if (_busy || widget.controller.sessionActionPending) return;
+    _at ??= widget.controller.now().toUtc();
+    _eventId ??=
+        '${widget.sessionId}:${widget.reopen ? 'reopen' : 'close'}:${_at!.microsecondsSinceEpoch}:${_sequence++}';
+    setState(() {
+      _busy = true;
+      _error = null;
+    });
+    final saved = widget.reopen
+        ? await widget.controller.reopenSession(
+            widget.sessionId,
+            eventId: _eventId!,
+            at: _at,
+          )
+        : await widget.controller.closeSession(
+            widget.sessionId,
+            eventId: _eventId!,
+            at: _at,
+          );
+    if (!mounted) return;
+    if (saved) {
+      Navigator.pop(context);
+      return;
+    }
+    setState(() {
+      _busy = false;
+      _error =
+          widget.controller.sessionActionError ??
+          '저장하지 못했어요. 같은 버튼으로 다시 시도해 주세요.';
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) => PopScope(
+    canPop: !_busy,
+    child: AlertDialog(
+      key: const ValueKey('session-lifecycle-dialog'),
+      scrollable: true,
+      backgroundColor: AppColors.bgLift,
+      surfaceTintColor: AppColors.bgLift,
+      title: Text(
+        widget.reopen ? '기록을 다시 열까요?' : '기록을 마감할까요?',
+        style: AppType.heading,
+      ),
+      content: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _SessionSummaryView(
+            summary: widget.controller.state.sessionSummary(widget.sessionId),
+          ),
+          const SizedBox(height: AppSpace.x4),
+          Text(
+            widget.reopen
+                ? '다시 열기 저장이 끝나면 세트를 수정할 수 있어요. 기존 기록과 마감 이력은 남아요.'
+                : '마감 시각은 운동 종료 시각과 달라요. 마감 후 수정하려면 기록을 다시 열어 주세요.',
+            style: AppType.caption,
+          ),
+          if (_error != null) ...[
+            const SizedBox(height: AppSpace.x4),
+            Text(
+              _error!,
+              key: const ValueKey('session-lifecycle-error'),
+              style: AppType.body.copyWith(color: AppColors.warn),
+            ),
+          ],
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: _busy ? null : () => Navigator.pop(context),
+          child: Text('취소', style: AppType.action),
+        ),
+        TextButton(
+          key: const ValueKey('session-lifecycle-confirm'),
+          onPressed: _busy ? null : _confirm,
+          child: Text(
+            _busy
+                ? '저장 중…'
+                : widget.reopen
+                ? '다시 열기'
+                : '마감하기',
+            style: AppType.action,
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
 /// 목표와 실제 수행, 완료·제외·초안을 같은 위치에서 비교하는 세트 행.
 class WorkoutSetRow extends StatelessWidget {
   final int number;
@@ -326,7 +595,7 @@ class WorkoutSetRow extends StatelessWidget {
         : '기록 전';
     final color = done
         ? AppColors.good
-        : skipped
+        : skipped || (readOnly && onPressed == null)
         ? AppColors.muted
         : AppColors.accent;
     return Semantics(
@@ -389,6 +658,18 @@ class WorkoutSetRow extends StatelessWidget {
                           'RIR ${formatNumber(actual!.rir!)}',
                           style: mono(),
                         ),
+                      ],
+                      if (done) ...[
+                        const SizedBox(height: AppSpace.x2),
+                        Text(
+                          actual!.performedDate == null ? '수행일 미상' : '실제 수행일',
+                          style: AppType.caption,
+                        ),
+                        if (actual!.performedDate != null)
+                          Text(
+                            isoDate(actual!.performedDate!),
+                            style: mono(color: AppColors.muted),
+                          ),
                       ],
                       if (actual?.note.isNotEmpty ?? false) ...[
                         const SizedBox(height: AppSpace.x2),
@@ -460,6 +741,7 @@ class WorkoutDraftPreview extends StatelessWidget {
             'repetitions': '반복',
             'rir': 'RIR',
             'note': '메모',
+            'performedDate': '실제 수행일',
           }.entries) ...[
             Text(
               entry.value,
@@ -471,6 +753,8 @@ class WorkoutDraftPreview extends StatelessWidget {
             Text(
               draft[entry.key]?.isNotEmpty == true
                   ? draft[entry.key]!
+                  : entry.key == 'performedDate'
+                  ? '수행일 미상'
                   : '입력 없음',
               key: ValueKey('draft-preview-${entry.key}'),
               style:
@@ -550,8 +834,12 @@ class SetEditor extends StatefulWidget {
 
 class _SetEditorState extends State<SetEditor> {
   final _form = GlobalKey<FormState>();
+  final _dateField = GlobalKey<FormFieldState<String>>();
   late final TextEditingController _weight, _repetitions, _rir, _note;
   late WeightUnit _unit;
+  late String _performedDate;
+  late final bool _allowUnknownDate;
+  String? _entryError;
   bool _committing = false, _hasChanges = false, _finished = false;
   _SetEditorResult? _resultAfterRetry;
 
@@ -560,7 +848,16 @@ class _SetEditorState extends State<SetEditor> {
     super.initState();
     final draft = widget.controller.state.setDrafts[widget.set.id];
     final actual = widget.controller.state.setActuals[widget.set.id];
-    _hasChanges = draft != null;
+    _allowUnknownDate =
+        actual?.status == SetActualStatus.completed &&
+        actual?.performedDate == null;
+    _performedDate =
+        draft?['performedDate'] ??
+        (actual?.status == SetActualStatus.completed
+            ? actual?.performedDate == null
+                  ? ''
+                  : isoDate(actual!.performedDate!)
+            : isoDate(widget.controller.now()));
     _unit = switch (draft?['unit']) {
       'kg' => WeightUnit.kg,
       'lb' => WeightUnit.lb,
@@ -596,9 +893,69 @@ class _SetEditorState extends State<SetEditor> {
     'rir': _rir.text,
     'note': _note.text,
     'unit': _unit.key,
+    'performedDate': _performedDate,
   };
 
+  bool get _editable {
+    if (widget.controller.sessionActionPending) return false;
+    final sessions =
+        widget.controller.state.activePlan?.sessions ??
+        const <PlannedSession>[];
+    final session = sessions
+        .where(
+          (s) => s.exercises.any(
+            (e) => e.sets.any((set) => set.id == widget.set.id),
+          ),
+        )
+        .firstOrNull;
+    return session != null &&
+        !widget.controller.state.isSessionClosed(session.id);
+  }
+
+  String? _dateError(String? value) {
+    if (value == null || value.isEmpty) {
+      return _allowUnknownDate ? null : '실제 수행일을 지정해 주세요.';
+    }
+    try {
+      final date = parseCalendarDate(value);
+      return date.isAfter(calendarDate(widget.controller.now()))
+          ? '오늘 이후 날짜는 선택할 수 없어요.'
+          : null;
+    } on FormatException {
+      return '실제 수행일 형식을 확인해 주세요.';
+    }
+  }
+
+  Future<void> _pickDate() async {
+    if (_committing || !_editable) return;
+    FocusScope.of(context).unfocus();
+    final today = DateUtils.dateOnly(widget.controller.now());
+    DateTime initial = today;
+    if (_dateError(_performedDate) == null && _performedDate.isNotEmpty) {
+      final date = parseCalendarDate(_performedDate);
+      initial = DateTime(date.year, date.month, date.day);
+    }
+    final date = await showDatePicker(
+      context: context,
+      initialDate: initial,
+      firstDate: DateTime(1),
+      lastDate: today,
+      currentDate: today,
+      helpText: '실제 수행일',
+      cancelText: '취소',
+      confirmText: '선택',
+    );
+    if (date == null || !mounted || !_editable) return;
+    setState(() {
+      _performedDate = isoDate(date);
+      _entryError = null;
+    });
+    _dateField.currentState?.didChange(_performedDate);
+    _changed('');
+  }
+
   void _changed(String _) {
+    if (!_editable) return;
     _hasChanges = true;
     _resultAfterRetry = null;
     final draft = _draft;
@@ -610,9 +967,11 @@ class _SetEditorState extends State<SetEditor> {
   }
 
   Future<void> _complete({bool advance = false}) async {
-    if (_committing || _finished) return;
+    if (_committing || _finished || !_editable) return;
     if (!_form.currentState!.validate()) return;
     final rir = _rir.text.trim();
+    final at = widget.controller.now().toUtc();
+    final previous = widget.controller.state.setActuals[widget.set.id];
     await _commit(
       SetActual.completed(
         weight: double.parse(_weight.text.trim()),
@@ -620,13 +979,20 @@ class _SetEditorState extends State<SetEditor> {
         repetitions: int.parse(_repetitions.text.trim()),
         rir: rir.isEmpty ? null : double.parse(rir),
         note: _note.text.trim(),
+        performedDate: _performedDate.isEmpty
+            ? null
+            : parseCalendarDate(_performedDate),
+        recordedAt: previous?.status == SetActualStatus.completed
+            ? previous?.recordedAt
+            : at,
+        updatedAt: at,
       ),
       advance: advance,
     );
   }
 
   Future<void> _commit(SetActual? actual, {bool advance = false}) async {
-    if (_committing || _finished) return;
+    if (_committing || _finished || !_editable) return;
     setState(() {
       _committing = true;
       _resultAfterRetry = advance
@@ -669,6 +1035,10 @@ class _SetEditorState extends State<SetEditor> {
   Future<void> _close() async {
     if (_committing || _finished) return;
     FocusScope.of(context).unfocus();
+    if (!_editable) {
+      _finish(_SetEditorResult.closed);
+      return;
+    }
     if (!_hasChanges && widget.controller.saveError == null) {
       _finish(_SetEditorResult.closed);
       return;
@@ -679,7 +1049,7 @@ class _SetEditorState extends State<SetEditor> {
     });
     final draft = _draft;
     final saved = await widget.controller.update(
-      (state) => state.withSetDraft(widget.set.id, draft),
+      (state) => _hasChanges ? state.withSetDraft(widget.set.id, draft) : state,
     );
     if (!mounted) return;
     setState(() => _committing = false);
@@ -691,6 +1061,7 @@ class _SetEditorState extends State<SetEditor> {
     animation: widget.controller,
     builder: (context, _) {
       final actual = widget.controller.state.setActuals[widget.set.id];
+      final blocked = _committing || !_editable;
       return PopScope(
         canPop: !_committing && widget.controller.saveError == null,
         child: Padding(
@@ -739,10 +1110,66 @@ class _SetEditorState extends State<SetEditor> {
                     ),
                     const SizedBox(height: AppSpace.x6),
                     AbsorbPointer(
-                      absorbing: _committing,
+                      absorbing: blocked,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
+                          FormField<String>(
+                            key: _dateField,
+                            initialValue: _performedDate,
+                            validator: _dateError,
+                            autovalidateMode: AutovalidateMode.always,
+                            builder: (field) => Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Text('실제 수행일', style: AppType.caption),
+                                const SizedBox(height: AppSpace.x2),
+                                Wrap(
+                                  alignment: WrapAlignment.spaceBetween,
+                                  crossAxisAlignment: WrapCrossAlignment.center,
+                                  spacing: AppSpace.x3,
+                                  children: [
+                                    Text(
+                                      _performedDate.isEmpty
+                                          ? '수행일 미상'
+                                          : _performedDate,
+                                      key: const ValueKey(
+                                        'set-performed-date-value',
+                                      ),
+                                      style: _performedDate.isEmpty
+                                          ? AppType.body
+                                          : AppType.number,
+                                    ),
+                                    TextButton(
+                                      key: const ValueKey(
+                                        'set-performed-date-picker',
+                                      ),
+                                      onPressed: blocked ? null : _pickDate,
+                                      child: Text(
+                                        _performedDate.isEmpty
+                                            ? '날짜 지정'
+                                            : '날짜 변경',
+                                        style: AppType.action,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                if (_allowUnknownDate && _performedDate.isEmpty)
+                                  Text(
+                                    '이전 기록에 날짜가 없어요. 지정하기 전까지 미상으로 남겨요.',
+                                    style: AppType.caption,
+                                  ),
+                                if (field.errorText != null)
+                                  Text(
+                                    field.errorText!,
+                                    style: AppType.caption.copyWith(
+                                      color: AppColors.warn,
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: AppSpace.x4),
                           SegmentedButton<WeightUnit>(
                             key: const ValueKey('set-weight-unit'),
                             segments: [
@@ -770,7 +1197,7 @@ class _SetEditorState extends State<SetEditor> {
                                 AppColors.ink,
                               ),
                             ),
-                            onSelectionChanged: _committing
+                            onSelectionChanged: blocked
                                 ? null
                                 : (selection) {
                                     setState(() => _unit = selection.single);
@@ -817,6 +1244,16 @@ class _SetEditorState extends State<SetEditor> {
                       ),
                     ),
                     const SizedBox(height: AppSpace.x4),
+                    if (!_editable)
+                      Text(
+                        '지금은 기록을 수정할 수 없어요. 목록에서 마감 상태를 확인해 주세요.',
+                        style: AppType.caption,
+                      ),
+                    if (_entryError != null)
+                      Text(
+                        _entryError!,
+                        style: AppType.body.copyWith(color: AppColors.warn),
+                      ),
                     if (widget.controller.saveError != null) ...[
                       Text(
                         widget.controller.saveError!,
@@ -849,12 +1286,12 @@ class _SetEditorState extends State<SetEditor> {
                           ? '수정한 기록 저장'
                           : '세트 완료',
                       busy: _committing,
-                      onPressed: () => _complete(),
+                      onPressed: blocked ? null : () => _complete(),
                     ),
                     if (widget.hasNextSet) ...[
                       const SizedBox(height: AppSpace.x2),
                       OutlinedButton(
-                        onPressed: _committing
+                        onPressed: blocked
                             ? null
                             : () => _complete(advance: true),
                         style: OutlinedButton.styleFrom(
@@ -873,7 +1310,7 @@ class _SetEditorState extends State<SetEditor> {
                     ],
                     const SizedBox(height: AppSpace.x2),
                     TextButton(
-                      onPressed: _committing
+                      onPressed: blocked
                           ? null
                           : () => _commit(
                               SetActual.skipped(note: _note.text.trim()),
@@ -888,7 +1325,7 @@ class _SetEditorState extends State<SetEditor> {
                     ),
                     if (actual != null)
                       TextButton(
-                        onPressed: _committing ? null : () => _commit(null),
+                        onPressed: blocked ? null : () => _commit(null),
                         style: TextButton.styleFrom(
                           minimumSize: const Size(
                             double.infinity,
