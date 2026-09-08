@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'app/training_controller.dart';
 import 'domain/training_program.dart';
 import 'flow_components.dart';
+import 'exercise_guide_screen.dart';
 import 'prescription_widgets.dart';
 import 'tokens.dart';
 import 'widgets.dart';
@@ -38,6 +39,18 @@ class _SearchScreenState extends State<SearchScreen> {
       return FlowPage(
         title: '운동 검색',
         children: [
+          OutlinedButton.icon(
+            style: OutlinedButton.styleFrom(
+              minimumSize: const Size(AppSize.touch, AppSize.touch),
+            ),
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => const ExerciseGuidesScreen(),
+              ),
+            ),
+            icon: const Icon(Icons.menu_book_outlined, size: AppSize.icon),
+            label: Text('운동·용어 가이드', style: AppType.action),
+          ),
           ConsoleField(
             key: const ValueKey('exercise-search-query'),
             controller: _query,
@@ -203,6 +216,7 @@ class _ExercisePlanDetail extends StatelessWidget {
     children: [
       Text(entry.exercise.name, style: AppType.title),
       Text('${entry.source} · 읽기 전용', style: AppType.caption),
+      ExerciseGuideLink(exerciseName: entry.exercise.name),
       GlassPanel(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

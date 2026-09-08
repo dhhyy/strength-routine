@@ -3,6 +3,7 @@ import 'app/training_controller.dart';
 import 'domain/recent_lift_record.dart';
 import 'domain/training_program.dart';
 import 'flow_components.dart';
+import 'exercise_guide_screen.dart';
 import 'prescription_widgets.dart';
 import 'tokens.dart';
 import 'widgets.dart';
@@ -153,6 +154,7 @@ class ProgramDetailScreen extends StatelessWidget {
               for (final exercise in session.exercises) ...[
                 const SizedBox(height: AppSpace.x4),
                 Text(exercise.name, style: AppType.body),
+                ExerciseGuideLink(exerciseName: exercise.name),
                 SupersetNote(group: exercise.supersetGroup),
                 const SizedBox(height: AppSpace.x1),
                 Text(
@@ -542,6 +544,7 @@ class _PlanReviewScreenState extends State<PlanReviewScreen> {
               for (final exercise in session.exercises) ...[
                 const SizedBox(height: AppSpace.x4),
                 Text(exercise.name, style: AppType.body),
+                ExerciseGuideLink(exerciseName: exercise.name),
                 SupersetNote(group: exercise.supersetGroup),
                 for (var i = 0; i < exercise.sets.length; i++) ...[
                   const SizedBox(height: AppSpace.x2),

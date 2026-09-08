@@ -1,0 +1,90 @@
+00:00 +0: loading /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/exercise_guides_test.dart
+00:00 +0: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/exercise_guides_test.dart: every actual bundled exercise has one complete offline guide
+00:00 +1: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/exercise_guides_test.dart: aliases are explicit unambiguous and never fuzzy exercise identity
+00:00 +2: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/exercise_guides_test.dart: search filters names aliases and equipment without inventing results
+00:00 +3: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/exercise_guides_test.dart: source links use reviewed primary publishers and glossary covers app meanings
+00:00 +4: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/exercise_guide_screen_test.dart: guide search opens offline instructions and glossary
+00:01 +5: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/exercise_guide_screen_test.dart: empty search is recoverable and unknown name has no misleading action
+00:02 +6: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/exercise_guide_screen_test.dart: source failure retains offline body and retry opens exact reviewed URI
+
+Warning: A call to tap() with finder "Found 1 widget with text "출처 다시 열기": [
+  Text("출처 다시 열기", dependencies: [DefaultSelectionStyle, DefaultTextStyle, MediaQuery, _ScrollableScope]),
+]" derived an Offset (Offset(187.5, 845.0)) that would not hit test on the specified widget.
+Maybe the widget is actually off-screen, or another widget is obscuring it, or the widget cannot receive pointer events.
+Indeed, Offset(187.5, 845.0) is outside the bounds of the root of the render tree, Size(375.0, 812.0).
+The finder corresponds to this RenderBox: RenderParagraph#3f2d7 relayoutBoundary=up24
+The hit test result at that offset is: HitTestResult(HitTestEntry<HitTestTarget>#a7663(_ReusableRenderView#337f3), HitTestEntry<HitTestTarget>#d0626(<AutomatedTestWidgetsFlutterBinding>))
+#0      WidgetController._getElementPoint (package:flutter_test/src/controller.dart:2077:25)
+#1      WidgetController.getCenter (package:flutter_test/src/controller.dart:1861:12)
+#2      WidgetController.tap (package:flutter_test/src/controller.dart:1041:7)
+#3      main.<anonymous closure> (file:///Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/exercise_guide_screen_test.dart:155:20)
+<asynchronous suspension>
+#4      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:193:15)
+<asynchronous suspension>
+#5      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1064:5)
+<asynchronous suspension>
+#6      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+To silence this warning, pass "warnIfMissed: false" to "tap()".
+To make this warning fatal, set WidgetController.hitTestWarningShouldBeFatal to true.
+
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: no matching candidates
+  Actual: _TextWidgetFinder:<Found 1 widget with text "출처 연결 실패": [
+            Text("출처 연결 실패", inherit: true, color: Color(alpha: 1.0000, red: 0.8627, green: 0.8902,
+blue: 0.9216, colorSpace: ColorSpace.sRGB), family: IBM Plex Sans KR, size: 18.0, weight: 600,
+style: normal, letterSpacing: 0.0, dependencies: [DefaultSelectionStyle, DefaultTextStyle,
+MediaQuery]),
+          ]>
+   Which: means one was found but none were expected
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/exercise_guide_screen_test.dart:157:7)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:193:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1064:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/exercise_guide_screen_test.dart line 157
+The test description was:
+  source failure retains offline body and retry opens exact reviewed URI
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:02 +6 -1: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/exercise_guide_screen_test.dart: source failure retains offline body and retry opens exact reviewed URI [E]
+  Test failed. See exception logs above.
+  The test description was: source failure retains offline body and retry opens exact reviewed URI
+  
+00:02 +6 -1: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/exercise_guide_screen_test.dart: opening disables duplicate tap and thrown platform error is recoverable
+00:02 +7 -1: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/exercise_guide_screen_test.dart: long guide and glossary remain readable with large Korean text
+00:02 +8 -1: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/exercise_guide_screen_test.dart: search tab and actual program detail both connect to guides
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following StateError was thrown running a test:
+Bad state: Too many elements
+
+When the exception was thrown, this was the stack:
+#0      Iterable.single (dart:core/iterable.dart:696:24)
+#1      WidgetController.widget (package:flutter_test/src/controller.dart:804:30)
+#2      WidgetController.scrollUntilVisible.<anonymous closure> (package:flutter_test/src/controller.dart:2341:15)
+#5      TestAsyncUtils.guard (package:flutter_test/src/test_async_utils.dart:74:41)
+#6      WidgetController.scrollUntilVisible (package:flutter_test/src/controller.dart:2339:27)
+#7      main.<anonymous closure> (file:///Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/exercise_guide_screen_test.dart:232:18)
+<asynchronous suspension>
+#8      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:193:15)
+<asynchronous suspension>
+#9      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1064:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided 3 frames from dart:async and package:stack_trace)
+
+The test description was:
+  search tab and actual program detail both connect to guides
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:03 +8 -2: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/exercise_guide_screen_test.dart: search tab and actual program detail both connect to guides [E]
+  Test failed. See exception logs above.
+  The test description was: search tab and actual program detail both connect to guides
+  
+00:03 +8 -2: Some tests failed.

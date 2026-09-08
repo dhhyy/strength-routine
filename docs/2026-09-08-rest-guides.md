@@ -47,3 +47,78 @@
 테스트가 검증한 범위는 headless Flutter 위젯·임시 파일이며 실제 OS 앱 재실행이나 Simulator 동작을 뜻하지 않는다.
 
 휴식 단위 최종: `flutter test test/rest_preferences_test.dart test/settings_screen_test.dart test/rest_timer_test.dart test/local_settings_store_test.dart --dart-define=SETTINGS_RENDER_DIR=research/2026-09-08/rest-guides/rest-final --reporter expanded` **32개 통과**. `rest-settings-large.png`에서 단축한 자동 시작 라벨이 한 줄로 읽히며 입력·저장·설명·스위치가 잘리지 않음을 직접 확인했다. PNG는 실제 KR/Mono 폰트로 렌더했다. 새 테스트 수는 도메인7+위젯2=9개이며32개 전체가 새 테스트라는 뜻은 아니다.
+
+
+### 4.2 가이드 출처와 콘텐츠 범위
+
+조사일: 2026-09-08. ACE/NASM 자격교육기관의 직접 작성 자료, Muscle & Strength·StrengthLog 자체 운동 안내, REP Fitness의 직접 작성 동작 안내를 읽었다. 아래 링크는 검색 결과가 아닌 실제 원문으로 열어 본 페이지이다. 인용문/사진/영상을 복사하지 않고 시작·움직임·확인 세 항목을 독립적으로 짧게 작성했다. 원문에 포함된 근육 증가·부상 방지·치료 효능이나 권장 세트/반복을 앱 처방으로 옮기지 않았다.
+
+| 실제 카탈로그 종목 | 검토 원문 |
+|---|---|
+| 고블렛 스쿼트 | [ACE · Goblet Squat](https://www.acefitness.org/resources/everyone/exercise-library/362/goblet-squat/) |
+| 덤벨 스쿼트 | [Muscle & Strength · Dumbbell Squat](https://www.muscleandstrength.com/exercises/dumbbell-squat.html) |
+| 바벨 백스쿼트 | [ACE · Back Squat](https://www.acefitness.org/resources/everyone/exercise-library/11/back-squat/) |
+| 레그 프레스 | [NASM · Leg Press](https://www.nasm.org/resource-center/exercise-library/leg-press) |
+| 덤벨 루마니안 데드리프트 | [NASM · Dumbbell Romanian Deadlift](https://www.nasm.org/resource-center/exercise-library/dumbbell-romanian-deadlift) |
+| 바벨 루마니안 데드리프트 | [ACE · Romanian Deadlift](https://www.acefitness.org/continuing-education/certified/may-2025/8865/the-ace-do-it-better-series-the-romanian-deadlift/) |
+| 시티드 레그 컬 | [ACE · Hamstrings study exercise instructions](https://www.acefitness.org/continuing-education/certified/february-2018/6896/ace-sponsored-research-what-is-the-best-exercise-for-the-hamstrings/) |
+| 덤벨 글루트 브리지 | [NASM · Squat alternatives / Floor bridges](https://www.nasm.org/resource-center/blog/squat-alternatives) |
+| 덤벨 스탠딩 카프 레이즈 | [REP Fitness · Dumbbell calf raises](https://repfitness.com/blogs/training/dumbbell-calf-raises) |
+| 덤벨 벤치프레스 | [ACE · Dumbbell chest press](https://www.acefitness.org/resources/everyone/exercise-library/19/chest-press/) |
+| 덤벨 인클라인 프레스 | [ACE · Incline chest press](https://www.acefitness.org/resources/everyone/exercise-library/25/incline-chest-press/) |
+| 덤벨 플로어 프레스 | [Muscle & Strength · Dumbbell floor press](https://www.muscleandstrength.com/exercises/dumbbell-floor-press.html) |
+| 바벨 벤치프레스 | [ACE · Barbell chest press](https://www.acefitness.org/resources/everyone/exercise-library/5/chest-press/) |
+| 머신 체스트 프레스 | [ACE · Seated chest press](https://www.acefitness.org/resources/everyone/exercise-library/188/seated-chest-press/) |
+| 덤벨 숄더 프레스 | [ACE · Seated overhead press](https://www.acefitness.org/resources/everyone/exercise-library/45/seated-overhead-press/) |
+| 바벨 오버헤드프레스 | [Muscle & Strength · Military press](https://www.muscleandstrength.com/exercises/military-press.html) |
+| 덤벨 레터럴 레이즈 | [ACE · Lateral raise](https://www.acefitness.org/resources/everyone/exercise-library/26/lateral-raise/) |
+| 랫 풀다운 | [ACE · Seated lat pulldown](https://www.acefitness.org/resources/everyone/exercise-library/158/seated-lat-pulldown/) |
+| 시티드 케이블 로우 | [Muscle & Strength · Seated cable row](https://www.muscleandstrength.com/exercises/seated-row.html) |
+| 덤벨 벤트오버 로우 | [Muscle & Strength · Bent over dumbbell row](https://www.muscleandstrength.com/exercises/bent-over-dumbbell-row.html) |
+| 덤벨 체스트 서포티드 로우 | [Muscle & Strength · Chest supported dumbbell row](https://www.muscleandstrength.com/exercises/chest-supported-dumbbell-row) |
+| 덤벨 바이셉스 컬 | [ACE · Seated biceps curl](https://www.acefitness.org/resources/everyone/exercise-library/44/seated-biceps-curl/) |
+| 케이블 트라이셉스 프레스다운 | [StrengthLog · Tricep pushdown with bar](https://www.strengthlog.com/tricep-pushdown-with-bar/) |
+| 크런치 (맨몸) | [StrengthLog · Crunch](https://www.strengthlog.com/crunch/) |
+
+자세가 이름만으로 확정되지 않는 덤벨 숄더 프레스/바이셉스 컬은 화면에 ‘앉은 자세 기준’, 케이블 프레스다운은 ‘바 손잡이 기준’을 표시한다. 덤벨 스쿼트는 양손에 들고 몸 옆에 둔 자세, 체스트 서포티드 로우는 인클라인 벤치에 가슴을 대는 자세로 명시했다. 시티드 레그 컬은 ACE 연구의 수행 방법을 참고하고 NASM 페이지의 패드 설명에 혼동 여지가 있어 ACE를 앱의 출처로 선택했다. RDL의 동작 범위·스쿼트 깊이는 원문의 특정 깊이를 모든 사용자에게 강요하지 않고 몸통 지지가 가능한 범위로 작성했다.
+
+`guideForExercise`는 작성된 이름·별칭의 정확한 일치(양끝 공백과 영문 대소문자만 정리)만 허용한다. 장비가 생략된 ‘스쿼트’나 ‘덤벨 벤치프레스 변형’은 연결하지 않는다. 가이드 검색에서는 부분 이름/장비를 찾을 수 있지만 기록 복사나 종목 동일성 판단에 이 검색 결과를 사용하지 않는다. 24개 목록과 9개 용어 본문은 Dart 상수이며 파일 다운로드나 원격 응답 없이 제공한다.
+
+새 페이지는 `ExerciseGuidesScreen`(검색/빈 상태), `ExerciseGuideScreen`(본문/원문 열기/진행/실패/재시도), `TrainingGlossaryScreen`(용어), `ExerciseGuideLink`(정확한 종목 연결/미등록 안내)이다. 검색 화면·운동 구성 상세·프로그램 구성 및 시작 전 검토에 링크를 연결했다. `GuideText`가 한글과 라틴·숫자 폰트를 분리한다. 외부 링크 어댑터는 `url_launcher`의 `LaunchMode.externalApplication`을 사용하며 중복 열기를 막는다.
+
+### 4.3 가이드 검증과 렌더 수정
+
+`flutter test test/exercise_guides_test.dart test/exercise_guide_screen_test.dart --dart-define=GUIDE_RENDER_DIR=research/2026-09-08/rest-guides/guide-final --reporter expanded` **10개 통과**(도메인4·위젯6). 실제 카탈로그의 24개 이름 전체, 고유 별칭, 미등록/모호한 이름, 장비/영문 검색,9개 용어, 정확한 외부 URI, false/throw 실패, 열기 중 상태, 재시도, 프로그램 상세·검색 진입, 큰 글자 경로를 검증했다.
+
+처음 375px·1.8배 렌더에서 긴 종목 제목이 ‘서포티/드’로 끊겼다. 가이드 본문 제목을 heading 토큰으로 조정해 전체 종목 이름이 읽히게 했다. 링크 실패 패널이 기존 버튼 앞에 삽입되어 버튼을 화면 밖으로 밀어내던 문제는 실패 패널을 출처 버튼 뒤에 두어 해결했다. 테스트의 화면 교체 시 기존 Navigator 경로가 남던 설정도 분리하여 실제 새 진입으로 검사했다. 처음 실패 로그/PNG와 최종 통과 로그/PNG를 `guide-first/`와 `guide-final/`에 각각 보존했다. 최종 큰 글자 제목·본문·출처 재시도 화면을 직접 열어 확인했다.
+
+외부 링크 시험은 주입한 어댑터의 성공/실패를 확인한 headless 시험이다. 실제 iOS/Android 브라우저 전환·뒤로 복귀·오프라인 네트워크·스크린리더·실제 키보드 검증은 운영 확인표에 남는다. 앱이 사용자 동작을 측정하거나 자세의 정확성을 판정한다고 설명하지 않는다.
+
+## 5. 사용자가 확인할 순서
+
+1. 프로필 → 앱 설정에서 기본 휴식을 90초로 저장하고 자동 시작은 꺼진 상태를 확인한다.
+2. 휴식 처방이 없는 세트를 완료해 수동 휴식 시작에90초가 표시되는지 확인한다.
+3. 설정에서 자동 시작을 켜고 새 세트를 완료해 타이머의 ‘시작 당시 사용자 기본값’ 출처를 확인한다.
+4. 설정값을120초로 바꾸고 이미 시작한 타이머의 원래 시간과 출처가 유지되는지 확인한다.
+5. 처방0초인 세트는 기본값이 있어도 타이머가 시작되지 않는지 확인한다.
+6. 진행 중 타이머가 있을 때 새 세트를 완료하고 교체 확인을 취소하여 원래 타이머가 유지되는지 확인한다.
+7. 기존 완료 기록을 수정해 자동 타이머가 다시 시작되지 않는지 확인한다.
+8. 검색 → 운동·용어 가이드에서 종목·장비·영문 별칭을 검색하고 내용을 연다.
+9. 네트워크를 끊은 뒤에도 본문을 읽을 수 있는지 확인하고 원문 열기 실패 후 앱으로 돌아온다.
+10. 프로그램 상세와 시작 전 검토에서 같은 종목 가이드를 열고, 미등록 관리자 종목에는 가이드 없음이 표시되는지 확인한다.
+11. 기기 글자 크기를 키워 모든 입력/버튼/본문이 스크롤로 도달 가능한지 확인한다.
+12. 기기를 종료하고 다시 켜 설정·타이머를 확인한다. 실제 OS 종료/복귀 결과는 수행한 기기와 시간을 별도로 기록한다.
+
+## 6. 한 문장 변경 목록
+
+- 휴식 처방이 없는 세트에 적용할 사용자 기본 시간을 기기에 저장한다.
+- 새 완료 기록의 저장이 성공한 뒤에만 자동 휴식을 시작한다.
+- 명시0초는 사용자 기본값으로 대체하지 않는다.
+- 진행 중인 타이머의 처방/사용자 출처와 시작 당시 시간을 보존한다.
+- 기존 타이머를 교체할 때 사용자의 확인을 받는다.
+- 기본5개 프로그램의24개 종목에 오프라인 동작 설명을 연결한다.
+-9개 운동 용어를 앱의 실제 기록·처방 규칙과 함께 설명한다.
+- 미등록 종목에는 다른 종목의 가이드를 추정해서 보여주지 않는다.
+- 출처 링크 열기 실패 뒤에도 본문과 재시도 버튼을 유지한다.
+
+가이드 연결 회귀: `flutter test test/exercise_guides_test.dart test/exercise_guide_screen_test.dart test/advanced_workout_screen_test.dart --reporter expanded` **16개 통과**. 기존 고급 처방 표시·슈퍼세트 순서·수동 타이머·실패/재시도·보관 읽기 전용 검사를 함께 통과했다. [회귀 로그](../research/2026-09-08/rest-guides/guide-regression.txt).

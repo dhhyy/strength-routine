@@ -1,0 +1,12 @@
+00:00 +0: loading /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/exercise_guides_test.dart
+00:00 +0: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/exercise_guides_test.dart: every actual bundled exercise has one complete offline guide
+00:00 +1: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/exercise_guides_test.dart: aliases are explicit unambiguous and never fuzzy exercise identity
+00:00 +2: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/exercise_guides_test.dart: search filters names aliases and equipment without inventing results
+00:00 +3: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/exercise_guides_test.dart: source links use reviewed primary publishers and glossary covers app meanings
+00:00 +4: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/exercise_guide_screen_test.dart: guide search opens offline instructions and glossary
+00:01 +5: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/exercise_guide_screen_test.dart: empty search is recoverable and unknown name has no misleading action
+00:02 +6: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/exercise_guide_screen_test.dart: source failure retains offline body and retry opens exact reviewed URI
+00:02 +7: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/exercise_guide_screen_test.dart: opening disables duplicate tap and thrown platform error is recoverable
+00:02 +8: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/exercise_guide_screen_test.dart: long guide and glossary remain readable with large Korean text
+00:02 +9: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/exercise_guide_screen_test.dart: search tab and actual program detail both connect to guides
+00:02 +10: All tests passed!
