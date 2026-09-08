@@ -1,0 +1,14 @@
+{
+  "base": "064509f",
+  "checked_paths": [
+    "assets",
+    "landing",
+    "pubspec.yaml",
+    "pubspec.lock",
+    "lib/data",
+    "lib/domain",
+    "research/2026-09-08/review"
+  ],
+  "changed_paths": [],
+  "unchanged": true
+}
