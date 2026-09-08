@@ -193,3 +193,11 @@ Fixed 앱바·Fluid 스크롤·Hybrid 편집 시트/마감 확인창으로 조�
 선택 미기록 세트가 마감된 뒤에도 청록색으로 보여 편집 가능성으로 오인할 수 있었다. 비클릭 읽기 전용 행을 muted로 조정하고 재개 버튼만 주요 행동으로 남겼다. 실패 확인창의 중복 보존 안내를 줄였다. [큰 글자 마감](research/2026-09-08/session-lifecycle/closed-large.png), [마감 실패](research/2026-09-08/session-lifecycle/close-error.png), [복수 날짜 검토](research/2026-09-08/session-lifecycle/dated-review.png)를 다시 확인했다.
 
 수행일 카드에는 선택한 날짜의 수행 수와 세션 전체 수를 분리했다. [세션 카드](research/2026-09-08/session-lifecycle/performed-session-large.png)는 1세트/3세트·미상 1세트를 서로 다른 의미로 표시한다. 모두 Flutter headless 위젯 렌더이며 OS 기기 캡처가 아니다. 전체 153개 회귀·정적 분석과 데이터 보존 수정은 [최종 보고서](docs/2026-09-08-session-lifecycle-verification.md)에 기록했다.
+
+## 9/8 · 관리자 정밀 편집 — 구현 전 방향
+
+운영자가 특정 주차·세션·세트만 바꾸려는데 현재 한 주 반복·운동당 동일 처방 입력만 지원하는 것이 문제다. 새 정밀 편집은 기존 프로그램을 원형 그대로 읽어 **주차 선택→세션 선택→운동→개별 세트** 순서로 좁혀 수정한다. 기존 Console v2 관리자 화면과 [관리자 렌더](research/2026-09-08/admin/admin-editor.png)의 폼/검토 동작을 재사용한다. 스타일을 교체하거나 웹 관리 사이트로 전환하지 않는다.
+
+불변: 운영자 한 명, 내부 진입점, 일반 앱 5탭, 현재 프로그램 스냅샷·실제 운동 기록·날짜·D5, 기존 한 주 반복 편집기의 원문 초안. Fixed 앱바·Hybrid 주차/세션 선택·Fluid 폼/세트 목록으로 조립한다. 모든 주를 한 화면에 펼치지 않고 선택한 범위를 명시한다. 복사는 대상 주와 교체 범위를 확인하고, 삭제·복사와 반복 입력은 되돌리기로 복구할 수 있게 한다.
+
+날짜·숫자·ID는 mono, 한글은 KR, 기존 AppType/AppSpace/AppSize/AppColors/GlassPanel/FlowPage를 유지한다. 세트별 반복·RIR·필수/선택·중량 방식이 서로 다르다는 것을 실제 행의 값으로 확인한다. 저장 중·미저장 실패·유효성 오류·취소·복구를 분리한다. 1200px 운영 화면과 375px·큰 글자·키보드 조건에서 렌더 비판→수정→재렌더를 수행한다. 상세 흐름과 데이터 계약은 `docs/2026-09-08-admin-precise-editor.md`에 남긴다.
