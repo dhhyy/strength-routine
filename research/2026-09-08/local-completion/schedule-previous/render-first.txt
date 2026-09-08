@@ -1,0 +1,9 @@
+00:00 +0: loading /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/schedule_previous_screen_test.dart
+00:00 +0: schedule date review is explicit and cancel preserves original
+00:01 +1: apply persists reviewed schedule and stale review is blocked
+00:01 +2: schedule storage failure retains candidate for retry
+00:02 +3: large schedule text stays scrollable and missed workouts keep dates
+00:02 +4: copy confirms provenance and overwrite, preserves raw fields and reloads draft
+00:03 +5: empty previous records and large source dialog remain readable
+00:03 +6: copy save failure retains new input and retry persists without completing
+00:03 +7: All tests passed!

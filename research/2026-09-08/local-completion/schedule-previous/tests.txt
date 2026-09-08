@@ -1,0 +1,28 @@
+00:00 +0: loading /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/schedule_edit_test.dart
+00:00 +0: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/schedule_edit_test.dart: only schedule dates change and all existing metadata survives
+00:00 +1: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/schedule_edit_test.dart: today and past are protected
+00:00 +2: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/schedule_edit_test.dart: future actuals, skips, drafts, notes and legacy state are protected
+00:00 +3: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/schedule_edit_test.dart: closed and reopened future sessions stay protected
+00:00 +4: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/schedule_edit_test.dart: unknown sessions, weekdays, order and nonfuture dates fail precisely
+00:00 +5: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/schedule_edit_test.dart: unchanged protected dates are a no-op
+00:00 +6: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/schedule_edit_test.dart: durable review saves dates and rejects a stale revision
+00:00 +7: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/schedule_edit_test.dart: save failure preserves original state and can retry same review
+00:00 +8: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/previous_record_test.dart: original kg/lb and only weight, unit and reps copy into raw draft
+00:00 +9: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/previous_record_test.dart: sort by performed date instead of scheduled date
+00:00 +10: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/previous_record_test.dart: unknown, same/future day, excluded and draft sources are absent
+00:00 +11: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/previous_record_test.dart: unknown current performed date does not infer date order
+00:00 +12: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/previous_record_test.dart: different program or version with same display name is not merged
+00:00 +13: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/previous_record_test.dart: matching immutable program snapshot across plans is supported
+00:00 +14: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/previous_record_test.dart: ambiguous exercise identifier fails closed
+00:00 +15: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/previous_record_test.dart: warm-up and work set kinds are not combined
+00:00 +16: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/previous_record_test.dart: different set ordinal is never borrowed
+00:03 +17: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/schedule_previous_screen_test.dart: schedule date review is explicit and cancel preserves original
+00:04 +18: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/schedule_previous_screen_test.dart: apply persists reviewed schedule and stale review is blocked
+00:04 +19: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/schedule_previous_screen_test.dart: schedule storage failure retains candidate for retry
+00:05 +20: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/schedule_previous_screen_test.dart: large schedule text stays scrollable and missed workouts keep dates
+00:05 +21: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/schedule_previous_screen_test.dart: copy confirms provenance and overwrite, preserves raw fields and reloads draft
+00:06 +22: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/schedule_previous_screen_test.dart: empty previous records and large source dialog remain readable
+00:06 +23: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/schedule_previous_screen_test.dart: copy save failure retains new input and retry persists without completing
+00:07 +24: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/schedule_previous_screen_test.dart: review crossing midnight cannot move a now-current session
+00:07 +25: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/schedule_previous_screen_test.dart: changed previous source is rejected after review
+00:07 +26: All tests passed!

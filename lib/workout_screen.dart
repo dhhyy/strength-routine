@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'app/training_controller.dart';
+import 'domain/previous_record.dart';
+import 'previous_record_dialog.dart';
 import 'domain/recent_lift_record.dart';
 import 'domain/training_program.dart';
 import 'flow_components.dart';
@@ -1030,6 +1032,50 @@ class _SetEditorState extends State<SetEditor> {
     );
   }
 
+  Future<void> _copyPrevious() async {
+    if (_committing || !_editable) return;
+    FocusScope.of(context).unfocus();
+    DateTime? before;
+    try {
+      before = parseCalendarDate(_performedDate);
+    } on FormatException {
+      /* Unknown dates are not ordered. */
+    }
+    final revision = widget.controller.revision;
+    final records = previousSetRecords(
+      widget.controller.state,
+      targetSetId: widget.set.id,
+      performedBefore: before,
+      asOf: widget.controller.now(),
+    );
+    final selected = await choosePreviousRecord(context, records);
+    if (selected == null || !mounted || !_editable) return;
+    if (_weight.text.isNotEmpty || _repetitions.text.isNotEmpty) {
+      if (!await confirmPreviousOverwrite(context) || !mounted || !_editable) {
+        return;
+      }
+    }
+    final current = previousSetRecords(
+      widget.controller.state,
+      targetSetId: widget.set.id,
+      performedBefore: before,
+      asOf: widget.controller.now(),
+    );
+    if (widget.controller.revision != revision ||
+        !current.any((record) => record.fingerprint == selected.fingerprint)) {
+      setState(() => _entryError = '이전 기록이 바뀌었어요. 다시 선택해 주세요.');
+      return;
+    }
+    final copied = selected.copyInto(_draft);
+    setState(() {
+      _weight.text = copied['weight']!;
+      _repetitions.text = copied['repetitions']!;
+      _unit = selected.actual.unit!;
+      _entryError = null;
+    });
+    _changed('');
+  }
+
   Future<void> _complete({bool advance = false}) async {
     if (_committing || _finished || !_editable) return;
     if (!_form.currentState!.validate()) return;
@@ -1233,6 +1279,18 @@ class _SetEditorState extends State<SetEditor> {
                                   ),
                               ],
                             ),
+                          ),
+                          const SizedBox(height: AppSpace.x3),
+                          OutlinedButton.icon(
+                            key: const ValueKey('previous-record-open'),
+                            onPressed:
+                                blocked ||
+                                    widget.controller.saving ||
+                                    widget.controller.saveError != null
+                                ? null
+                                : _copyPrevious,
+                            icon: const Icon(Icons.history),
+                            label: Text('이전 기록 가져오기', style: AppType.action),
                           ),
                           const SizedBox(height: AppSpace.x4),
                           SegmentedButton<WeightUnit>(
