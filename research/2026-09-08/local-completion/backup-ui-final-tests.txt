@@ -1,0 +1,7 @@
+00:00 +0: loading /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/backup_screen_test.dart
+00:00 +0: export creates restorable file and cancel preserves current state
+00:02 +1: review cancellation and explicit restore replace only after confirmation
+00:04 +2: corrupt import retains current record and supports retry
+00:05 +3: review and recovery controls fit narrow large text
+00:07 +4: unreadable current file shows unknown counts and can restore
+00:08 +5: All tests passed!

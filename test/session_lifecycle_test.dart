@@ -413,7 +413,7 @@ void main() {
         json.remove(field);
       }
       final text = jsonEncode({
-        'schemaVersion': fields.isEmpty ? 5 : 3,
+        'schemaVersion': fields.isEmpty ? 7 : 3,
         'state': json,
       });
       await file.writeAsString(text);

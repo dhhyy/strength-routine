@@ -202,4 +202,36 @@ void main() {
     expect(find.text('처리하지 못했어요'), findsOneWidget);
     expect(controller.state.activePlan, isNotNull);
   });
+  testWidgets('unreadable current file shows unknown counts and can restore', (
+    tester,
+  ) async {
+    gateway.input = TrainingBackupService(controller).export();
+    await tester.runAsync(() async {
+      await controller.store.file.writeAsString('broken current data');
+      await controller.initialize();
+    });
+    await pump(tester);
+    await tap(tester, '백업 파일 가져오기');
+    await tester.scrollUntilVisible(
+      find.text('복원 전 확인'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('기록을 읽지 못해 개수를 확인할 수 없어요.'), findsOneWidget);
+    await capture(tester, 'backup-unreadable-review');
+    await tap(tester, '검토한 기록으로 복원');
+    await tester.tap(find.text('기록 교체'));
+    await flush(tester);
+    expect(controller.loadError, isNull);
+    expect(controller.state.activePlan, isNotNull);
+    expect(
+      await tester.runAsync(
+        () => TrainingBackupService(
+          controller,
+        ).unreadableRecoveryFile.readAsString(),
+      ),
+      'broken current data',
+    );
+  });
 }

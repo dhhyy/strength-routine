@@ -41,8 +41,9 @@ class _BackupScreenState extends State<BackupScreen> {
         );
       }
     } catch (_) {
-      if (mounted)
+      if (mounted) {
         setState(() => _error = '파일을 처리하지 못했어요. 기록과 선택한 원본은 유지돼요. 다시 시도해 주세요.');
+      }
     } finally {
       if (mounted) setState(() => _busy = false);
     }
@@ -203,7 +204,9 @@ class _BackupScreenState extends State<BackupScreen> {
                     const SizedBox(height: AppSpace.x3),
                     Text('현재 기록', style: AppType.heading),
                     Text(
-                      _summary(widget.controller.state),
+                      widget.controller.loadError != null
+                          ? '기록을 읽지 못해 개수를 확인할 수 없어요.'
+                          : _summary(widget.controller.state),
                       style: AppType.body,
                     ),
                     const SizedBox(height: AppSpace.x3),
