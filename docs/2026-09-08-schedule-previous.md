@@ -34,3 +34,14 @@
 ## 5. 구현·검증 결과
 
 구현 전 명세 완료. 실제 결과와 커밋은 후속 기록한다.
+
+### 5.1 LC02 완료
+
+- `lib/domain/schedule_edit.dart`: `scheduleProtectionReason`과 `withReviewedSchedule`가 날짜 조건과 사용자 기록 보호를 검증한다.
+- `lib/schedule_screen.dart`: 미래 날짜 선택, 유지 일정 펼침, 변경 전후 검토, 명시 적용, 저장 실패 재시도, 최신 일정 재로딩을 연결했다.
+- `lib/training_screens.dart`: 오늘 루틴에 일정 편집과 놓친 운동 전체 목록을 연결했다. 프로필의 백업 진입도 LC01 화면에 연결했다.
+- `TrainingController.commitReviewedState`의 revision 잠금과 저장 성공 후 반영을 사용하며, 화면 적용 직전 오늘 날짜를 다시 확인한다.
+- `test/schedule_edit_test.dart` 8개가 실제 파일 재로딩·저장 실패·D5 이력·수행일 미상·과거/기록 보호를 검증했다.
+- 일정 화면 5개와 이전 복사 화면 4개를 묶은 통합 화면 시험은 `test/schedule_previous_screen_test.dart`에 남긴다.
+
+일정 기능 확인 순서: 오늘 루틴 → 남은 일정 편집 → 미래 세션 날짜 선택 → 선택했던 훈련 요일의 뒤 날짜 선택 → 변경 내용 확인 → 변경 전후 비교 → 일정 적용. 뒤로 가면 변경하지 않는다. 기록이 있는 미래 세션은 ‘유지되는 일정’의 보호 이유로 확인한다. 놓친 운동 모두 보기에서 과거 세션을 열면 ‘계획한 날짜’는 원래 날짜로 남고 실제 수행일은 별도 입력한다.

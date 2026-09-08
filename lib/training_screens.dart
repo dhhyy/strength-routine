@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'app/training_controller.dart';
+import 'backup_screen.dart';
+import 'schedule_screen.dart';
 import 'app/settings_controller.dart';
 import 'domain/recent_lift_record.dart';
 import 'settings_screen.dart';
@@ -81,6 +83,16 @@ class ActiveTodayScreen extends StatelessWidget {
           '${plan.program.trainerName} · ${plan.program.weeks}주',
           style: AppType.caption,
         ),
+        TextButton.icon(
+          key: const ValueKey('open-schedule-editor'),
+          onPressed: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => ScheduleScreen(controller: controller),
+            ),
+          ),
+          icon: const Icon(Icons.edit_calendar_outlined),
+          label: Text('남은 일정 편집', style: AppType.action),
+        ),
         if (todaySessions.isEmpty)
           StatePanel(
             title: future.isEmpty ? '예정된 운동이 끝났어요' : '오늘은 예정된 운동이 없어요',
@@ -92,8 +104,21 @@ class ActiveTodayScreen extends StatelessWidget {
         for (final session in todaySessions)
           _SessionCard(controller: controller, session: session),
         if (missed.isNotEmpty) ...[
-          Text('기록이 남아 있는 운동', style: AppType.heading),
+          Text('놓친 운동 · 기록이 남아 있어요', style: AppType.heading),
           _SessionCard(controller: controller, session: missed.last),
+          TextButton(
+            key: const ValueKey('open-missed-workouts'),
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) =>
+                    MissedWorkoutsScreen(controller: controller, today: today),
+              ),
+            ),
+            child: Text(
+              '놓친 운동 모두 보기 · ${missed.length}개',
+              style: AppType.action,
+            ),
+          ),
         ],
         if (future.isNotEmpty) ...[
           Text('다음 운동', style: AppType.heading),
@@ -219,15 +244,18 @@ class _SessionCard extends StatelessWidget {
                 : (complete ? '기록 확인하기' : '운동 기록하기'),
             onPressed: () => Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (_) => WorkoutScreen(
-                  controller: controller,
-                  session: session,
-                  readOnly: readOnly,
-                  defaultUnit:
-                      SettingsScope.maybeOf(
-                        context,
-                      )?.settings.defaultWeightUnit ??
-                      WeightUnit.kg,
+                builder: (_) => _inheritSettings(
+                  context,
+                  WorkoutScreen(
+                    controller: controller,
+                    session: session,
+                    readOnly: readOnly,
+                    defaultUnit:
+                        SettingsScope.maybeOf(
+                          context,
+                        )?.settings.defaultWeightUnit ??
+                        WeightUnit.kg,
+                  ),
                 ),
               ),
             ),
@@ -535,6 +563,14 @@ class CurrentProfileScreen extends StatelessWidget {
             ),
           ),
         ),
+      PrimaryAction(
+        label: '운동 기록 백업',
+        onPressed: () => Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => BackupScreen(controller: controller),
+          ),
+        ),
+      ),
       TextButton(
         onPressed: () => Navigator.of(
           context,
@@ -572,4 +608,51 @@ class CurrentProfileScreen extends StatelessWidget {
       ),
     ],
   );
+}
+
+/// Missed sessions retain their schedule and record on a separate performed date.
+class MissedWorkoutsScreen extends StatelessWidget {
+  final TrainingController controller;
+  final DateTime today;
+  const MissedWorkoutsScreen({
+    super.key,
+    required this.controller,
+    required this.today,
+  });
+  @override
+  Widget build(BuildContext context) => AnimatedBuilder(
+    animation: controller,
+    builder: (context, _) {
+      final missed =
+          controller.state.activePlan?.sessions
+              .where(
+                (session) =>
+                    session.date.isBefore(calendarDate(today)) &&
+                    !controller.state.isSessionClosed(session.id),
+              )
+              .toList() ??
+          [];
+      return FlowPage(
+        title: '놓친 운동',
+        children: [
+          Text('예정일은 유지해요. 실제로 운동한 날은 세트 입력에서 지정해 주세요.', style: AppType.body),
+          if (missed.isEmpty)
+            const StatePanel(
+              title: '놓친 운동이 없어요',
+              message: '지난 예정일 중 아직 마감하지 않은 운동이 여기에 표시돼요.',
+              icon: Icons.event_available,
+            ),
+          for (final session in missed)
+            _SessionCard(controller: controller, session: session),
+        ],
+      );
+    },
+  );
+}
+
+Widget _inheritSettings(BuildContext source, Widget child) {
+  final settings = SettingsScope.maybeOf(source);
+  return settings == null
+      ? child
+      : SettingsScope(controller: settings, child: child);
 }
