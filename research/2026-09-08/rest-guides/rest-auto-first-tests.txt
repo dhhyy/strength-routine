@@ -33,7 +33,7 @@ The test description was:
 00:19 +3 -1: a running timer requires explicit replacement and cancel preserves both actuals [E]
   Test failed. See exception logs above.
   The test description was: a running timer requires explicit replacement and cancel preserves both actuals
-  
+
 00:19 +3 -1: failed workout save starts no timer until first durable completion retry
 ══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
 The following StateError was thrown running a test:
@@ -67,6 +67,6 @@ The test description was:
 00:19 +3 -2: failed workout save starts no timer until first durable completion retry [E]
   Test failed. See exception logs above.
   The test description was: failed workout save starts no timer until first durable completion retry
-  
+
 00:19 +3 -2: timer write failure leaves workout complete and retry keeps original deadline
 00:21 +4 -2: Some tests failed.
