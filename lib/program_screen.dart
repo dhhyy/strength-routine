@@ -8,7 +8,12 @@ import 'widgets.dart';
 
 class ProgramScreen extends StatefulWidget {
   final TrainingController controller;
-  const ProgramScreen({super.key, required this.controller});
+  final WeightUnit defaultUnit;
+  const ProgramScreen({
+    super.key,
+    required this.controller,
+    this.defaultUnit = WeightUnit.kg,
+  });
   @override
   State<ProgramScreen> createState() => _ProgramScreenState();
 }
@@ -91,6 +96,7 @@ class _ProgramScreenState extends State<ProgramScreen> {
                             builder: (_) => ProgramDetailScreen(
                               controller: c,
                               program: program,
+                              defaultUnit: widget.defaultUnit,
                             ),
                           ),
                         );
@@ -112,10 +118,12 @@ class _ProgramScreenState extends State<ProgramScreen> {
 class ProgramDetailScreen extends StatelessWidget {
   final TrainingController controller;
   final TrainingProgram program;
+  final WeightUnit defaultUnit;
   const ProgramDetailScreen({
     super.key,
     required this.controller,
     required this.program,
+    this.defaultUnit = WeightUnit.kg,
   });
   @override
   Widget build(BuildContext context) => FlowPage(
@@ -158,8 +166,11 @@ class ProgramDetailScreen extends StatelessWidget {
         onPressed: () async {
           final started = await Navigator.of(context).push<bool>(
             MaterialPageRoute(
-              builder: (_) =>
-                  ProgramSetupScreen(controller: controller, program: program),
+              builder: (_) => ProgramSetupScreen(
+                controller: controller,
+                program: program,
+                defaultUnit: defaultUnit,
+              ),
             ),
           );
           if (started == true && context.mounted) {
@@ -175,11 +186,13 @@ class ProgramSetupScreen extends StatefulWidget {
   final TrainingController controller;
   final TrainingProgram program;
   final DateTime Function()? now;
+  final WeightUnit defaultUnit;
   const ProgramSetupScreen({
     super.key,
     required this.controller,
     required this.program,
     this.now,
+    this.defaultUnit = WeightUnit.kg,
   });
   @override
   State<ProgramSetupScreen> createState() => _ProgramSetupScreenState();
@@ -385,6 +398,7 @@ class _ProgramSetupScreenState extends State<ProgramSetupScreen> {
                               context: context,
                               isScrollControlled: true,
                               builder: (_) => RecentRecordEditor(
+                                defaultUnit: widget.defaultUnit,
                                 lift: lift,
                                 initial: _records[lift],
                               ),
@@ -538,7 +552,13 @@ class _PlanReviewScreenState extends State<PlanReviewScreen> {
 class RecentRecordEditor extends StatefulWidget {
   final MainLift lift;
   final RecentLiftRecord? initial;
-  const RecentRecordEditor({super.key, required this.lift, this.initial});
+  final WeightUnit defaultUnit;
+  const RecentRecordEditor({
+    super.key,
+    required this.lift,
+    this.initial,
+    this.defaultUnit = WeightUnit.kg,
+  });
   @override
   State<RecentRecordEditor> createState() => _RecentRecordEditorState();
 }
@@ -560,7 +580,7 @@ class _RecentRecordEditorState extends State<RecentRecordEditor> {
       text: r?.rir == null ? '' : formatNumber(r!.rir!),
     );
     _date = r?.date ?? calendarDate(DateTime.now());
-    _unit = r?.unit ?? WeightUnit.kg;
+    _unit = r?.unit ?? widget.defaultUnit;
   }
 
   @override

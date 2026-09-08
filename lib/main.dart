@@ -4,6 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'app/training_controller.dart';
+import 'app/settings_controller.dart';
+import 'data/local_settings_store.dart';
 import 'data/local_training_store.dart';
 import 'data/local_habit_store.dart';
 import 'flow_components.dart';
@@ -51,6 +53,7 @@ class RootGate extends StatefulWidget {
 
 class _RootGateState extends State<RootGate> {
   TrainingController? _controller;
+  SettingsController? _settings;
   bool _opening = true;
   String? _error;
   @override
@@ -77,6 +80,16 @@ class _RootGateState extends State<RootGate> {
           );
         }
       }
+      _settings ??= SettingsController(
+        store: LocalSettingsStore(
+          File(
+            widget.controller == null
+                ? '${_controller!.store.file.parent.path}/app-settings.json'
+                : '${_controller!.store.file.path}.settings.json',
+          ),
+        ),
+      );
+      if (_settings!.loading) await _settings!.initialize();
       if (_controller!.loading || _controller!.loadError != null) {
         await _controller!.initialize();
       }
@@ -89,6 +102,7 @@ class _RootGateState extends State<RootGate> {
   @override
   void dispose() {
     if (widget.controller == null) _controller?.dispose();
+    _settings?.dispose();
     super.dispose();
   }
 
@@ -136,10 +150,13 @@ class _RootGateState extends State<RootGate> {
             onDone: () => c.update((state) => state.copyWith(onboarded: true)),
           );
         }
-        return HomeShell(
-          controller: c,
-          now: widget.now,
-          habitStore: widget.habitStore,
+        return SettingsScope(
+          controller: _settings!,
+          child: HomeShell(
+            controller: c,
+            now: widget.now,
+            habitStore: widget.habitStore,
+          ),
         );
       },
     );

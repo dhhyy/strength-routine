@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'app/training_controller.dart';
+import 'app/settings_controller.dart';
+import 'domain/recent_lift_record.dart';
+import 'settings_screen.dart';
+import 'support_screen.dart';
+import 'subscription_screen.dart';
 import 'training_insights_screen.dart';
 import 'domain/training_program.dart';
 import 'flow_components.dart';
@@ -12,7 +17,14 @@ Future<void> openPrograms(
   BuildContext context,
   TrainingController controller,
 ) => Navigator.of(context).push(
-  MaterialPageRoute(builder: (_) => ProgramScreen(controller: controller)),
+  MaterialPageRoute(
+    builder: (_) => ProgramScreen(
+      controller: controller,
+      defaultUnit:
+          SettingsScope.maybeOf(context)?.settings.defaultWeightUnit ??
+          WeightUnit.kg,
+    ),
+  ),
 );
 
 class ActiveTodayScreen extends StatelessWidget {
@@ -167,6 +179,11 @@ class _SessionCard extends StatelessWidget {
                   controller: controller,
                   session: session,
                   readOnly: readOnly,
+                  defaultUnit:
+                      SettingsScope.maybeOf(
+                        context,
+                      )?.settings.defaultWeightUnit ??
+                      WeightUnit.kg,
                 ),
               ),
             ),
@@ -237,6 +254,11 @@ class _SavedRecordsScreenState extends State<SavedRecordsScreen> {
               builder: (_) => TrainingInsightsScreen(
                 controller: c,
                 now: widget.now,
+                showSuggestions:
+                    SettingsScope.maybeOf(
+                      context,
+                    )?.settings.showLoadSuggestions ??
+                    true,
               ),
             ),
           ),
@@ -387,6 +409,28 @@ class CurrentProfileScreen extends StatelessWidget {
           label: '프로그램 선택',
           onPressed: () => openPrograms(context, controller),
         ),
+      ),
+      if (SettingsScope.maybeOf(context) != null)
+        PrimaryAction(
+          label: '앱 설정',
+          onPressed: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) =>
+                  SettingsScreen(controller: SettingsScope.maybeOf(context)!),
+            ),
+          ),
+        ),
+      TextButton(
+        onPressed: () => Navigator.of(
+          context,
+        ).push(MaterialPageRoute(builder: (_) => const SupportScreen())),
+        child: Text('도움말·자주 묻는 질문', style: AppType.action),
+      ),
+      TextButton(
+        onPressed: () => Navigator.of(
+          context,
+        ).push(MaterialPageRoute(builder: (_) => const SubscriptionScreen())),
+        child: Text('구독 안내', style: AppType.action),
       ),
       Text('최근 리프트 기록', style: AppType.heading),
       if (controller.state.recentRecords.isEmpty)

@@ -31,12 +31,14 @@ class WorkoutScreen extends StatelessWidget {
   final TrainingController controller;
   final PlannedSession session;
   final bool readOnly;
+  final WeightUnit defaultUnit;
 
   const WorkoutScreen({
     super.key,
     required this.controller,
     required this.session,
     this.readOnly = false,
+    this.defaultUnit = WeightUnit.kg,
   });
 
   @override
@@ -237,6 +239,7 @@ class WorkoutScreen extends StatelessWidget {
           exerciseName: editing.exercise.name,
           set: editing.set,
           number: editing.number,
+          defaultUnit: defaultUnit,
           hasNextSet:
               _nextUnrecordedSet(
                 orderedSets,
@@ -530,6 +533,7 @@ class SetEditor extends StatefulWidget {
   final PlannedSet set;
   final int number;
   final bool hasNextSet;
+  final WeightUnit defaultUnit;
   const SetEditor({
     super.key,
     required this.controller,
@@ -537,6 +541,7 @@ class SetEditor extends StatefulWidget {
     required this.set,
     required this.number,
     this.hasNextSet = false,
+    this.defaultUnit = WeightUnit.kg,
   });
 
   @override
@@ -559,7 +564,7 @@ class _SetEditorState extends State<SetEditor> {
     _unit = switch (draft?['unit']) {
       'kg' => WeightUnit.kg,
       'lb' => WeightUnit.lb,
-      _ => actual?.unit ?? WeightUnit.kg,
+      _ => actual?.unit ?? widget.defaultUnit,
     };
     _weight = TextEditingController(
       text:
