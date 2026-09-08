@@ -8,12 +8,16 @@ import '../flow_components.dart';
 import '../tokens.dart';
 import '../widgets.dart';
 import 'detailed_routine.dart';
+import 'detailed_bulk_edit.dart';
+import 'detailed_bulk_screen.dart';
+import '../prescription_widgets.dart';
 
 /// Only raw administrator drafts are autosaved. A catalog replacement requires
 /// a separate review and a successful durable-save callback.
 class DetailedRoutineScreen extends StatefulWidget {
   final DetailedRoutineDraft initialDraft;
   final List<TrainingProgram> catalog;
+  final List<TrainingProgram> versionHistory;
   final Future<bool> Function(DetailedRoutineDraft) onDraftChanged;
   final Future<bool> Function(TrainingProgram, DetailedRoutineDraft)
   onSaveProgram;
@@ -22,6 +26,7 @@ class DetailedRoutineScreen extends StatefulWidget {
     super.key,
     required this.initialDraft,
     required this.catalog,
+    this.versionHistory = const [],
     required this.onDraftChanged,
     required this.onSaveProgram,
   });
@@ -202,7 +207,10 @@ class _DetailedRoutineScreenState extends State<DetailedRoutineScreen> {
       final snapshot = _draft.copy();
       final candidate = generateDetailedRoutine(snapshot);
       final previous = _catalog.where((p) => p.id == candidate.id).firstOrNull;
-      if (previous != null && previous.version == candidate.version) {
+      if ([
+        ..._catalog,
+        ...widget.versionHistory,
+      ].any((p) => p.id == candidate.id && p.version == candidate.version)) {
         throw const FormatException(
           '기존 프로그램을 교체하려면 버전을 바꿔 주세요. 같은 ID·버전은 저장할 수 없습니다.',
         );
@@ -349,6 +357,26 @@ class _DetailedRoutineScreenState extends State<DetailedRoutineScreen> {
     },
   );
 
+  Future<void> _bulkEdit(int exerciseIndex) async {
+    final source = _draft.copy();
+    final result = await Navigator.of(context).push<DetailedBulkPreview>(
+      MaterialPageRoute(
+        builder: (_) => DetailedBulkScreen(
+          source: source,
+          weekIndex: _week,
+          sessionIndex: _session,
+          exerciseIndex: exerciseIndex,
+        ),
+      ),
+    );
+    if (!mounted || result == null) return;
+    if (!result.matches(_draft)) {
+      setState(() => _message = '초안이 변경됐어요. 일괄 수정 범위를 다시 검토해 주세요.');
+      return;
+    }
+    _change(() => _draft = result.candidate.copy());
+  }
+
   Widget _setEditor(
     DetailedExerciseDraft exercise,
     int exerciseIndex,
@@ -392,6 +420,20 @@ class _DetailedRoutineScreenState extends State<DetailedRoutineScreen> {
                 ],
               ),
               _setFields([
+                DropdownButtonFormField<ProgramSetKind>(
+                  key: ValueKey('detail-$_formEpoch-$path-set-kind'),
+                  value: value.kind,
+                  isExpanded: true,
+                  decoration: _decoration('세트 종류'),
+                  items: [
+                    for (final kind in ProgramSetKind.values)
+                      DropdownMenuItem(
+                        value: kind,
+                        child: Text(setKindLabel(kind), style: AppType.body),
+                      ),
+                  ],
+                  onChanged: (kind) => _change(() => value.kind = kind!),
+                ),
                 _field(
                   '$path-id',
                   '세트 ID',
@@ -404,7 +446,7 @@ class _DetailedRoutineScreenState extends State<DetailedRoutineScreen> {
                     Expanded(
                       child: _field(
                         '$path-reps',
-                        value.isAmrap ? '기준 반복 수' : '반복 수',
+                        value.isAmrap ? '기준 반복 수' : '반복 하한',
                         value.repetitions,
                         (text) => value.repetitions = text,
                         numeric: true,
@@ -413,14 +455,21 @@ class _DetailedRoutineScreenState extends State<DetailedRoutineScreen> {
                     const SizedBox(width: AppSpace.x3),
                     Expanded(
                       child: _field(
-                        '$path-rir',
-                        'RIR · 선택',
-                        value.rir,
-                        (text) => value.rir = text,
+                        '$path-reps-max',
+                        '상한 · 선택',
+                        value.repetitionsMax,
+                        (text) => value.repetitionsMax = text,
                         numeric: true,
                       ),
                     ),
                   ],
+                ),
+                _field(
+                  '$path-rir',
+                  'RIR · 선택',
+                  value.rir,
+                  (text) => value.rir = text,
+                  numeric: true,
                 ),
                 DropdownButtonFormField<LoadKind>(
                   key: ValueKey('detail-$_formEpoch-$path-load-kind'),
@@ -656,6 +705,18 @@ class _DetailedRoutineScreenState extends State<DetailedRoutineScreen> {
                     style: AppType.caption,
                   ),
                 ],
+              ),
+              TextButton.icon(
+                key: ValueKey('bulk-edit-$path'),
+                onPressed: _saving || _saveError != null
+                    ? null
+                    : () => _bulkEdit(index),
+                icon: const Icon(Icons.tune),
+                label: Text('세트 일괄 수정', style: AppType.action),
+              ),
+              Text(
+                '반복 상한을 지정하면 범위가 됩니다. AMRAP과 함께 지정할 수 없어요. 워밍업·드롭세트도 각 세트를 직접 작성해 주세요.',
+                style: AppType.caption,
               ),
               for (var i = 0; i < exercise.sets.length; i++)
                 _setEditor(exercise, index, i),
@@ -1027,7 +1088,7 @@ class _DetailedRoutineScreenState extends State<DetailedRoutineScreen> {
 }
 
 String _setDescription(ProgramSet set) =>
-    '${set.isAmrap ? 'AMRAP · 기준 ' : ''}${set.repetitions}회 · RIR ${set.rir == null ? '미지정' : formatNumber(set.rir!)} · ${switch (set.load.kind) {
+    '${set.kind == ProgramSetKind.work ? '' : '${setKindLabel(set.kind)} · '}${repetitionLabel(set)} · RIR ${set.rir == null ? '미지정' : formatNumber(set.rir!)} · ${switch (set.load.kind) {
       LoadKind.manual => '중량 직접 입력',
       LoadKind.fixedKg => '${formatNumber(set.load.value!)} kg',
       LoadKind.percentOfBaseline => '${liftLabel(set.load.lift!)} 기준 ${formatNumber(set.load.value!)}%',

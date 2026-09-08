@@ -386,6 +386,42 @@ void main() {
     final export = await AdminProgramStore(file).export(loaded);
     expect(jsonDecode(await export.readAsString())['programs'], isEmpty);
   });
+  test('범위 밖 실제 반복은 실패로 단정하지 않고 D5 비교에서 제외한다', () {
+    final json = jsonCopy(insightsPlan().program.toJson());
+    for (final session in json['sessions']) {
+      session['exercises'][0]['sets'][0]['repetitionsMax'] = 8;
+    }
+    final plan = createActivePlan(
+      id: 'range-boundary',
+      program: TrainingProgram.fromJson(json),
+      startDate: DateTime.utc(2026, 8, 3),
+      weekdays: [1],
+      incrementKg: 2.5,
+    );
+    for (final repetitions in [4, 9]) {
+      var state = insightsState(plan: plan);
+      final set = plan.sessions[1].exercises.single.sets.first;
+      state = state.withSetActual(
+        set.id,
+        SetActual.completed(
+          weight: 100,
+          unit: WeightUnit.kg,
+          repetitions: repetitions,
+          rir: 0,
+          performedDate: plan.sessions[1].date,
+        ),
+      );
+      final trend = buildTrainingInsights(
+        state,
+        planId: plan.id,
+        asOf: insightsToday,
+      ).single;
+      expect(trend.points[1].comparableRirGap, isNull);
+      expect(trend.points[1].performedSets, 2);
+      expect(trend.points[1].repetitions, repetitions + 5);
+      expect(trend.suggestion, isNull);
+    }
+  });
   for (final kind in [ProgramSetKind.warmup, ProgramSetKind.drop]) {
     test('D5 ${kind.name}은 비교/감량 대상에서 제외하지만 실제 통계와 필수 조건은 유지한다', () {
       final json = jsonCopy(insightsPlan().program.toJson());
@@ -413,6 +449,16 @@ void main() {
             performedDate: session.date,
           ),
         );
+        state = state.withSetActual(
+          session.exercises.single.sets[1].id,
+          SetActual.completed(
+            weight: 30,
+            unit: WeightUnit.kg,
+            repetitions: 11,
+            rir: null,
+            performedDate: session.date,
+          ),
+        );
       }
       final trend = buildTrainingInsights(
         state,
@@ -423,7 +469,7 @@ void main() {
         trend.points.every(
           (p) =>
               p.performedSets == 2 &&
-              p.repetitions == 13 &&
+              p.repetitions == 19 &&
               p.comparableRirGap == 1,
         ),
         isTrue,

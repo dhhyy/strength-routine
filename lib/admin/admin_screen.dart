@@ -5,6 +5,7 @@ import '../domain/recent_lift_record.dart';
 import '../domain/training_program.dart';
 import '../flow_components.dart';
 import '../tokens.dart';
+import '../prescription_widgets.dart';
 import '../widgets.dart';
 import 'admin_program_store.dart';
 import 'detailed_routine.dart';
@@ -23,6 +24,9 @@ class _AdminScreenState extends State<AdminScreen> {
   RoutineBlueprint _draft = RoutineBlueprint();
   DetailedRoutineDraft? _detailedDraft;
   List<TrainingProgram> _programs = [];
+  List<TrainingProgram> _versionHistory = [];
+  Set<String> _archivedProgramIds = {};
+  bool _showArchived = false;
   bool _loading = true, _saving = false, _exporting = false;
   bool _committing = false;
   String? _loadError, _saveError, _actionError, _message;
@@ -48,6 +52,8 @@ class _AdminScreenState extends State<AdminScreen> {
         _draft = saved?.draft ?? RoutineBlueprint();
         _detailedDraft = saved?.detailedDraft;
         _programs = programs;
+        _versionHistory = saved?.versionHistory ?? [];
+        _archivedProgramIds = saved?.archivedProgramIds ?? {};
         _formVersion++;
       });
     } catch (_) {
@@ -62,6 +68,8 @@ class _AdminScreenState extends State<AdminScreen> {
     draft: _draft,
     programs: _programs,
     detailedDraft: _detailedDraft,
+    versionHistory: _versionHistory,
+    archivedProgramIds: _archivedProgramIds,
   );
   Future<bool> _save() async {
     if (_committing) return false;
@@ -96,7 +104,7 @@ class _AdminScreenState extends State<AdminScreen> {
     try {
       final program = generateRoutine(_draft);
       final old = _programs.where((p) => p.id == program.id).firstOrNull;
-      if (old != null && old.version == program.version) {
+      if (_workspace.isVersionUsed(program.id, program.version)) {
         throw const FormatException('같은 ID를 등록하려면 새 버전을 입력해 주세요.');
       }
       final approved = await Navigator.of(context).push<bool>(
@@ -133,6 +141,8 @@ class _AdminScreenState extends State<AdminScreen> {
       if (!mounted) return true;
       setState(() {
         _programs = candidate.programs;
+        _versionHistory = candidate.versionHistory;
+        _archivedProgramIds = candidate.archivedProgramIds;
         _detailedDraft = candidate.detailedDraft;
         _revision++;
       });
@@ -159,15 +169,59 @@ class _AdminScreenState extends State<AdminScreen> {
     TrainingProgram program,
     DetailedRoutineDraft? detailed,
   ) async {
-    final old = _programs.where((p) => p.id == program.id).firstOrNull;
-    if (old?.version == program.version) return false;
-    return _commitWorkspace(
-      AdminWorkspace(
-        draft: _draft,
-        detailedDraft: detailed?.copy(),
-        programs: [..._programs.where((p) => p.id != program.id), program],
+    try {
+      return await _commitWorkspace(_workspace.withProgram(program, detailed));
+    } on FormatException catch (error) {
+      if (mounted) setState(() => _actionError = error.message);
+      return false;
+    }
+  }
+
+  Future<void> _archive(TrainingProgram program) async {
+    final archived = _archivedProgramIds.contains(program.id);
+    final approved = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppColors.bgLift,
+        title: Text(
+          archived ? '배포 목록에 복원할까요?' : '프로그램을 보관할까요?',
+          style: AppType.heading,
+        ),
+        content: SingleChildScrollView(
+          child: Text(
+            '${program.title}\n${archived ? '다음 카탈로그 내보내기에 다시 포함합니다.' : '다음 카탈로그 내보내기에서 제외합니다.'} 기존 사용자 계획과 버전 이력은 유지됩니다.',
+            style: AppType.body,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text('취소', style: AppType.action),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(archived ? '복원' : '보관', style: AppType.action),
+          ),
+        ],
       ),
     );
+    if (!mounted || approved != true) return;
+    await _commitWorkspace(_workspace.withArchived(program.id, !archived));
+  }
+
+  Future<void> _history(TrainingProgram program) async {
+    final selected = await Navigator.of(context).push<TrainingProgram>(
+      MaterialPageRoute(
+        builder: (_) => AdminVersionHistory(
+          program: program,
+          versions: _workspace.versionsFor(program.id),
+        ),
+      ),
+    );
+    if (!mounted || selected == null) return;
+    final draft = DetailedRoutineDraft.fromProgram(selected);
+    draft.version = _workspace.nextVersionFor(program.id);
+    await _openDetailed(draft);
   }
 
   Future<void> _openDetailed(DetailedRoutineDraft? next) async {
@@ -201,6 +255,8 @@ class _AdminScreenState extends State<AdminScreen> {
         AdminWorkspace(
           draft: _draft,
           programs: _programs,
+          versionHistory: _versionHistory,
+          archivedProgramIds: _archivedProgramIds,
           detailedDraft: next.copy(),
         ),
       );
@@ -212,6 +268,7 @@ class _AdminScreenState extends State<AdminScreen> {
         builder: (_) => DetailedRoutineScreen(
           initialDraft: _detailedDraft!.copy(),
           catalog: List.of(_programs),
+          versionHistory: List.of(_versionHistory),
           onDraftChanged: (draft) {
             if (_committing) return Future.value(false);
             _detailedDraft = draft.copy();
@@ -253,7 +310,7 @@ class _AdminScreenState extends State<AdminScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '${snapshot.programs.length}개 프로그램을 파일로 저장했습니다.',
+                    '${snapshot.publishedPrograms.length}개 프로그램을 파일로 저장했습니다. 보관 ${snapshot.archivedProgramIds.length}개는 제외했습니다.',
                     style: AppType.body,
                   ),
                   const SizedBox(height: AppSpace.x3),
@@ -501,6 +558,36 @@ class _AdminScreenState extends State<AdminScreen> {
                 style: AppType.caption,
               ),
               Text('관리자 카탈로그 ${_programs.length}개', style: AppType.heading),
+              Wrap(
+                spacing: AppSpace.x3,
+                children: [
+                  for (final archived in [false, true])
+                    ChoiceChip(
+                      key: ValueKey('catalog-archived-$archived'),
+                      label: Text(
+                        archived
+                            ? '보관됨 ${_archivedProgramIds.length}'
+                            : '배포 대상 ${_programs.length - _archivedProgramIds.length}',
+                        style: AppType.action,
+                      ),
+                      selected: _showArchived == archived,
+                      selectedColor: AppColors.accentSoft,
+                      backgroundColor: AppColors.fill,
+                      side: const BorderSide(color: AppColors.hairStrong),
+                      onSelected: (_) =>
+                          setState(() => _showArchived = archived),
+                    ),
+                ],
+              ),
+              if (!_programs.any(
+                (p) => _archivedProgramIds.contains(p.id) == _showArchived,
+              ))
+                StatePanel(
+                  title: _showArchived ? '보관한 프로그램이 없어요' : '배포 대상 프로그램이 없어요',
+                  message: _showArchived
+                      ? '보관해도 버전 이력은 유지되며 여기서 복원할 수 있어요.'
+                      : '새 프로그램을 작성하거나 보관 목록에서 복원해 주세요.',
+                ),
               if (_actionError != null)
                 StatePanel(title: '변경 저장 실패', message: _actionError!),
               if (_saveError != null)
@@ -509,7 +596,9 @@ class _AdminScreenState extends State<AdminScreen> {
                   message: _saveError!,
                   action: PrimaryAction(label: '저장 재시도', onPressed: _save),
                 ),
-              for (final program in _programs)
+              for (final program in _programs.where(
+                (p) => _archivedProgramIds.contains(p.id) == _showArchived,
+              ))
                 GlassPanel(
                   padding: const EdgeInsets.all(AppSpace.x4),
                   child: Column(
@@ -547,6 +636,23 @@ class _AdminScreenState extends State<AdminScreen> {
                                     _openDetailed(copy);
                                   },
                             child: Text('복제해서 만들기', style: AppType.action),
+                          ),
+                          TextButton(
+                            key: ValueKey('catalog-history-${program.id}'),
+                            onPressed: _saving || _exporting
+                                ? null
+                                : () => _history(program),
+                            child: Text('버전 이력', style: AppType.action),
+                          ),
+                          TextButton(
+                            key: ValueKey('catalog-archive-${program.id}'),
+                            onPressed: _saving || _exporting
+                                ? null
+                                : () => _archive(program),
+                            child: Text(
+                              _showArchived ? '배포 목록에 복원' : '보관',
+                              style: AppType.action,
+                            ),
                           ),
                         ],
                       ),
@@ -779,3 +885,80 @@ class AdminProgramReview extends StatelessWidget {
     ],
   );
 }
+
+class AdminVersionHistory extends StatelessWidget {
+  final TrainingProgram program;
+  final List<TrainingProgram> versions;
+  const AdminVersionHistory({
+    super.key,
+    required this.program,
+    required this.versions,
+  });
+  @override
+  Widget build(BuildContext context) => FlowPage(
+    title: '프로그램 버전 이력',
+    children: [
+      Text(program.title, style: AppType.title),
+      Text(
+        '과거 구성을 새 버전 초안으로 불러옵니다. 정밀 편집의 변경 검토와 저장을 거쳐야 최신 프로그램에 반영됩니다.',
+        style: AppType.body,
+      ),
+      for (final version in versions.reversed)
+        GlassPanel(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                'v${version.version}${version.version == program.version ? ' · 현재 버전' : ''}',
+                style: AppType.heading,
+              ),
+              const SizedBox(height: AppSpace.x2),
+              Text(
+                '${version.title} · ${version.weeks}주 · 주 ${version.sessionsPerWeek}회',
+                style: AppType.body,
+              ),
+              Text(version.description, style: AppType.caption),
+              for (final session in version.orderedSessions)
+                ExpansionTile(
+                  title: Text(
+                    '${session.week}주 · ${session.title}',
+                    style: AppType.body,
+                  ),
+                  children: [
+                    for (final exercise in session.exercises)
+                      Padding(
+                        padding: const EdgeInsets.all(AppSpace.x3),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Text(exercise.name, style: AppType.heading),
+                            SupersetNote(group: exercise.supersetGroup),
+                            for (var i = 0; i < exercise.sets.length; i++) ...[
+                              Text(
+                                '${i + 1}세트 · ${setKindLabel(exercise.sets[i].kind)} · ${repetitionLabel(exercise.sets[i])} · ${_historyLoad(exercise.sets[i])} · RIR ${exercise.sets[i].rir ?? '미지정'} · ${exercise.sets[i].isRequired ? '필수' : '선택'}',
+                                style: AppType.caption,
+                              ),
+                              SetPrescriptionNotes(set: exercise.sets[i]),
+                            ],
+                          ],
+                        ),
+                      ),
+                  ],
+                ),
+              TextButton(
+                key: ValueKey('restore-version-${version.version}'),
+                onPressed: () => Navigator.pop(context, version),
+                child: Text('새 버전 초안으로 복구', style: AppType.action),
+              ),
+            ],
+          ),
+        ),
+    ],
+  );
+}
+
+String _historyLoad(ProgramSet set) => switch (set.load.kind) {
+  LoadKind.manual => '중량 직접 입력',
+  LoadKind.fixedKg => '${set.load.value} kg',
+  LoadKind.percentOfBaseline => '${set.load.lift?.key} 기준 ${set.load.value}%',
+};
