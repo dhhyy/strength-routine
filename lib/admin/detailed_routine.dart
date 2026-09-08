@@ -5,7 +5,8 @@ import '../domain/training_program.dart';
 /// Exercises identify the movement; each set independently identifies its load
 /// baseline. Those two lifts are deliberately not inferred from each other.
 final class DetailedSetDraft {
-  String id, repetitions, rir, loadValue, restSeconds, tempo;
+  String id, repetitions, repetitionsMax, rir, loadValue, restSeconds, tempo;
+  ProgramSetKind kind;
   LoadKind loadKind;
   MainLift? loadLift;
   bool isRequired, isAmrap;
@@ -13,6 +14,8 @@ final class DetailedSetDraft {
   DetailedSetDraft({
     this.id = '',
     this.repetitions = '',
+    this.repetitionsMax = '',
+    this.kind = ProgramSetKind.work,
     this.rir = '',
     this.loadValue = '',
     this.loadKind = LoadKind.manual,
@@ -26,6 +29,8 @@ final class DetailedSetDraft {
   factory DetailedSetDraft.fromProgram(ProgramSet set) => DetailedSetDraft(
     id: set.id,
     repetitions: set.repetitions.toString(),
+    repetitionsMax: set.repetitionsMax?.toString() ?? '',
+    kind: set.kind,
     rir: set.rir?.toString() ?? '',
     loadValue: set.load.value?.toString() ?? '',
     loadKind: set.load.kind,
@@ -39,6 +44,8 @@ final class DetailedSetDraft {
   Map<String, Object?> toJson() => {
     'id': id,
     'repetitions': repetitions,
+    if (repetitionsMax.isNotEmpty) 'repetitionsMax': repetitionsMax,
+    if (kind != ProgramSetKind.work) 'setKind': kind.name,
     'rir': rir,
     'loadValue': loadValue,
     'loadKind': loadKind.name,
@@ -62,7 +69,13 @@ final class DetailedSetDraft {
         'isRequired',
       },
       '세트 초안',
-      optional: {'restSeconds', 'tempo', 'isAmrap'},
+      optional: {
+        'restSeconds',
+        'tempo',
+        'isAmrap',
+        'repetitionsMax',
+        'setKind',
+      },
     );
     final required = json['isRequired'];
     if (required is! bool) {
@@ -75,6 +88,12 @@ final class DetailedSetDraft {
     return DetailedSetDraft(
       id: _text(json, 'id'),
       repetitions: _text(json, 'repetitions'),
+      repetitionsMax: json.containsKey('repetitionsMax')
+          ? _text(json, 'repetitionsMax')
+          : '',
+      kind: json.containsKey('setKind')
+          ? ProgramSetKind.values.byName(json['setKind'] as String)
+          : ProgramSetKind.work,
       rir: _text(json, 'rir'),
       loadValue: _text(json, 'loadValue'),
       loadKind: _loadKind(json['loadKind']),
@@ -287,6 +306,17 @@ final class DetailedRoutineDraft {
     );
   }
 
+  bool get hasExtendedPrescriptions => weeks.any(
+    (week) => week.sessions.any(
+      (session) => session.exercises.any(
+        (exercise) => exercise.sets.any(
+          (set) =>
+              set.repetitionsMax.isNotEmpty || set.kind != ProgramSetKind.work,
+        ),
+      ),
+    ),
+  );
+
   bool get hasAdvancedPrescriptions => weeks.any(
     (week) => week.sessions.any(
       (session) => session.exercises.any(
@@ -436,6 +466,17 @@ TrainingProgram generateDetailedRoutine(DetailedRoutineDraft draft) {
           if (repetitions == null || repetitions < 1 || repetitions > 100) {
             throw FormatException('$setContext 반복 수: 1~100 사이의 정수를 입력해 주세요.');
           }
+          final upperText = set.repetitionsMax.trim();
+          final upper = upperText.isEmpty ? null : int.tryParse(upperText);
+          if (upperText.isNotEmpty &&
+              (upper == null || upper < repetitions || upper > 100)) {
+            throw FormatException(
+              '$setContext 반복 상한: 하한 이상 100 이하의 정수 또는 빈 값으로 입력해 주세요.',
+            );
+          }
+          if (set.isAmrap && upper != null) {
+            throw FormatException('$setContext: AMRAP과 반복 범위는 함께 지정할 수 없어요.');
+          }
           final rirText = set.rir.trim();
           final rir = rirText.isEmpty ? null : double.tryParse(rirText);
           if (rirText.isNotEmpty &&
@@ -479,6 +520,8 @@ TrainingProgram generateDetailedRoutine(DetailedRoutineDraft draft) {
             ProgramSet(
               id: setId,
               repetitions: repetitions,
+              repetitionsMax: upper,
+              kind: set.kind,
               rir: rir,
               load: load,
               isRequired: set.isRequired,

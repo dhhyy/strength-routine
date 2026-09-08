@@ -3,8 +3,15 @@ import 'package:flutter/material.dart';
 import 'domain/training_program.dart';
 import 'tokens.dart';
 
-String repetitionLabel(ProgramSet set) =>
-    set.isAmrap ? 'AMRAP · 기준 ${set.repetitions}회' : '${set.repetitions}회';
+String setKindLabel(ProgramSetKind kind) => switch (kind) {
+  ProgramSetKind.work => '작업 세트',
+  ProgramSetKind.warmup => '워밍업',
+  ProgramSetKind.drop => '드롭세트',
+};
+
+String repetitionLabel(ProgramSet set) => set.isAmrap
+    ? 'AMRAP · 기준 ${set.repetitions}회'
+    : '${set.repetitions}${set.repetitionsMax == null ? '' : '–${set.repetitionsMax}'}회';
 
 List<InlineSpan> repetitionSpans(ProgramSet set) => [
   if (set.isAmrap) ...[
@@ -15,7 +22,8 @@ List<InlineSpan> repetitionSpans(ProgramSet set) => [
     const TextSpan(text: '기준 '),
   ],
   TextSpan(
-    text: '${set.repetitions}',
+    text:
+        '${set.repetitions}${set.repetitionsMax == null ? '' : '–${set.repetitionsMax}'}',
     style: mono(color: AppColors.inkDim),
   ),
   const TextSpan(text: '회'),
@@ -35,6 +43,19 @@ class SetPrescriptionNotes extends StatelessWidget {
   Widget build(BuildContext context) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
+      if (set.kind != ProgramSetKind.work)
+        Padding(
+          padding: const EdgeInsets.only(top: AppSpace.x2),
+          child: Text(
+            setKindLabel(set.kind),
+            style: AppType.caption.copyWith(color: AppColors.accent),
+          ),
+        ),
+      if (explain && set.kind == ProgramSetKind.drop)
+        Text(
+          '작성된 순서와 중량대로 각 세트를 수행해 주세요. 자동 중량 감소는 적용하지 않아요.',
+          style: AppType.caption,
+        ),
       if (set.restSeconds != null || set.tempo != null)
         Padding(
           padding: const EdgeInsets.only(top: AppSpace.x2),

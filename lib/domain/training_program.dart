@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'recent_lift_record.dart';
 
+enum ProgramSetKind { work, warmup, drop }
+
 enum LoadKind { manual, fixedKg, percentOfBaseline }
 
 enum BaselineSource { userEntered, recordedWeight }
@@ -83,6 +85,8 @@ final class LiftBaseline {
 final class ProgramSet {
   final String id;
   final int repetitions;
+  final int? repetitionsMax;
+  final ProgramSetKind kind;
   final double? rir;
   final LoadPrescription load;
   final bool isRequired;
@@ -92,6 +96,8 @@ final class ProgramSet {
   ProgramSet({
     required this.id,
     required this.repetitions,
+    this.repetitionsMax,
+    this.kind = ProgramSetKind.work,
     this.rir,
     required this.load,
     this.isRequired = true,
@@ -101,6 +107,15 @@ final class ProgramSet {
   }) {
     _id(id);
     _check(repetitions > 0, 'Repetitions must be positive');
+    _check(
+      repetitionsMax == null ||
+          repetitionsMax! >= repetitions && repetitionsMax! <= 100,
+      'Invalid repetition range',
+    );
+    _check(
+      !isAmrap || repetitionsMax == null,
+      'AMRAP cannot have a repetition range',
+    );
     _rir(rir);
     _check(
       restSeconds == null || restSeconds! >= 0 && restSeconds! <= 3600,
@@ -111,11 +126,15 @@ final class ProgramSet {
       'Tempo must contain four phases, for example 3-1-X-0',
     );
   }
+  bool get hasExtendedPrescriptions =>
+      repetitionsMax != null || kind != ProgramSetKind.work;
   bool get hasAdvancedPrescriptions =>
       restSeconds != null || tempo != null || isAmrap;
   Map<String, Object?> toJson() => {
     'id': id,
     'repetitions': repetitions,
+    if (repetitionsMax != null) 'repetitionsMax': repetitionsMax,
+    if (kind != ProgramSetKind.work) 'setKind': kind.name,
     'rir': rir,
     'load': load.toJson(),
     'isRequired': isRequired,
@@ -126,6 +145,10 @@ final class ProgramSet {
   factory ProgramSet.fromJson(Map<String, dynamic> j) => ProgramSet(
     id: j['id'] as String,
     repetitions: j['repetitions'] as int,
+    repetitionsMax: j['repetitionsMax'] as int?,
+    kind: j.containsKey('setKind')
+        ? ProgramSetKind.values.byName(j['setKind'] as String)
+        : ProgramSetKind.work,
     rir: (j['rir'] as num?)?.toDouble(),
     load: LoadPrescription.fromJson(_map(j['load'])),
     isRequired: j['isRequired'] as bool,
@@ -257,6 +280,11 @@ final class TrainingProgram {
       );
     }
   }
+  bool get hasExtendedPrescriptions => sessions.any(
+    (session) => session.exercises.any(
+      (exercise) => exercise.sets.any((set) => set.hasExtendedPrescriptions),
+    ),
+  );
   bool get hasAdvancedPrescriptions => sessions.any(
     (session) => session.exercises.any(
       (exercise) =>
@@ -299,6 +327,8 @@ final class PlannedSet {
   final double? targetKg;
   const PlannedSet._(this.id, this.template, this.targetKg);
   int get repetitions => template.repetitions;
+  int? get repetitionsMax => template.repetitionsMax;
+  ProgramSetKind get kind => template.kind;
   double? get rir => template.rir;
   bool get isRequired => template.isRequired;
   int? get restSeconds => template.restSeconds;
@@ -1014,6 +1044,9 @@ final class TrainingAppState {
       }
     }
   }
+  bool get hasExtendedPrescriptions =>
+      (activePlan?.program.hasExtendedPrescriptions ?? false) ||
+      planHistory.any((plan) => plan.program.hasExtendedPrescriptions);
   bool get hasAdvancedPrescriptions =>
       (activePlan?.program.hasAdvancedPrescriptions ?? false) ||
       planHistory.any((plan) => plan.program.hasAdvancedPrescriptions);
@@ -1587,4 +1620,12 @@ bool containsAdvancedPrescriptionFields(Object? value) {
         value.values.any(containsAdvancedPrescriptionFields);
   }
   return value is List && value.any(containsAdvancedPrescriptionFields);
+}
+
+bool containsExtendedPrescriptionFields(Object? value) {
+  if (value is Map) {
+    return value.keys.any(const {'repetitionsMax', 'setKind'}.contains) ||
+        value.values.any(containsExtendedPrescriptionFields);
+  }
+  return value is List && value.any(containsExtendedPrescriptionFields);
 }
