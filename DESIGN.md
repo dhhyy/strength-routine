@@ -201,3 +201,9 @@ Fixed 앱바·Fluid 스크롤·Hybrid 편집 시트/마감 확인창으로 조�
 불변: 운영자 한 명, 내부 진입점, 일반 앱 5탭, 현재 프로그램 스냅샷·실제 운동 기록·날짜·D5, 기존 한 주 반복 편집기의 원문 초안. Fixed 앱바·Hybrid 주차/세션 선택·Fluid 폼/세트 목록으로 조립한다. 모든 주를 한 화면에 펼치지 않고 선택한 범위를 명시한다. 복사는 대상 주와 교체 범위를 확인하고, 삭제·복사와 반복 입력은 되돌리기로 복구할 수 있게 한다.
 
 날짜·숫자·ID는 mono, 한글은 KR, 기존 AppType/AppSpace/AppSize/AppColors/GlassPanel/FlowPage를 유지한다. 세트별 반복·RIR·필수/선택·중량 방식이 서로 다르다는 것을 실제 행의 값으로 확인한다. 저장 중·미저장 실패·유효성 오류·취소·복구를 분리한다. 1200px 운영 화면과 375px·큰 글자·키보드 조건에서 렌더 비판→수정→재렌더를 수행한다. 상세 흐름과 데이터 계약은 `docs/2026-09-08-admin-precise-editor.md`에 남긴다.
+
+### 관리자 정밀 편집 렌더 반영
+
+첫 1200px 렌더에서 세트 입력이 세로로 길게 늘어져 값 비교가 어려웠다. [최초](research/2026-09-08/admin-precise/first/sets-desktop.png)와 비교해 [최종](research/2026-09-08/admin-precise/final/sets-desktop.png)은 관련 입력을 3열로 모았다. 375px에서는 세로 입력을 유지하고 ChoiceChip·필수 여부 Switch의 색을 Console 토큰으로 통일했다. [큰 글자 화면](research/2026-09-08/admin-precise/final/editor-mobile-large.png)과 [검토](research/2026-09-08/admin-precise/final/review-mobile-large.png), [실패](research/2026-09-08/admin-precise/final/save-failure-mobile.png)를 확인했다.
+
+실제 조건은 1200×900/375×900·1.5배 글자·320px 키보드 inset의 headless 위젯 렌더다. 전체 189개 회귀와 정적 분석을 통과했다. 세트 비교 수치의 범위, ID 충돌·저장 경쟁조건 수정, 기기 미실행 범위는 [정밀 편집 명세·검증](docs/2026-09-08-admin-precise-editor.md)에 남겼다.

@@ -1,5 +1,7 @@
 # 자체 검증과 QA 진입점
 
+**최신 관리자 정밀 편집:** [제어 범위·운영자 확인·검증](../docs/2026-09-08-admin-precise-editor.md)을 먼저 읽는다. 실제 목록에서 기존 프로그램을 열어 한 세트를 바꾸고 새 버전으로 내보내는 경로까지 연결했으며 전체 189개가 통과했다.
+
 **9/8 최신:** [실기기 확인 순서](../docs/2026-09-08-device-test-guide.md)와 [기능 검증](../docs/2026-09-08-feature-verification.md)을 먼저 읽는다. `tool/device_qa.dart`는 오늘 완료→D5→OS 재실행을 위한 별도 합성 저장 파일을 사용하며 최초 한 번만 자료를 만든다. `lib/main_admin.dart`는 운영자의 내부 생성 도구이며 사용자 배포 대상이 아니다.
 
 **수행일·마감 후속:** [현재 구현 명세](../docs/2026-09-08-session-lifecycle.md)와 실기기 가이드의 **F1~F8**을 추가로 따른다. 실제 날짜 선택→초안/실제 저장→`기록 마감`→`기록 다시 열기`→수정·재마감·수행일 달력을 확인하는 절차다. 이번 문서 갱신에서는 코드/테스트를 읽었으며 **시뮬레이터·실기기·OS 강제 종료 시험을 실행하지 않았다**. 최종 테스트 수·커밋·렌더 결과는 최신 명세/검증 문서에서 확인한다.
@@ -94,3 +96,16 @@ flutter run -d 003D93A6-D728-4968-92EE-7996BD1E568E
 ```
 
 파일 저장·실패 복구·복원 및 375×812/키보드 제약의 최신 결과는 [자체 검증 보고서](../docs/2026-09-07-verification.md)에 남긴다. 네이티브 렌더와 실제 기기 조작을 테스트 통과만으로 완료 처리하지 않는다. 과거 캡처·실행 이력은 [작업 기록](../docs/2026-09-07-work-log.md)을 따른다.
+
+## 최신 관리자 정밀 편집 확인 · 9/8
+
+[정밀 편집 명세·검증](../docs/2026-09-08-admin-precise-editor.md)의 §10 운영자 조작과 §13 자동 검사 결과를 먼저 읽는다. 내부 진입점은 계속 `lib/main_admin.dart`이며 사용자 재요청 전 Simulator를 실행하지 않는다. 관리자 작업 파일 v2, 소비자 카탈로그 v1, 사용자 운동 파일 v3을 구별한다.
+
+**[macOS Terminal] 앱 루트에서:**
+
+```sh
+flutter test test/detailed_routine_test.dart test/detailed_admin_workspace_test.dart test/detailed_admin_screen_test.dart test/detailed_admin_integration_test.dart --concurrency=1 --reporter expanded
+flutter test test/detailed_admin_screen_test.dart --reporter expanded --dart-define=DETAILED_ADMIN_RENDER_DIR=/tmp/strength-admin-precise
+```
+
+원형 보존·주차 독립성·중량 기준·순서/복사·v1/v2 이행·실제 카탈로그 편집→새 버전 저장→내보내기·저장 충돌을 각각 확인한다. 두 번째 명령은 번들 폰트의 headless 위젯 렌더이며 실제 내부 앱/OS 프로세스 복원을 의미하지 않는다.
