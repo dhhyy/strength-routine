@@ -1,0 +1,172 @@
+00:00 +0: loading /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart
+00:00 +0: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 기존 혼합 처방에서 2주차 2세트만 바꾸고 전체 검토 후 저장한다
+00:13 +1: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 반복 범위와 세트 종류를 편집/검토하고 새 버전으로 저장한다
+00:19 +2: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 반복 범위와 세트 종류를 편집/검토하고 새 버전으로 저장한다
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+관리자 작업의 관찰 가능한 완료 상태를 10초 안에 확인하지 못했습니다.
+
+When the exception was thrown, this was the stack:
+#0      fail (package:matcher/src/expect/expect.dart:149:31)
+#1      main.settle (file:///Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart:129:9)
+<asynchronous suspension>
+#2      main.tap (file:///Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart:233:5)
+<asynchronous suspension>
+#3      main.<anonymous closure> (file:///Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart:308:5)
+<asynchronous suspension>
+#4      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:193:15)
+<asynchronous suspension>
+#5      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1064:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  반복 범위와 세트 종류를 편집/검토하고 새 버전으로 저장한다
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:22 +2 -1: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 잘못된 원문과 저장 실패를 보존하고 재시도 후 경로 오류를 안내한다
+00:22 +2 -1: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 반복 범위와 세트 종류를 편집/검토하고 새 버전으로 저장한다 [E]
+  Test failed. See exception logs above.
+  The test description was: 반복 범위와 세트 종류를 편집/검토하고 새 버전으로 저장한다
+
+00:24 +3 -1: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 일괄 수정은 미리보기/취소/확정/한 단계 되돌리기를 연결한다
+00:25 +4 -1: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 일괄 수정은 미리보기/취소/확정/한 단계 되돌리기를 연결한다
+00:27 +5 -1: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 일괄 수정은 미리보기/취소/확정/한 단계 되돌리기를 연결한다
+00:27 +6 -1: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 초기 이력 false: 연속 저장 뒤 원래·중간 버전을 검토 전에 차단한다
+00:29 +7 -1: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 초기 이력 false: 연속 저장 뒤 원래·중간 버전을 검토 전에 차단한다
+00:30 +7 -1: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 보관 취소/실패 보존/재시도/복원과 실제 파일 재로딩을 연결한다
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: exactly one matching candidate
+  Actual: _TextWidgetFinder:<Found 0 widgets with text "변경 저장 실패": []>
+   Which: means none were found but one was expected
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart:444:5)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:193:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1064:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart line 444
+The test description was:
+  보관 취소/실패 보존/재시도/복원과 실제 파일 재로딩을 연결한다
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:30 +7 -2: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 초기 이력 false: 연속 저장 뒤 원래·중간 버전을 검토 전에 차단한다
+00:30 +7 -2: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 보관 취소/실패 보존/재시도/복원과 실제 파일 재로딩을 연결한다 [E]
+  Test failed. See exception logs above.
+  The test description was: 보관 취소/실패 보존/재시도/복원과 실제 파일 재로딩을 연결한다
+
+00:33 +7 -2: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 초기 이력 false: 연속 저장 뒤 원래·중간 버전을 검토 전에 차단한다
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following StateError was thrown running a test:
+Bad state: No element
+
+When the exception was thrown, this was the stack:
+#0      Iterable.single (dart:core/iterable.dart:694:25)
+#1      WidgetController.element (package:flutter_test/src/controller.dart:864:30)
+#2      WidgetController.dragUntilVisible.<anonymous closure> (package:flutter_test/src/controller.dart:2394:38)
+<asynchronous suspension>
+#3      TestAsyncUtils.guard.<anonymous closure> (package:flutter_test/src/test_async_utils.dart:130:27)
+<asynchronous suspension>
+#4      WidgetController.scrollUntilVisible.<anonymous closure> (package:flutter_test/src/controller.dart:2351:7)
+<asynchronous suspension>
+#5      TestAsyncUtils.guard.<anonymous closure> (package:flutter_test/src/test_async_utils.dart:130:27)
+<asynchronous suspension>
+#6      main.reveal (file:///Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart:92:5)
+<asynchronous suspension>
+#7      main.enter (file:///Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart:109:5)
+<asynchronous suspension>
+#8      main.<anonymous closure> (file:///Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart:322:9)
+<asynchronous suspension>
+#9      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:193:15)
+<asynchronous suspension>
+#10     TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1064:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  초기 이력 false: 연속 저장 뒤 원래·중간 버전을 검토 전에 차단한다
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:33 +7 -3: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 이력에서 과거 구성을 불러와 새 버전으로 저장하고 과거 스냅샷을 보존한다
+00:33 +7 -3: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 초기 이력 false: 연속 저장 뒤 원래·중간 버전을 검토 전에 차단한다 [E]
+  Test failed. See exception logs above.
+  The test description was: 초기 이력 false: 연속 저장 뒤 원래·중간 버전을 검토 전에 차단한다
+
+00:44 +7 -3: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 초기 이력 true: 연속 저장 뒤 원래·중간 버전을 검토 전에 차단한다
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following StateError was thrown running a test:
+Bad state: No element
+
+When the exception was thrown, this was the stack:
+#0      Iterable.single (dart:core/iterable.dart:694:25)
+#1      WidgetController.element (package:flutter_test/src/controller.dart:864:30)
+#2      WidgetController.dragUntilVisible.<anonymous closure> (package:flutter_test/src/controller.dart:2394:38)
+<asynchronous suspension>
+#3      TestAsyncUtils.guard.<anonymous closure> (package:flutter_test/src/test_async_utils.dart:130:27)
+<asynchronous suspension>
+#4      WidgetController.scrollUntilVisible.<anonymous closure> (package:flutter_test/src/controller.dart:2351:7)
+<asynchronous suspension>
+#5      TestAsyncUtils.guard.<anonymous closure> (package:flutter_test/src/test_async_utils.dart:130:27)
+<asynchronous suspension>
+#6      main.reveal (file:///Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart:92:5)
+<asynchronous suspension>
+#7      main.enter (file:///Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart:109:5)
+<asynchronous suspension>
+#8      main.<anonymous closure> (file:///Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart:322:9)
+<asynchronous suspension>
+#9      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:193:15)
+<asynchronous suspension>
+#10     TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1064:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  초기 이력 true: 연속 저장 뒤 원래·중간 버전을 검토 전에 차단한다
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:44 +7 -4: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 이력에서 과거 구성을 불러와 새 버전으로 저장하고 과거 스냅샷을 보존한다
+00:44 +7 -4: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 초기 이력 true: 연속 저장 뒤 원래·중간 버전을 검토 전에 차단한다 [E]
+  Test failed. See exception logs above.
+  The test description was: 초기 이력 true: 연속 저장 뒤 원래·중간 버전을 검토 전에 차단한다
+
+00:44 +7 -4: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 이력에서 과거 구성을 불러와 새 버전으로 저장하고 과거 스냅샷을 보존한다
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+관리자 작업의 관찰 가능한 완료 상태를 10초 안에 확인하지 못했습니다.
+
+When the exception was thrown, this was the stack:
+#0      fail (package:matcher/src/expect/expect.dart:149:31)
+#1      main.settle (file:///Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart:129:9)
+<asynchronous suspension>
+#2      main.<anonymous closure> (file:///Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart:540:5)
+<asynchronous suspension>
+#3      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:193:15)
+<asynchronous suspension>
+#4      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1064:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  이력에서 과거 구성을 불러와 새 버전으로 저장하고 과거 스냅샷을 보존한다
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:44 +7 -5: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 검토 뒤 사용 버전 충돌은 저장 재시도 대신 원문 편집으로 돌아간다
+00:44 +7 -5: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 이력에서 과거 구성을 불러와 새 버전으로 저장하고 과거 스냅샷을 보존한다 [E]
+  Test failed. See exception logs above.
+  The test description was: 이력에서 과거 구성을 불러와 새 버전으로 저장하고 과거 스냅샷을 보존한다
+
+00:45 +8 -5: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 반복 범위/일괄 1200.0px 큰 글자 렌더와 키보드 조작
+00:45 +9 -5: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 연속 입력 저장은 순서대로 진행하며 최신 초안 저장 전 검토를 막는다
+00:46 +10 -5: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 반복 범위/일괄 375.0px 큰 글자 렌더와 키보드 조작
+00:46 +11 -5: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 375 너비 큰 글자와 키보드에서도 세트 입력과 검토가 동작한다
+00:46 +12 -5: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 1200 너비에서 세트 필수 여부와 순서를 바꾸어 검토한다
+00:47 +13 -5: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 세트의 중량 기준은 운동 기록 종목과 독립적으로 바꾼다
+00:48 +14 -5: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 구분자가 포함된 ID도 검토의 세트 수와 기존 처방을 충돌시키지 않는다
+00:49 +15 -5: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 빈 주차 초안은 원문을 덮어쓰지 않고 명시적으로 첫 구성을 추가한다
+00:49 +16 -5: Some tests failed.

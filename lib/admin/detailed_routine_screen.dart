@@ -19,6 +19,9 @@ class DetailedRoutineScreen extends StatefulWidget {
   final List<TrainingProgram> catalog;
   final List<TrainingProgram> versionHistory;
   final Future<bool> Function(DetailedRoutineDraft) onDraftChanged;
+
+  /// Returns false for a retriable write failure; throws [FormatException]
+  /// when the reviewed candidate requires editing before it can be saved.
   final Future<bool> Function(TrainingProgram, DetailedRoutineDraft)
   onSaveProgram;
 
@@ -38,6 +41,7 @@ class DetailedRoutineScreen extends StatefulWidget {
 class _DetailedRoutineScreenState extends State<DetailedRoutineScreen> {
   late DetailedRoutineDraft _draft;
   late List<TrainingProgram> _catalog;
+  late final Set<(String, String)> _usedVersions;
   final _undo = <DetailedRoutineDraft>[], _redo = <DetailedRoutineDraft>[];
   final _expandedSetOptions = <String>{};
   Future<void> _saveQueue = Future.value();
@@ -50,6 +54,10 @@ class _DetailedRoutineScreenState extends State<DetailedRoutineScreen> {
     super.initState();
     _draft = widget.initialDraft.copy();
     _catalog = List.of(widget.catalog);
+    _usedVersions = {
+      for (final program in [...widget.catalog, ...widget.versionHistory])
+        (program.id, program.version),
+    };
   }
 
   void _saveDraft() {
@@ -207,10 +215,7 @@ class _DetailedRoutineScreenState extends State<DetailedRoutineScreen> {
       final snapshot = _draft.copy();
       final candidate = generateDetailedRoutine(snapshot);
       final previous = _catalog.where((p) => p.id == candidate.id).firstOrNull;
-      if ([
-        ..._catalog,
-        ...widget.versionHistory,
-      ].any((p) => p.id == candidate.id && p.version == candidate.version)) {
+      if (_usedVersions.contains((candidate.id, candidate.version))) {
         throw const FormatException(
           '기존 프로그램을 교체하려면 버전을 바꿔 주세요. 같은 ID·버전은 저장할 수 없습니다.',
         );
@@ -226,6 +231,7 @@ class _DetailedRoutineScreenState extends State<DetailedRoutineScreen> {
       );
       if (!mounted || saved != true) return;
       setState(() {
+        _usedVersions.add((candidate.id, candidate.version));
         _catalog = [..._catalog.where((p) => p.id != candidate.id), candidate];
         _message = '검토한 버전을 관리자 카탈로그에 저장했습니다. 사용자 앱 반영은 내보내기 후 진행해 주세요.';
       });
@@ -1109,9 +1115,10 @@ class _DetailedReview extends StatefulWidget {
 
 class _DetailedReviewState extends State<_DetailedReview> {
   bool _saving = false;
+  bool _requiresEditing = false;
   String? _error;
   Future<void> _save() async {
-    if (_saving) return;
+    if (_saving || _requiresEditing) return;
     setState(() {
       _saving = true;
       _error = null;
@@ -1119,6 +1126,14 @@ class _DetailedReviewState extends State<_DetailedReview> {
     bool saved;
     try {
       saved = await widget.onSave();
+    } on FormatException catch (error) {
+      if (!mounted) return;
+      setState(() {
+        _saving = false;
+        _requiresEditing = true;
+        _error = error.message;
+      });
+      return;
     } catch (_) {
       saved = false;
     }
@@ -1318,9 +1333,15 @@ class _DetailedReviewState extends State<_DetailedReview> {
           if (_error != null)
             Text(_error!, style: AppType.body.copyWith(color: AppColors.warn)),
           PrimaryAction(
-            label: _error == null ? '검토한 프로그램 저장' : '카탈로그 저장 재시도',
+            label: _requiresEditing
+                ? '편집으로 돌아가기'
+                : _error == null
+                ? '검토한 프로그램 저장'
+                : '카탈로그 저장 재시도',
             busy: _saving,
-            onPressed: _save,
+            onPressed: _requiresEditing
+                ? () => Navigator.pop(context, false)
+                : _save,
           ),
         ],
       ),

@@ -7,8 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:strength_routine/admin/admin_program_store.dart';
 import 'package:strength_routine/admin/detailed_routine.dart';
 import 'package:strength_routine/admin/detailed_routine_screen.dart';
+import 'package:strength_routine/admin/routine_builder.dart';
 import 'package:strength_routine/domain/recent_lift_record.dart';
 import 'package:strength_routine/domain/training_program.dart';
 import 'package:strength_routine/theme.dart';
@@ -22,6 +24,7 @@ void main() {
     WidgetTester tester, {
     DetailedRoutineDraft? draft,
     List<TrainingProgram>? catalog,
+    List<TrainingProgram> versionHistory = const [],
     Future<bool> Function(DetailedRoutineDraft)? onDraft,
     Future<bool> Function(TrainingProgram, DetailedRoutineDraft)? onProgram,
     double width = 375,
@@ -66,6 +69,7 @@ void main() {
           initialDraft:
               draft ?? DetailedRoutineDraft.fromProgram(fixtureProgram()),
           catalog: catalog ?? [],
+          versionHistory: versionHistory,
           onDraftChanged: onDraft ?? (_) async => true,
           onSaveProgram: onProgram ?? (_, _) async => true,
         ),
@@ -269,6 +273,119 @@ void main() {
     expect(attempts, hasLength(2));
     expect(attempts[0], attempts[1]);
     expect(find.text('주차·세트 정밀 편집'), findsOneWidget);
+  });
+
+  for (final hasHistory in [false, true]) {
+    testWidgets('초기 이력 $hasHistory: 연속 저장 뒤 원래·중간 버전을 검토 전에 차단한다', (
+      tester,
+    ) async {
+      final original = fixtureProgram(version: '1');
+      var workspace = AdminWorkspace(
+        draft: RoutineBlueprint(),
+        programs: [original],
+      );
+      if (hasHistory) {
+        workspace = workspace.withProgram(fixtureProgram(version: '2'), null);
+      }
+      final originals = workspace
+          .versionsFor(original.id)
+          .map((program) => jsonEncode(program.toJson()))
+          .toList();
+      final firstVersion = hasHistory ? 3 : 2;
+      var saveCalls = 0;
+      DetailedRoutineDraft? lastDraft;
+      await pump(
+        tester,
+        draft: DetailedRoutineDraft.fromProgram(workspace.programs.single)
+          ..version = '$firstVersion',
+        catalog: workspace.programs,
+        versionHistory: workspace.versionHistory,
+        width: 1200,
+        onDraft: (draft) async {
+          lastDraft = draft.copy();
+          return true;
+        },
+        onProgram: (program, draft) async {
+          saveCalls++;
+          workspace = workspace.withProgram(program, draft);
+          return true;
+        },
+      );
+      await tap(tester, find.text('변경 검토'));
+      await tap(tester, find.text('검토한 프로그램 저장'));
+      Future<void> editMetadata(String key, String value) async {
+        await reveal(tester, find.text('프로그램 정보'));
+        final input = find.descendant(
+          of: find.byKey(const ValueKey('detail-metadata')),
+          matching: field(key),
+        );
+        if (input.evaluate().isEmpty) {
+          await tap(tester, find.text('프로그램 정보'));
+        }
+        await reveal(tester, input);
+        await tester.enterText(input, value);
+        await tester.pumpAndSettle();
+      }
+
+      for (
+        var version = firstVersion + 1;
+        version <= firstVersion + 2;
+        version++
+      ) {
+        await editMetadata('version', '$version');
+        await tap(tester, find.text('변경 검토'));
+        await tap(tester, find.text('검토한 프로그램 저장'));
+      }
+      expect(saveCalls, 3);
+      final savedWorkspace = jsonEncode(workspace.toJson());
+      for (final version in ['1', '$firstVersion', '${firstVersion + 1}']) {
+        await editMetadata('version', version);
+        await tap(tester, find.text('변경 검토'));
+        expect(find.text('프로그램 변경 검토'), findsNothing);
+        expect(find.textContaining('같은 ID·버전은 저장할 수 없습니다.'), findsOneWidget);
+        expect(lastDraft!.version, version);
+        expect(saveCalls, 3);
+        expect(jsonEncode(workspace.toJson()), savedWorkspace);
+      }
+      expect(
+        workspace
+            .versionsFor(original.id)
+            .take(originals.length)
+            .map((program) => jsonEncode(program.toJson())),
+        originals,
+      );
+      // 버전 문자열은 프로그램 ID별로 관리한다.
+      await editMetadata('id', 'independent-program');
+      await tap(tester, find.text('변경 검토'));
+      expect(find.text('프로그램 변경 검토'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    });
+  }
+
+  testWidgets('검토 뒤 사용 버전 충돌은 저장 재시도 대신 원문 편집으로 돌아간다', (tester) async {
+    var saveCalls = 0;
+    await pump(
+      tester,
+      onProgram: (_, _) async {
+        saveCalls++;
+        throw const FormatException('이미 사용한 버전입니다. 새 버전을 입력해 주세요.');
+      },
+    );
+    await tap(tester, find.text('변경 검토'));
+    await tap(tester, find.text('검토한 프로그램 저장'));
+    expect(find.text('이미 사용한 버전입니다. 새 버전을 입력해 주세요.'), findsOneWidget);
+    expect(find.text('카탈로그 저장 재시도'), findsNothing);
+    await reveal(tester, find.text('편집으로 돌아가기'));
+    await capture(tester, 'version-conflict-mobile');
+    await tap(tester, find.text('편집으로 돌아가기'));
+    expect(find.text('주차·세트 정밀 편집'), findsOneWidget);
+    await tap(tester, find.text('프로그램 정보'));
+    expect(
+      tester.widget<TextFormField>(field('version')).initialValue,
+      'test-v1',
+    );
+    expect(saveCalls, 1);
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('연속 입력 저장은 순서대로 진행하며 최신 초안 저장 전 검토를 막는다', (tester) async {

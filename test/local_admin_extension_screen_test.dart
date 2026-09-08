@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
@@ -12,6 +14,61 @@ import 'package:strength_routine/admin/detailed_routine_screen.dart';
 import 'package:strength_routine/admin/routine_builder.dart';
 import 'package:strength_routine/domain/training_program.dart';
 import 'package:strength_routine/theme.dart';
+
+// Delay only the real file's parent-create stage of an atomic write. The
+// workspace store and its serialization/rename path remain production code.
+class _WriteBarrier {
+  Completer<void>? _release;
+  bool entered = false;
+  int writes = 0;
+  void hold() {
+    expect(_release, isNull);
+    entered = false;
+    _release = Completer<void>();
+  }
+
+  Future<void> wait() async {
+    writes++;
+    if (_release case final release?) {
+      entered = true;
+      await release.future;
+    }
+  }
+
+  void release() {
+    _release!.complete();
+    _release = null;
+  }
+}
+
+class _BarrierFile implements File {
+  final File file;
+  final _WriteBarrier barrier;
+  _BarrierFile(this.file, this.barrier);
+  @override
+  String get path => file.path;
+  @override
+  Directory get parent => _BarrierDirectory(file.parent, barrier);
+  @override
+  Future<String> readAsString({Encoding encoding = utf8}) =>
+      file.readAsString(encoding: encoding);
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+}
+
+class _BarrierDirectory implements Directory {
+  final Directory directory;
+  final _WriteBarrier barrier;
+  _BarrierDirectory(this.directory, this.barrier);
+  @override
+  Future<Directory> create({bool recursive = false}) async {
+    await barrier.wait();
+    return directory.create(recursive: recursive);
+  }
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+}
 
 // 조작/렌더 검증용 합성 자료. 사용자 프로그램 처방이 아니다.
 TrainingProgram _program({String version = '1', String title = '편집 검증 프로그램'}) =>
@@ -58,14 +115,32 @@ void main() {
         directory = await Directory.systemTemp.createTemp('lc04-widget-'),
   );
   tearDown(() => directory.delete(recursive: true));
-  Future<void> settle(WidgetTester tester) async {
-    for (var i = 0; i < 10; i++) {
+  Future<void> settle(WidgetTester tester, {bool Function()? until}) async {
+    final elapsed = Stopwatch()..start();
+    bool completed() =>
+        until?.call() ??
+        (find.byType(CircularProgressIndicator).evaluate().isEmpty &&
+            find.byType(LinearProgressIndicator).evaluate().isEmpty &&
+            find
+                .byWidgetPredicate(
+                  (widget) => widget is AbsorbPointer && widget.absorbing,
+                )
+                .evaluate()
+                .isEmpty &&
+            find.text('초안 저장 중…').evaluate().isEmpty &&
+            find.text('초안 저장 중').evaluate().isEmpty);
+    await tester.pump(const Duration(milliseconds: 16));
+    while (!completed()) {
+      if (elapsed.elapsed > const Duration(seconds: 10)) {
+        fail('관리자 작업의 관찰 가능한 완료 상태를 10초 안에 확인하지 못했습니다.');
+      }
       await tester.runAsync(
-        () => Future<void>.delayed(const Duration(milliseconds: 5)),
+        () => Future<void>.delayed(const Duration(milliseconds: 10)),
       );
-      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 16));
     }
-    await tester.pumpAndSettle();
+    // Only settle route and expansion animations once actual I/O is done.
+    if (until == null) await tester.pumpAndSettle();
   }
 
   Future<void> pump(
@@ -154,10 +229,14 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  Future<void> tap(WidgetTester tester, Finder finder) async {
+  Future<void> tap(
+    WidgetTester tester,
+    Finder finder, {
+    bool Function()? until,
+  }) async {
     await reveal(tester, finder);
     await tester.tap(finder);
-    await settle(tester);
+    await settle(tester, until: until);
   }
 
   Future<void> enter(WidgetTester tester, String suffix, String text) async {
@@ -367,7 +446,10 @@ void main() {
       find.byKey(const ValueKey('catalog-archive-lc04-fixture')),
     );
     await tester.tap(find.text('보관').last);
-    await settle(tester);
+    await settle(
+      tester,
+      until: () => find.text('변경 저장 실패').evaluate().isNotEmpty,
+    );
     expect(find.text('변경 저장 실패'), findsOneWidget);
     await reveal(tester, find.byKey(const ValueKey('catalog-archived-false')));
     expect(find.text('배포 대상 1'), findsOneWidget);
@@ -401,7 +483,9 @@ void main() {
     expect(tester.takeException(), isNull);
   });
   testWidgets('이력에서 과거 구성을 불러와 새 버전으로 저장하고 과거 스냅샷을 보존한다', (tester) async {
-    final store = AdminProgramStore(File('${directory.path}/workspace.json'));
+    final file = File('${directory.path}/workspace.json');
+    final barrier = _WriteBarrier();
+    final store = AdminProgramStore(_BarrierFile(file, barrier));
     final old = _program();
     final current = _program(version: '2', title: '수정한 검증 프로그램');
     final original = AdminWorkspace(
@@ -415,14 +499,64 @@ void main() {
       find.byKey(const ValueKey('catalog-history-lc04-fixture')),
     );
     await capture(tester, 'version-history-desktop');
-    await tap(tester, find.byKey(const ValueKey('restore-version-1')));
+    barrier.hold();
+    await tap(
+      tester,
+      find.byKey(const ValueKey('restore-version-1')),
+      until: () => barrier.entered,
+    );
+    await tester.runAsync(
+      () => Future<void>.delayed(const Duration(milliseconds: 100)),
+    );
+    await tester.pump();
+    expect(find.byType(DetailedRoutineScreen), findsNothing);
+    expect(barrier.writes, 2);
+    expect(
+      jsonDecode((await tester.runAsync(file.readAsString))!),
+      original.toJson(),
+    );
+    barrier.release();
+    await settle(
+      tester,
+      until: () => find.byType(DetailedRoutineScreen).evaluate().isNotEmpty,
+    );
+    await settle(tester);
     expect(find.byType(DetailedRoutineScreen), findsOneWidget);
     final opened = (await tester.runAsync(store.load))!;
     expect(opened.detailedDraft!.version, '3');
     expect(opened.detailedDraft!.title, old.title);
     expect(opened.programs.single.title, current.title);
     await tap(tester, find.text('변경 검토'));
-    await tap(tester, find.text('검토한 프로그램 저장'));
+    barrier.hold();
+    await tap(tester, find.text('검토한 프로그램 저장'), until: () => barrier.entered);
+    await tester.runAsync(
+      () => Future<void>.delayed(const Duration(milliseconds: 100)),
+    );
+    await tester.pump();
+    expect(find.text('프로그램 변경 검토'), findsOneWidget);
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(barrier.writes, 3);
+    expect(
+      jsonDecode((await tester.runAsync(file.readAsString))!),
+      opened.toJson(),
+    );
+    final saveButton = find.ancestor(
+      of: find.byType(CircularProgressIndicator),
+      matching: find.byType(FilledButton),
+    );
+    expect(tester.widget<FilledButton>(saveButton).onPressed, isNull);
+    await tester.tap(saveButton);
+    await tester.pump();
+    expect(barrier.writes, 3);
+    // Keep real I/O pending beyond the former 50 ms budget while settle runs.
+    await tester.runAsync(() async {
+      Timer(const Duration(milliseconds: 250), barrier.release);
+    });
+    await settle(
+      tester,
+      until: () => find.text('프로그램 변경 검토').evaluate().isEmpty,
+    );
+    await settle(tester);
     final restored = (await tester.runAsync(
       () => AdminProgramStore(store.file).load(),
     ))!;

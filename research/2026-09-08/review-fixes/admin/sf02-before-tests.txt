@@ -1,0 +1,33 @@
+00:00 +0: loading /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart
+00:00 +0: 초기 이력 false: 연속 저장 뒤 원래·중간 버전을 검토 전에 차단한다
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: no matching candidates
+  Actual: _TextWidgetFinder:<Found 1 widget with text "프로그램 변경 검토": [
+            Text("프로그램 변경 검토", inherit: true, color: Color(alpha: 1.0000, red: 0.8627, green:
+0.8902, blue: 0.9216, colorSpace: ColorSpace.sRGB), family: IBM Plex Sans KR, size: 18.0, weight:
+600, style: normal, letterSpacing: 0.0, dependencies: [DefaultSelectionStyle, DefaultTextStyle,
+MediaQuery]),
+          ]>
+   Which: means one was found but none were expected
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart:337:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:193:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1064:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart line 337
+The test description was:
+  초기 이력 false: 연속 저장 뒤 원래·중간 버전을 검토 전에 차단한다
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:05 +0 -1: 초기 이력 false: 연속 저장 뒤 원래·중간 버전을 검토 전에 차단한다 [E]
+  Test failed. See exception logs above.
+  The test description was: 초기 이력 false: 연속 저장 뒤 원래·중간 버전을 검토 전에 차단한다
+
+00:05 +0 -1: Some tests failed.

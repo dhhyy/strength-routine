@@ -173,7 +173,7 @@ class _AdminScreenState extends State<AdminScreen> {
       return await _commitWorkspace(_workspace.withProgram(program, detailed));
     } on FormatException catch (error) {
       if (mounted) setState(() => _actionError = error.message);
-      return false;
+      rethrow;
     }
   }
 

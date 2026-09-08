@@ -1,0 +1,165 @@
+00:00 +0: loading /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart
+00:00 +0: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 기존 혼합 처방에서 2주차 2세트만 바꾸고 전체 검토 후 저장한다
+00:03 +1: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 기존 혼합 처방에서 2주차 2세트만 바꾸고 전체 검토 후 저장한다
+00:03 +2: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 기존 혼합 처방에서 2주차 2세트만 바꾸고 전체 검토 후 저장한다
+00:03 +3: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 기존 혼합 처방에서 2주차 2세트만 바꾸고 전체 검토 후 저장한다
+00:03 +4: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 기존 혼합 처방에서 2주차 2세트만 바꾸고 전체 검토 후 저장한다
+00:03 +5: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 기존 혼합 처방에서 2주차 2세트만 바꾸고 전체 검토 후 저장한다
+00:03 +6: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 기존 혼합 처방에서 2주차 2세트만 바꾸고 전체 검토 후 저장한다
+00:03 +7: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 기존 혼합 처방에서 2주차 2세트만 바꾸고 전체 검토 후 저장한다
+00:03 +8: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 기존 혼합 처방에서 2주차 2세트만 바꾸고 전체 검토 후 저장한다
+00:03 +9: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 기존 혼합 처방에서 2주차 2세트만 바꾸고 전체 검토 후 저장한다
+00:03 +10: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 기존 혼합 처방에서 2주차 2세트만 바꾸고 전체 검토 후 저장한다
+00:03 +11: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 기존 혼합 처방에서 2주차 2세트만 바꾸고 전체 검토 후 저장한다
+00:03 +12: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 기존 혼합 처방에서 2주차 2세트만 바꾸고 전체 검토 후 저장한다
+00:03 +13: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 기존 혼합 처방에서 2주차 2세트만 바꾸고 전체 검토 후 저장한다
+00:03 +14: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 기존 혼합 처방에서 2주차 2세트만 바꾸고 전체 검토 후 저장한다
+00:03 +15: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 기존 혼합 처방에서 2주차 2세트만 바꾸고 전체 검토 후 저장한다
+00:03 +16: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 기존 혼합 처방에서 2주차 2세트만 바꾸고 전체 검토 후 저장한다
+00:03 +17: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 기존 혼합 처방에서 2주차 2세트만 바꾸고 전체 검토 후 저장한다
+00:03 +18: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 기존 혼합 처방에서 2주차 2세트만 바꾸고 전체 검토 후 저장한다
+00:03 +19: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 기존 혼합 처방에서 2주차 2세트만 바꾸고 전체 검토 후 저장한다
+00:03 +20: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 기존 혼합 처방에서 2주차 2세트만 바꾸고 전체 검토 후 저장한다
+00:07 +21: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 기존 혼합 처방에서 2주차 2세트만 바꾸고 전체 검토 후 저장한다
+00:08 +22: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 목록에서 기존 프로그램의 한 세트를 편집해 새 버전 저장·내보내기·재로딩한다
+00:10 +23: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 목록에서 기존 프로그램의 한 세트를 편집해 새 버전 저장·내보내기·재로딩한다
+00:10 +24: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 목록에서 기존 프로그램의 한 세트를 편집해 새 버전 저장·내보내기·재로딩한다
+00:12 +25: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 목록에서 기존 프로그램의 한 세트를 편집해 새 버전 저장·내보내기·재로딩한다
+00:12 +26: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 목록에서 기존 프로그램의 한 세트를 편집해 새 버전 저장·내보내기·재로딩한다
+00:14 +27: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 목록에서 기존 프로그램의 한 세트를 편집해 새 버전 저장·내보내기·재로딩한다
+00:14 +28: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 목록에서 기존 프로그램의 한 세트를 편집해 새 버전 저장·내보내기·재로딩한다
+00:14 +29: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 목록에서 기존 프로그램의 한 세트를 편집해 새 버전 저장·내보내기·재로딩한다
+00:15 +30: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 목록에서 기존 프로그램의 한 세트를 편집해 새 버전 저장·내보내기·재로딩한다
+00:15 +31: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 목록에서 기존 프로그램의 한 세트를 편집해 새 버전 저장·내보내기·재로딩한다
+00:16 +32: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 보관 취소/실패 보존/재시도/복원과 실제 파일 재로딩을 연결한다
+00:17 +33: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 보관 취소/실패 보존/재시도/복원과 실제 파일 재로딩을 연결한다
+00:19 +34: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 보관 취소/실패 보존/재시도/복원과 실제 파일 재로딩을 연결한다
+00:20 +34: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 초기 이력 false: 연속 저장 뒤 원래·중간 버전을 검토 전에 차단한다
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following StateError was thrown running a test:
+Bad state: Too many elements
+
+When the exception was thrown, this was the stack:
+#0      Iterable.single (dart:core/iterable.dart:696:24)
+#1      WidgetController.element (package:flutter_test/src/controller.dart:864:30)
+#2      WidgetController.dragUntilVisible.<anonymous closure> (package:flutter_test/src/controller.dart:2394:38)
+<asynchronous suspension>
+#3      TestAsyncUtils.guard.<anonymous closure> (package:flutter_test/src/test_async_utils.dart:130:27)
+<asynchronous suspension>
+#4      WidgetController.scrollUntilVisible.<anonymous closure> (package:flutter_test/src/controller.dart:2351:7)
+<asynchronous suspension>
+#5      TestAsyncUtils.guard.<anonymous closure> (package:flutter_test/src/test_async_utils.dart:130:27)
+<asynchronous suspension>
+#6      main.reveal (file:///Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart:92:5)
+<asynchronous suspension>
+#7      main.enter (file:///Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart:109:5)
+<asynchronous suspension>
+#8      main.<anonymous closure>.editMetadata (file:///Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart:321:9)
+<asynchronous suspension>
+#9      main.<anonymous closure> (file:///Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart:352:7)
+<asynchronous suspension>
+#10     testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:193:15)
+<asynchronous suspension>
+#11     TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1064:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  초기 이력 false: 연속 저장 뒤 원래·중간 버전을 검토 전에 차단한다
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:20 +34 -1: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 보관 취소/실패 보존/재시도/복원과 실제 파일 재로딩을 연결한다
+00:20 +34 -1: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 초기 이력 false: 연속 저장 뒤 원래·중간 버전을 검토 전에 차단한다 [E]
+  Test failed. See exception logs above.
+  The test description was: 초기 이력 false: 연속 저장 뒤 원래·중간 버전을 검토 전에 차단한다
+
+00:22 +35 -1: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 보관 취소/실패 보존/재시도/복원과 실제 파일 재로딩을 연결한다
+00:25 +35 -1: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 초기 이력 true: 연속 저장 뒤 원래·중간 버전을 검토 전에 차단한다
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following StateError was thrown running a test:
+Bad state: Too many elements
+
+When the exception was thrown, this was the stack:
+#0      Iterable.single (dart:core/iterable.dart:696:24)
+#1      WidgetController.element (package:flutter_test/src/controller.dart:864:30)
+#2      WidgetController.dragUntilVisible.<anonymous closure> (package:flutter_test/src/controller.dart:2394:38)
+<asynchronous suspension>
+#3      TestAsyncUtils.guard.<anonymous closure> (package:flutter_test/src/test_async_utils.dart:130:27)
+<asynchronous suspension>
+#4      WidgetController.scrollUntilVisible.<anonymous closure> (package:flutter_test/src/controller.dart:2351:7)
+<asynchronous suspension>
+#5      TestAsyncUtils.guard.<anonymous closure> (package:flutter_test/src/test_async_utils.dart:130:27)
+<asynchronous suspension>
+#6      main.reveal (file:///Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart:92:5)
+<asynchronous suspension>
+#7      main.enter (file:///Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart:109:5)
+<asynchronous suspension>
+#8      main.<anonymous closure>.editMetadata (file:///Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart:321:9)
+<asynchronous suspension>
+#9      main.<anonymous closure> (file:///Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart:352:7)
+<asynchronous suspension>
+#10     testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:193:15)
+<asynchronous suspension>
+#11     TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1064:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  초기 이력 true: 연속 저장 뒤 원래·중간 버전을 검토 전에 차단한다
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:25 +35 -2: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 보관 취소/실패 보존/재시도/복원과 실제 파일 재로딩을 연결한다
+00:25 +35 -2: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 초기 이력 true: 연속 저장 뒤 원래·중간 버전을 검토 전에 차단한다 [E]
+  Test failed. See exception logs above.
+  The test description was: 초기 이력 true: 연속 저장 뒤 원래·중간 버전을 검토 전에 차단한다
+
+00:26 +36 -2: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 보관 취소/실패 보존/재시도/복원과 실제 파일 재로딩을 연결한다
+00:26 +37 -2: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 보관 취소/실패 보존/재시도/복원과 실제 파일 재로딩을 연결한다
+00:27 +38 -2: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 보관 취소/실패 보존/재시도/복원과 실제 파일 재로딩을 연결한다
+00:28 +39 -2: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 보관 취소/실패 보존/재시도/복원과 실제 파일 재로딩을 연결한다
+00:28 +40 -2: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 보관 취소/실패 보존/재시도/복원과 실제 파일 재로딩을 연결한다
+00:28 +41 -2: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 보관 취소/실패 보존/재시도/복원과 실제 파일 재로딩을 연결한다
+00:28 +42 -2: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 보관 취소/실패 보존/재시도/복원과 실제 파일 재로딩을 연결한다
+unhandled error during finalization of test:
+/Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart
+TestDeviceException(Shell subprocess terminated by ^C (SIGINT, -2).)
+#0      FlutterTesterTestDevice.finished (package:flutter_tools/src/test/flutter_tester_device.dart:254:5)
+<asynchronous suspension>
+#1      FlutterTesterTestDevice.kill (package:flutter_tools/src/test/flutter_tester_device.dart:236:5)
+<asynchronous suspension>
+#2      FlutterPlatform._startTest.<anonymous closure> (package:flutter_tools/src/test/flutter_platform.dart:696:9)
+<asynchronous suspension>
+#3      FlutterPlatform._startTest.finalize (package:flutter_tools/src/test/flutter_platform.dart:597:11)
+<asynchronous suspension>
+#4      Future.wait.<anonymous closure> (dart:async/future.dart:525:21)
+<asynchronous suspension>
+#5      _DefaultShutdownHooks.runShutdownHooks (package:flutter_tools/src/base/process.dart:73:7)
+<asynchronous suspension>
+#6      exitWithHooks (package:flutter_tools/src/base/process.dart:655:3)
+<asynchronous suspension>
+#7      LocalSignals._handleSignal (package:flutter_tools/src/base/signals.dart:150:7)
+<asynchronous suspension>
+
+unhandled error during finalization of test:
+/Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart
+PathNotFoundException: Deletion failed, path = '/var/folders/jq/hlwqvtb15979k7m2j0p11gyc0000gn/T/flutter_tools.2TwV3o/flutter_test_listener.TFuCPr' (OS Error: No such file or directory, errno = 2)
+#0      _Directory._deleteSync (dart:io/directory_impl.dart:226:7)
+#1      FileSystemEntity.deleteSync (dart:io/file_system_entity.dart:425:7)
+#2      ForwardingFileSystemEntity.deleteSync (package:file/src/forwarding/forwarding_file_system_entity.dart:70:16)
+#3      ErrorHandlingDirectory.deleteSync.<anonymous closure> (package:flutter_tools/src/base/error_handling_io.dart:448:22)
+#4      _runSync (package:flutter_tools/src/base/error_handling_io.dart:549:14)
+#5      ErrorHandlingDirectory.deleteSync (package:flutter_tools/src/base/error_handling_io.dart:447:12)
+#6      FlutterPlatform._createListenerDart.<anonymous closure> (package:flutter_tools/src/test/flutter_platform.dart:793:15)
+#7      FlutterPlatform._startTest.finalize (package:flutter_tools/src/test/flutter_platform.dart:597:26)
+<asynchronous suspension>
+#8      Future.wait.<anonymous closure> (dart:async/future.dart:525:21)
+<asynchronous suspension>
+#9      _DefaultShutdownHooks.runShutdownHooks (package:flutter_tools/src/base/process.dart:73:7)
+<asynchronous suspension>
+#10     exitWithHooks (package:flutter_tools/src/base/process.dart:655:3)
+<asynchronous suspension>
+#11     LocalSignals._handleSignal (package:flutter_tools/src/base/signals.dart:150:7)
+<asynchronous suspension>
+
+01:48 +42 -2: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 보관 취소/실패 보존/재시도/복원과 실제 파일 재로딩을 연결한다 - did not complete [E]
+01:48 +42 -2: Some tests failed.
