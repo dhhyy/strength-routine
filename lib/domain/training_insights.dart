@@ -117,7 +117,8 @@ TrainingTrendPoint _point(TrainingAppState state, _Occurrence occurrence) {
       .expand((e) => e.sets)
       .where((s) => s.isRequired)
       .toList();
-  final required = sets.where((s) => s.isRequired).toList();
+  // AMRAP's displayed repetition count is a reference, not a fixed target.
+  final required = sets.where((s) => s.isRequired && !s.isAmrap).toList();
   final comparable =
       sessionRequired.isNotEmpty &&
       required.isNotEmpty &&
@@ -191,7 +192,8 @@ TargetLoadAdjustment? _suggestion(
     (o) => o.session.date.isAfter(calendarDate(asOf)),
   )) {
     for (final set in occurrence.planned.sets) {
-      if (state.setActuals.containsKey(set.id) ||
+      if (set.isAmrap ||
+          state.setActuals.containsKey(set.id) ||
           state.setDrafts.containsKey(set.id)) {
         continue;
       }
