@@ -303,3 +303,18 @@ Console v2의 같은 토큰과 기록 흐름을 유지하며 관리자에서 작
 | 타이머 실패 | 읽기 실패 재읽기와 쓰기 실패 재시도를 구분한다. 긴 목록 하단에서 시작해도 상단 상태를 보이게 하고, 실패 재시도 후 높아진 카드의 제목도 다시 드러낸다 |
 
 1200×900 관리자, 375×900 사용자/관리자, 글자 1.5배·320px 키보드 inset의 headless 렌더를 사용한다. 관리자 확장 라벨의 상단 잘림은 childrenPadding을 AppSpace.x3로 확보해 고쳤고, AMRAP 설명을 스위치 아래 전체 폭으로 옮겼다. 사용자 타이머 재시도 뒤 제목이 위로 가려져 전체 카드가 보이도록 스크롤을 보완했다. 이미지·최종 검증 범위는 [고급 처방 명세](2026-09-08-advanced-prescriptions.md)를 따른다.
+
+
+## 9/8 로컬 완성 기능 컴포넌트
+
+| 구성 | 소스 | 사용 계약 |
+|---|---|---|
+| BackupScreen | `lib/backup_screen.dart` | 운동 파일 범위·현재/후보 요약·명시 교체·복구본, FlowPage/GlassPanel/StatePanel 조립 |
+| ScheduleScreen / MissedWorkoutsScreen | `lib/schedule_screen.dart` / `lib/training_screens.dart` | 보호된 기록을 제외한 미래 날짜 선택·전후 검토·실패 재시도 |
+| 이전 기록 선택/덮어쓰기 | `lib/previous_record_dialog.dart` | 수행일·출처·원래 단위 표시 후 입력값만 초안으로 복사 |
+| DetailedBulkScreen | `lib/admin/detailed_bulk_screen.dart` | 범위/한 필드/변경 개수·전후 상세·취소/명시 적용 |
+| AdminVersionHistory | `lib/admin/admin_screen.dart` | 과거 처방을 펼쳐 확인한 뒤 새 버전 초안으로 복구 |
+| 휴식 설정 | `lib/settings_screen.dart` | 처방이 없을 때 기본 시간·자동 시작, 저장 전/후 선택 분리 |
+| ExerciseGuideLink/화면 | `lib/exercise_guide_screen.dart` | 명시 매핑한 가이드·오프라인 설명·외부 출처 실패 상태 |
+
+모든 새 UI는 기존 AppColors/AppSpace/AppRadius/AppSize/AppType/kr/mono를 쓴다. 한글 제목/설명과 숫자 날짜/중량 표현을 구분하고 좁은 폭에서 행을 강제로 유지하지 않는다. 상세 렌더 증거는 [로컬 완성 명세](2026-09-08-local-completion.md)와 각 기능 보고서에 연결한다.

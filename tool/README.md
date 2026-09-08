@@ -121,3 +121,21 @@ flutter test test/detailed_admin_screen_test.dart --reporter expanded --dart-def
 ```
 
 원형 보존·주차 독립성·중량 기준·순서/복사·v1/v2 이행·실제 카탈로그 편집→새 버전 저장→내보내기·저장 충돌을 각각 확인한다. 두 번째 명령은 번들 폰트의 headless 위젯 렌더이며 실제 내부 앱/OS 프로세스 복원을 의미하지 않는다.
+
+
+## 9/8 로컬 완성 기능 검증
+
+기존 앱 자동 테스트와 아래 기능 시험을 실행한다. 아래는 macOS zsh에서 실행하며 iOS 빌드는 서명/설치 없이 컴파일만 수행한다. Simulator를 실행하지 않는다.
+
+```sh
+cd /Users/yudongheon/Documents/vibe-design/apps/strength_routine
+flutter test --no-pub --reporter expanded
+flutter analyze --no-pub
+flutter build ios --debug --no-codesign --no-pub
+flutter test --no-pub test/backup_screen_test.dart --dart-define=BACKUP_RENDER_DIR=research/2026-09-08/local-completion/backup-final
+flutter test --no-pub test/schedule_previous_screen_test.dart --dart-define=SCHEDULE_PREVIOUS_RENDER_DIR=research/2026-09-08/local-completion/schedule-previous/final
+flutter test --no-pub test/settings_screen_test.dart --dart-define=SETTINGS_RENDER_DIR=research/2026-09-08/rest-guides/rest-final
+flutter test --no-pub test/exercise_guide_screen_test.dart --dart-define=GUIDE_RENDER_DIR=research/2026-09-08/rest-guides/guide-final
+```
+
+새 저장 계약은 카탈로그1~3/관리자1~4/운동1~6/설정1~2/타이머1~2/백업1이다. 운동 백업은 설정·습관·관리자·타이머를 포함하지 않는다. 복원 후 운동 파일6의 세대는 구 타이머의 복원을 차단한다. 상세 코드/실패 재현/결과는 [로컬 완성 보고서](../docs/2026-09-08-local-completion.md), 기기 확인은 [LC-D01~14](../docs/2026-09-08-device-test-guide.md)를 읽는다.

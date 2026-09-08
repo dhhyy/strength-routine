@@ -1,6 +1,8 @@
-# 9/8 · 독립 구현 가능한 남은 기능 전체 — 구현 전 명세
+# 9/8 · 로컬 기능 전체 — 선행 명세·구현·검증
 
-작성: 2026-09-08. 사용자 요청: “모두 문서 작성 후, 기능 구현해줘”. 직전 답변에서 나열한 여섯 묶음을 모두 개발한다. 이전 문서의 ‘제안/결정 필요’는 아래의 명시한 로컬 기본 정책으로 구체화한다. 상세 구현·검증 결과는 문서 마지막에 후속으로 기록하며 계획을 완료로 표시하지 않는다.
+작성: 2026-09-08. 사용자 요청: “모두 문서 작성 후, 기능 구현해줘”. 직전 답변에서 나열한 여섯 묶음을 모두 개발한다. 이전 문서의 ‘제안/결정 필요’는 아래의 명시한 로컬 기본 정책으로 구체화한다. 문서를 먼저 작성하고 아래 여섯 기능을 모두 구현·검증했다. 상세 결과와 한계는 §10에 남긴다.
+
+**최종 결과: 전체349개 테스트 통과, 정적 분석 정상, iOS 기기 대상 서명 없는 빌드 성공.** 신규97개 시험을 추가했고 실제 폰트 화면을 검토·수정했다. Simulator와 물리 기기는 실행하지 않았다.
 
 ## 1. 범위와 불변 조건
 
@@ -47,7 +49,7 @@
 
 ## 5. LC04 · 관리자 편집 확장
 
-반복 범위는 기존 repetitions를 하한으로 보존하고 선택 상한을 추가한다. 양수·상한≥하한, AMRAP과 범위는 동시 사용하지 않는다. 사용자에게 ‘8–12회’로 표시하고 실제 반복은 별도 입력한다. D5에서 범위는 하한을 기준으로 판단하며 워밍업/드롭세트는 고정 작업 세트와 다른 의도이므로 감량 비교·대상에서 제외한다.
+반복 범위는 기존 repetitions를 하한으로 보존하고 선택 상한을 추가한다. 양수·상한≥하한, AMRAP과 범위는 동시 사용하지 않는다. 사용자에게 ‘8–12회’로 표시하고 실제 반복은 별도 입력한다. D5에서는 실제 반복이 하한~상한 안에 있을 때만 RIR 비교 근거로 삼으며 워밍업/드롭세트는 고정 작업 세트와 다른 의도이므로 감량 비교·대상에서 제외한다.
 
 세트 종류는 기본 작업/워밍업/드롭세트이다. 기본값은 기존 파일 바이트 형태를 가능한 한 유지한다. 워밍업은 별도 강제 증량이나 준비 알고리즘이 아니며 관리자 수동 처방이다. 드롭세트도 각 하위 세트를 순서대로 직접 작성하고 자동 중량 감소를 추정하지 않는다. 라벨·검토·카탈로그·계획 스냅샷으로 전달한다.
 
@@ -91,7 +93,7 @@
 
 ## 10. 구현·검증 기록
 
-상태: 구현 전 명세 작성 완료. 아래에 기능별 실제 결과를 순차 기록한다.
+명세를 먼저 작성한 뒤 여섯 기능을 모두 구현했다. 아래에서 개별 증거와 최종 통합 결과를 구분한다.
 
 ### LC01 구현 상세와 데이터 계약
 
@@ -106,3 +108,94 @@
 - 첫 렌더에서 오류가 영어 파서 문구였고 생성 시각의 초/마이크로초가 큰 글자 검토 영역을 차지했다. 오류를 한국어로 정리하고 날짜·시각을 분 단위 보조 크기로 바꿨다. `research/2026-09-08/local-completion/backup-first`와 `backup-final`에375×900/1.5배 실제 폰트 결과가 있다.
 
 LC01 수동 확인 순서: 프로필→운동 기록 백업→백업 파일 저장→OS 취소를 먼저 확인→다시 저장→운동 기록 하나 변경→백업 파일 가져오기→현재/가져올 개수 확인→검토 취소→재가져오기→교체 확인→기록 확인→복구본 검토로 직전 상태 복원. 손상/다른 앱 JSON은 오류 후 기존 상태가 그대로인지 확인한다. 실제 OS 파일 공급자와 물리 기기 재실행은 별도 검증표에 미실행으로 남긴다.
+
+
+### 최종 통합 검증에서 찾은 문제와 수정
+
+첫 전체 실행은337개 통과·5개 실패였다. 관리자 검토에 기본 작업세트 라벨을 덧붙여 기존 반복 표시가 달라진2건은 기본 작업세트의 기존 표기를 유지하고 워밍업/드롭에만 종류를 표시하도록 수정했다. 검색 키보드/설정 큰글자2건은 테스트가 스크롤 이동의 다음 프레임을 기다리지 않고 누르던 문제였으며 정착 후 hit-test 가능 조건을 유지해 검증했다. 나머지1건은 새로 지원한 운동schema5를 ‘미지원 미래 버전’으로 쓰던 구 fixture를7로 옮긴 것이다. 새 버전 거부와 원본 보존 검증은 그대로 유지한다.
+
+독립 검토에서 손상된 현재 파일의 개수가 초기 빈 상태의0개처럼 표시될 수 있음을 찾았다. 읽기 오류 상태의 현재 요약을 ‘개수를 확인할 수 없음’으로 분기하고, 파일 가져오기→미확인 개수→명시 복원→손상 원본 바이트 보존을 별도 화면 시험으로 추가했다. 백업 파일 보관/복원 알고리즘을 다른 담당자가 독립 검토했으며 정상 UI 경로에서 확정할 데이터 손실·경합 결함은 추가 발견하지 못했다. 실제 프로세스 강제종료 검증을 대신하지 않는다.
+
+### 사용자가 확인할 짧은 변경 목록
+
+1. 운동 기록 전체를 JSON 파일로 저장하고 다시 가져올 수 있다.
+2. 복원 전에 현재 기록과 가져올 기록의 개수를 비교한다.
+3. 복원 직전 기록 한 개를 복구본으로 남긴다.
+4. 손상된 기기 기록도 원본 파일을 보존한 뒤 외부 백업으로 복구한다.
+5. 기록이 없는 미래 운동 날짜를 검토 후 변경한다.
+6. 놓친 운동을 원래 예정일로 열어 실제 수행일을 기록한다.
+7. 이전 중량·단위·반복을 확인 후 새 초안으로 가져온다.
+8. 이전 값을 가져와도 RIR·메모·현재 수행일은 유지한다.
+9. 관리자가 반복 하한과 상한을 함께 설정한다.
+10. 작업·워밍업·드롭세트를 구분해 작성하고 사용자에게 표시한다.
+11. 운동·세션·주차·프로그램 범위에서 한 필드를 일괄 수정한다.
+12. 프로그램을 보관하거나 배포 목록으로 복원한다.
+13. 과거 프로그램 버전을 새 버전 초안으로 복구한다.
+14. 휴식 처방이 없는 세트에 사용자 기본 시간을 적용한다.
+15. 자동 휴식을 켜면 새 완료 기록의 저장 성공 뒤 시작한다.
+16. 기본24종목과 운동용어9개를 오프라인으로 읽는다.
+17. 운동 가이드의 공식 원문을 열고 연결 실패 시 다시 시도한다.
+
+### 검증 결과표와 명령
+
+전체 시험·정적 분석·최종 기기 대상 빌드가 모두 성공했으며 아래의 실행 로그로 확인할 수 있다. 개별 합계는 중복 회귀가 있으므로 더해 전체 개수로 표현하지 않는다.
+
+| 단위 | 새 시험 | 별도 증거 |
+|---|---|---|
+| 백업 | 도메인/파일14 + 화면5 | `training_backup_test.dart`, `backup_screen_test.dart` |
+| 일정·이전 복사 | 일정8 + 복사9 + 화면9 | [26개 상세](2026-09-08-schedule-previous.md) |
+| 관리자 확장 | 도메인20 + 화면7 | [27개 상세](2026-09-08-local-admin.md) |
+| 휴식 설정·자동 시작 | 설정 도메인7 + 설정화면2 + 운동화면6 | [15개 상세](2026-09-08-rest-guides.md) |
+| 가이드 | 도메인4 + 화면6 | [10개 상세](2026-09-08-rest-guides.md) |
+
+기존252개에 새97개를 추가했으며 최종 전체349개가 모두 통과했다. 아래 로그의 마지막 결과와 일치한다.
+
+[macOS zsh · 앱 프로젝트 디렉토리]
+
+```sh
+cd /Users/yudongheon/Documents/vibe-design/apps/strength_routine
+flutter test --no-pub --reporter expanded
+flutter analyze --no-pub
+flutter build ios --debug --no-codesign --no-pub
+```
+
+원격 푸시·공개 배포·앱 설치·Simulator 실행·물리 기기 기록/OS재실행은 수행하지 않았다. 기기 확인은 [LC-D01~14](2026-09-08-device-test-guide.md)와 기능별 운영 절차를 사용한다. 구독/문의/서버동기화는 [별도 운영 범위](2026-09-08-remaining-work.md)로 구분한다.
+
+
+### 기능 단위 커밋 이력
+
+명세를 먼저 커밋하고 병렬 작업의 의존성 순서대로 기능을 통합했다. 실제 Git 이력은 다음과 같으며 원격 푸시는 하지 않았다.
+
+| 커밋 | 변경 |
+|---|---|
+| `f1d8771` | docs: specify remaining local feature completion |
+| `bea11e7` | docs: define precise catalog lifecycle and batch editing |
+| `925359c` | docs: define schedule editing and previous-record copying |
+| `4538ef8` | feat(admin): preserve set ranges and immutable catalog history |
+| `3b8b4ef` | feat(settings): persist rest defaults and preserve timer duration sources |
+| `2bc05a2` | feat(backup): review and restore workout files with recovery copies |
+| `07c9d9b` | feat(training): review future schedule changes and reopen missed workouts |
+| `9a8a512` | feat(training): copy confirmed previous actuals into set drafts |
+| `cfe3747` | feat(guides): add offline exercise instructions and source-linked glossary |
+| `48a737e` | feat(admin): review bulk edits and restore archived program versions |
+| `f262b4a` | docs: record administrator editing and catalog recovery verification |
+| `47c2057` | style(guides): satisfy static analysis for guide screens |
+| `325aa83` | feat(workout): start configured rest after durable set completion |
+| `74ea1f7` | fix(backup): distinguish unreadable records during restore review |
+| `ee2135a` | docs(validation): normalize saved rest test log whitespace |
+
+
+### 최종 자동 검증 결과
+
+| 확인 | 실제 결과 | 증거 |
+|---|---|---|
+| 전체 Flutter 시험 | **349개 통과**,54초 | [최종 로그](../research/2026-09-08/local-completion/full-tests-final.txt) |
+| 정적 분석 | **No issues found**,2.8초 | [분석 로그](../research/2026-09-08/local-completion/flutter-analyze.txt) |
+| iOS 기기 대상 빌드 | **성공**, Xcode11.9초, 서명/설치/실행 없음 | [빌드 로그](../research/2026-09-08/local-completion/ios-build-final.txt) |
+| 중간 전체 회귀 |348개 통과 후 손상파일 화면 시험1개 추가 | [348개 로그](../research/2026-09-08/local-completion/full-tests-348.txt) |
+| 첫 전체 회귀 |337통과·5실패, 위에 원인/수정 보존 | [첫 로그](../research/2026-09-08/local-completion/full-tests-first.txt) |
+| 문서 링크 | 로컬 대상 누락0건 | [검사 결과](../research/2026-09-08/local-completion/document-links.json) |
+
+전체 테스트의 개별 렌더 모드는 별도로 실행했다. 375px·큰 글자1.5/1.8배, 관리자1200px, 합성 키보드 inset을 실제 폰트로 관찰한 것이며 실제 OS 키보드/Files/브라우저/앱프로세스 복원의 검증이 아니다. 완성 앱 바이너리는 `build/ios/iphoneos/Runner.app`이며 별도의 서명이 있어야 실제 기기에 설치할 수 있다.
+
+검증용 프로그램/기록은 합성 테스트 fixture이며 사용자 데이터로 게시하지 않았다. 기본5개 카탈로그와 웹랜딩 시안은 이번 변경에서 수정하지 않았다. 실제 이미지 근거는 백업 first/final, 일정·복사 first/final, local-admin first/final, rest-guides의 rest/guide/auto 렌더에 보존한다. `git diff --check`와 문서 로컬 링크 검사도 마지막 문서 저장 뒤 확인한다.

@@ -225,3 +225,15 @@ AppType/AppColors/AppSpace/AppSize/GlassPanel/FlowPage를 조립하고 한글 KR
 사용자 AMRAP 처방은 중량 뒤 곱셈 기호를 구분점으로 바꿔 기준 반복을 고정 반복과 구별했다. 타이머 재시도 후 카드가 높아지면서 제목이 가려진 것을 [수정 전](research/2026-09-08/advanced-prescriptions/workout-first/timer-running-before-retry-scroll.png)에서 확인했고 전체 카드로 스크롤해 [최종](research/2026-09-08/advanced-prescriptions/workout-final/timer-running.png)에서 출처와 남은 시간을 함께 보이게 했다. 한글 그룹 이름은 KR로 표시한다.
 
 실제 검증 크기는 관리자 1200×900/375×900, 사용자 375×900, 글자 1.5배·320px keyboard inset이다. [키보드 제약](research/2026-09-08/advanced-prescriptions/workout-final/amrap-keyboard-large.png)은 합성 inset이고 실제 OS 키보드 화면이 아니다. 전체 252개 시험과 정적 분석이 통과했다. 검증 범위와 파일 초기화·만료 경계·처방 출처 검사 수정은 [고급 처방 보고서](docs/2026-09-08-advanced-prescriptions.md)에 남겼다.
+
+
+## 9/8 · 로컬 기능 완성 — 기존 방향 유지
+
+[선행 명세](docs/2026-09-08-local-completion.md)를 먼저 저장하고 백업·일정·기록 복사·관리자 편집·휴식 설정·운동 가이드를 연결한다. 기존 Console v2와 앞선 실제 관찰 참조를 재사용하며 새 시각 스타일이나 탭을 추가하지 않는다. 기존 앱바/상태 패널/입력/세트 편집을 유지하고, 사용자가 선택한 데이터의 출처와 확정 전 영향을 기존 화면 안에서 확인하게 한다.
+
+백업은 포함/제외 범위 → 내보내기/가져오기 → 현재/후보 요약 → 명시 교체, 일정은 미래 세션 → 날짜 → 전후 검토, 기록 복사는 출처 → 덮어쓰기 확인 → 초안, 관리자는 범위/필드 → 변경 수 → 상세 전후 목록, 가이드는 검색 → 로컬 설명 → 선택적 외부 출처로 조립한다. Fixed 앱바·Fluid 본문·Hybrid 선택/검토이며 초안, 정상/빈/읽기·쓰기 오류, 취소와 재시도를 분리한다.
+
+백업의 첫375×900/글자1.5배 렌더에서 생성 시각이 마이크로초까지 크게 표시되어 검토 제목을 밀었고 파서 오류가 영어로 노출됐다. 시각을 분 단위 보조 크기로 축소하고 한국어 재시도 안내로 바꿨다. [수정 전](research/2026-09-08/local-completion/backup-first/backup-review-large.png) → [수정 후](research/2026-09-08/local-completion/backup-final/backup-review-large.png), [오류 최종](research/2026-09-08/local-completion/backup-final/backup-error.png)을 직접 관찰했다. 실제 OS 파일 대화상자는 이 headless 그림의 검증 대상이 아니다.
+
+
+로컬 나머지 화면도 최종 렌더를 직접 관찰했다. 관리자는 하한/상한을 인접하게 두고 일괄 수정의 범위·수치를 두 줄로 나눴으며 긴 전후 목록은 펼침으로 옮겼다. 이전 기록 선택은 프로그램/세션/종목/세트를 구분해 큰 글자의 이름 끊김을 줄였다. 휴식 설정은 자동 시작 라벨을 줄였고, 가이드의 긴 제목 크기와 링크 실패 패널 위치를 수정했다. 각 담당자의 최초/최종 PNG와 조작 시험은 [관리자 보고서](docs/2026-09-08-local-admin.md), [일정·복사 보고서](docs/2026-09-08-schedule-previous.md), [휴식·가이드 보고서](docs/2026-09-08-rest-guides.md)에 있다. 루트도 최종 관리자 모바일2개·이전 기록 큰글자·가이드 큰글자·휴식 설정 큰글자를 확인했다. 사용자는 시뮬레이터를 요청하지 않았고 이번에도 실행하지 않았다.
