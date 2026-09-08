@@ -213,3 +213,16 @@
 - v0.3 (2026-09-07): 프로그램 선택→결과 확인→실제 세트 기록 구성 요소와 로컬 폰트 등록.
 - v0.2 (2026-09-05): Console v2 — 그라디언트·글래스·은은한 깊이·점진적 노출 반영. `05` 철학 연결.
 - v0.1: 최초 (플랫 Console).
+
+
+## 9/8 앱 기능 확장 컴포넌트
+
+| 구성 요소 | 코드·조립·상태 |
+|---|---|
+| 관리자 편집/검토 | `admin/admin_screen.dart`: FlowPage·GlassPanel·역할별 폼·날짜 없는 주간세션; 빈 초안/오류/저장실패/내보내기/교체 확인. ID·숫자 mono, 한글 body, 입력 enabled hairStrong/focused accent |
+| 기록 추세/제안 | `training_insights_screen.dart`: 계획 선택·수행 막대/수치·제안 이유·날짜별 before→after 모달·이력. bgLift 모달, accent/good 상태, 없음/누락/실패/undo 제한 |
+| 운동 목표 표시 | `workout_screen.dart`: 원래 목표를 보존하며 적용된 kg가 있으면 `조정 목표`로 표시, 세트/반복/RIR은 보존 |
+| 앱 설정 | `settings_screen.dart`: 기본 kg/lb SegmentedButton·제안 표시 Switch, 저장 전 선택/실패/성공 구분. 기존 accentSoft/fill/hairStrong 토큰 |
+| 도움말/구독 준비 | `support_screen.dart`, `subscription_screen.dart`: 실제 로컬 FAQ ExpansionTile과 준비 상태. 미연결 구매·문의 버튼 없음 |
+
+하단 5탭을 유지한다. 기록 탭은 추세·조정으로, 프로필은 설정·도움말·구독 안내로 연결한다. 관리자 도구는 소비자 탭에 넣지 않는다. 토큰 수치를 새로 만들지 않고 기존 AppSpace/AppSize/AppType/AppColors로 조립했다. [렌더와 테스트](2026-09-08-feature-verification.md)에 최초 문제·수정·재검증을 남긴다.
