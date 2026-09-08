@@ -34,12 +34,16 @@ final class LocalTrainingStore {
       }
       final envelope =
           jsonDecode(await file.readAsString()) as Map<String, dynamic>;
-      if (envelope['schemaVersion'] != 1 && envelope['schemaVersion'] != 2) {
+      if (![1, 2, 3].contains(envelope['schemaVersion'])) {
         throw const FormatException('Unsupported local state schema');
       }
-      return TrainingAppState.fromJson(
-        Map<String, dynamic>.from(envelope['state'] as Map),
-      );
+      final json = Map<String, dynamic>.from(envelope['state'] as Map);
+      if (envelope['schemaVersion'] == 3 &&
+          (!json.containsKey('sessionEvents') ||
+              !json.containsKey('legacySessionIds'))) {
+        throw const FormatException('Incomplete session lifecycle state');
+      }
+      return TrainingAppState.fromJson(json);
     } catch (error) {
       throw LocalTrainingStoreException(
         '저장된 운동 데이터를 읽을 수 없습니다. 원본 파일은 유지했습니다.',
@@ -54,7 +58,7 @@ final class LocalTrainingStore {
       '${file.path}.tmp.$pid.${DateTime.now().microsecondsSinceEpoch}.${_temporaryId++}',
     );
     try {
-      final text = jsonEncode({'schemaVersion': 2, 'state': state.toJson()});
+      final text = jsonEncode({'schemaVersion': 3, 'state': state.toJson()});
       await file.parent.create(recursive: true);
       await temporary.writeAsString(text, flush: true);
       await temporary.rename(file.path);

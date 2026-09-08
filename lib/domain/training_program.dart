@@ -8,6 +8,8 @@ enum BaselineSource { userEntered, recordedWeight }
 
 enum SetActualStatus { completed, skipped }
 
+enum SessionLifecycleKind { closed, reopened }
+
 final class LoadPrescription {
   final LoadKind kind;
   final double? value;
@@ -485,26 +487,44 @@ final class SetActual {
   final WeightUnit? unit;
   final int? repetitions;
   final String note;
+  final DateTime? performedDate, recordedAt, updatedAt;
   SetActual.completed({
     required double this.weight,
     required WeightUnit this.unit,
     required int this.repetitions,
     this.rir,
     this.note = '',
-  }) : status = SetActualStatus.completed {
+    DateTime? performedDate,
+    DateTime? recordedAt,
+    DateTime? updatedAt,
+  }) : status = SetActualStatus.completed,
+       performedDate = performedDate == null
+           ? null
+           : calendarDate(performedDate),
+       recordedAt = recordedAt?.toUtc(),
+       updatedAt = updatedAt?.toUtc() {
     _check(
       weight!.isFinite && weight! >= 0,
       'Actual weight must be finite and nonnegative',
     );
     _check(repetitions! > 0, 'Actual repetitions must be positive');
     _rir(rir);
+    _check(
+      this.recordedAt == null ||
+          this.updatedAt == null ||
+          !this.updatedAt!.isBefore(this.recordedAt!),
+      'Update precedes recording',
+    );
   }
   const SetActual.skipped({this.note = ''})
     : status = SetActualStatus.skipped,
       weight = null,
       unit = null,
       repetitions = null,
-      rir = null;
+      rir = null,
+      performedDate = null,
+      recordedAt = null,
+      updatedAt = null;
   Map<String, Object?> toJson() => {
     'status': status.name,
     'weight': weight,
@@ -512,18 +532,158 @@ final class SetActual {
     'repetitions': repetitions,
     'rir': rir,
     'note': note,
+    if (performedDate != null) 'performedDate': isoDate(performedDate!),
+    if (recordedAt != null) 'recordedAt': recordedAt!.toIso8601String(),
+    if (updatedAt != null) 'updatedAt': updatedAt!.toIso8601String(),
   };
-  factory SetActual.fromJson(Map<String, dynamic> j) => switch (j['status']) {
-    'completed' => SetActual.completed(
-      weight: _number(j['weight']),
-      unit: WeightUnit.values.byName(j['unit'] as String),
-      repetitions: j['repetitions'] as int,
-      rir: (j['rir'] as num?)?.toDouble(),
-      note: j['note'] as String,
-    ),
-    'skipped' => SetActual.skipped(note: j['note'] as String),
-    _ => throw const FormatException('Unknown set status'),
+  factory SetActual.fromJson(Map<String, dynamic> j) {
+    if (j['status'] == 'skipped') {
+      _check(
+        !['performedDate', 'recordedAt', 'updatedAt'].any(j.containsKey),
+        'Skipped set cannot have performance dates',
+      );
+    }
+    return switch (j['status']) {
+      'completed' => SetActual.completed(
+        weight: _number(j['weight']),
+        unit: WeightUnit.values.byName(j['unit'] as String),
+        repetitions: j['repetitions'] as int,
+        rir: (j['rir'] as num?)?.toDouble(),
+        note: j['note'] as String,
+        performedDate: j['performedDate'] == null
+            ? null
+            : parseCalendarDate(j['performedDate'] as String),
+        recordedAt: j['recordedAt'] == null
+            ? null
+            : _parseUtcInstant(j['recordedAt'] as String),
+        updatedAt: j['updatedAt'] == null
+            ? null
+            : _parseUtcInstant(j['updatedAt'] as String),
+      ),
+      'skipped' => SetActual.skipped(note: j['note'] as String),
+      _ => throw const FormatException('Unknown set status'),
+    };
+  }
+}
+
+/// Committed actuals and drafts are counted independently; dates are never inferred.
+final class SessionSummary {
+  final int totalSets, requiredSets, performedSets, skippedSets;
+  final int unrecordedSets, draftSets, unknownDateSets, requiredUnrecordedSets;
+  final List<DateTime> performedDates;
+  SessionSummary({
+    required this.totalSets,
+    required this.requiredSets,
+    required this.performedSets,
+    required this.skippedSets,
+    required this.unrecordedSets,
+    required this.draftSets,
+    required this.unknownDateSets,
+    required this.requiredUnrecordedSets,
+    required List<DateTime> performedDates,
+  }) : performedDates = List.unmodifiable(performedDates) {
+    _check(
+      [
+        totalSets,
+        requiredSets,
+        performedSets,
+        skippedSets,
+        unrecordedSets,
+        draftSets,
+        unknownDateSets,
+        requiredUnrecordedSets,
+      ].every((n) => n >= 0),
+      'Negative session summary count',
+    );
+    _check(
+      totalSets > 0 &&
+          performedSets + skippedSets + unrecordedSets == totalSets &&
+          requiredSets <= totalSets &&
+          draftSets <= totalSets &&
+          unknownDateSets <= performedSets &&
+          requiredUnrecordedSets <= requiredSets &&
+          requiredUnrecordedSets <= unrecordedSets &&
+          unrecordedSets - requiredUnrecordedSets <= totalSets - requiredSets,
+      'Invalid session summary counts',
+    );
+    DateTime? previous;
+    for (final date in this.performedDates) {
+      _check(
+        date == calendarDate(date) &&
+            (previous == null || date.isAfter(previous)),
+        'Performance dates must be sorted unique calendar dates',
+      );
+      previous = date;
+    }
+    final datedCount = performedSets - unknownDateSets;
+    _check(
+      this.performedDates.length <= datedCount &&
+          (datedCount == 0) == this.performedDates.isEmpty,
+      'Invalid performance date count',
+    );
+  }
+  bool get canClose => requiredUnrecordedSets == 0 && draftSets == 0;
+  Map<String, Object?> toJson() => {
+    'totalSets': totalSets,
+    'requiredSets': requiredSets,
+    'performedSets': performedSets,
+    'skippedSets': skippedSets,
+    'unrecordedSets': unrecordedSets,
+    'draftSets': draftSets,
+    'unknownDateSets': unknownDateSets,
+    'requiredUnrecordedSets': requiredUnrecordedSets,
+    'performedDates': performedDates.map(isoDate).toList(),
   };
+  factory SessionSummary.fromJson(Map<String, dynamic> j) => SessionSummary(
+    totalSets: j['totalSets'] as int,
+    requiredSets: j['requiredSets'] as int,
+    performedSets: j['performedSets'] as int,
+    skippedSets: j['skippedSets'] as int,
+    unrecordedSets: j['unrecordedSets'] as int,
+    draftSets: j['draftSets'] as int,
+    unknownDateSets: j['unknownDateSets'] as int,
+    requiredUnrecordedSets: j['requiredUnrecordedSets'] as int,
+    performedDates: (j['performedDates'] as List)
+        .map((v) => parseCalendarDate(v as String))
+        .toList(),
+  );
+}
+
+final class SessionLifecycleEvent {
+  final String id, sessionId;
+  final SessionLifecycleKind kind;
+  final DateTime at;
+  final SessionSummary summary;
+  SessionLifecycleEvent({
+    required this.id,
+    required this.sessionId,
+    required this.kind,
+    required DateTime at,
+    required this.summary,
+  }) : at = at.toUtc() {
+    _id(id);
+    _id(sessionId);
+    _check(summary.canClose, 'Lifecycle event requires a resolved session');
+  }
+  Map<String, Object?> toJson() => {
+    'id': id,
+    'sessionId': sessionId,
+    'kind': kind.name,
+    'at': at.toIso8601String(),
+    'summary': summary.toJson(),
+  };
+  factory SessionLifecycleEvent.fromJson(Map<String, dynamic> j) =>
+      SessionLifecycleEvent(
+        id: j['id'] as String,
+        sessionId: j['sessionId'] as String,
+        kind: switch (j['kind']) {
+          'closed' => SessionLifecycleKind.closed,
+          'reopened' => SessionLifecycleKind.reopened,
+          _ => throw const FormatException('Unknown session lifecycle event'),
+        },
+        at: _parseUtcInstant(j['at'] as String),
+        summary: SessionSummary.fromJson(_map(j['summary'])),
+      );
 }
 
 /// 원본 계획을 바꾸지 않는 사용자 승인 중량 조정 이력.
@@ -642,6 +802,8 @@ final class TrainingAppState {
   final Map<String, String> sessionNotes;
   final Set<String> completionNotified;
   final List<TargetLoadAdjustment> loadAdjustments;
+  final List<SessionLifecycleEvent> sessionEvents;
+  final Set<String> legacySessionIds;
   TrainingAppState({
     this.onboarded = false,
     List<RecentLiftRecord> recentRecords = const [],
@@ -652,6 +814,8 @@ final class TrainingAppState {
     Map<String, String> sessionNotes = const {},
     Set<String> completionNotified = const {},
     List<TargetLoadAdjustment> loadAdjustments = const [],
+    List<SessionLifecycleEvent> sessionEvents = const [],
+    Set<String> legacySessionIds = const {},
   }) : recentRecords = List.unmodifiable(recentRecords),
        planHistory = List.unmodifiable(planHistory),
        setActuals = Map.unmodifiable(setActuals),
@@ -663,7 +827,9 @@ final class TrainingAppState {
        ),
        sessionNotes = Map.unmodifiable(sessionNotes),
        completionNotified = Set.unmodifiable(completionNotified),
-       loadAdjustments = List.unmodifiable(loadAdjustments) {
+       loadAdjustments = List.unmodifiable(loadAdjustments),
+       sessionEvents = List.unmodifiable(sessionEvents),
+       legacySessionIds = Set.unmodifiable(legacySessionIds) {
     final plans = [...planHistory, if (activePlan != null) activePlan!];
     _check(
       recentRecords.every(
@@ -681,17 +847,26 @@ final class TrainingAppState {
       setActuals.keys.every(setIds.contains) &&
           setDrafts.keys.every(setIds.contains) &&
           sessionNotes.keys.every(sessionIds.contains) &&
-          completionNotified.every(sessionIds.contains),
+          completionNotified.every(sessionIds.contains) &&
+          legacySessionIds.every(sessionIds.contains),
       'Orphaned workout record',
     );
     _check(
       setDrafts.values.every(
         (draft) => draft.keys.every(
-          const ['weight', 'repetitions', 'rir', 'note', 'unit'].contains,
+          const [
+            'weight',
+            'repetitions',
+            'rir',
+            'note',
+            'unit',
+            'performedDate',
+          ].contains,
         ),
       ),
       'Unknown draft field',
     );
+    _validateSessionEvents();
     _check(
       loadAdjustments.map((a) => a.id).toSet().length == loadAdjustments.length,
       'Duplicate load adjustment',
@@ -740,6 +915,178 @@ final class TrainingAppState {
       }
     }
   }
+  PlannedSession _session(String sessionId) {
+    final matching = [
+      ...planHistory,
+      if (activePlan != null) activePlan!,
+    ].expand((p) => p.sessions).where((s) => s.id == sessionId);
+    _check(matching.length == 1, 'Unknown session');
+    return matching.single;
+  }
+
+  SessionSummary sessionSummary(String sessionId) {
+    final sets = _session(sessionId).exercises.expand((e) => e.sets).toList();
+    final performed = sets
+        .map((s) => setActuals[s.id])
+        .whereType<SetActual>()
+        .where((a) => a.status == SetActualStatus.completed)
+        .toList();
+    final dates =
+        performed
+            .map((a) => a.performedDate)
+            .whereType<DateTime>()
+            .toSet()
+            .toList()
+          ..sort();
+    return SessionSummary(
+      totalSets: sets.length,
+      requiredSets: sets.where((s) => s.isRequired).length,
+      performedSets: performed.length,
+      skippedSets: sets
+          .where((s) => setActuals[s.id]?.status == SetActualStatus.skipped)
+          .length,
+      unrecordedSets: sets.where((s) => !setActuals.containsKey(s.id)).length,
+      draftSets: sets.where((s) => setDrafts.containsKey(s.id)).length,
+      unknownDateSets: performed.where((a) => a.performedDate == null).length,
+      requiredUnrecordedSets: sets
+          .where((s) => s.isRequired && !setActuals.containsKey(s.id))
+          .length,
+      performedDates: dates,
+    );
+  }
+
+  bool isSessionClosed(String sessionId) {
+    for (final event in sessionEvents.reversed) {
+      if (event.sessionId == sessionId) {
+        return event.kind == SessionLifecycleKind.closed;
+      }
+    }
+    return false;
+  }
+
+  void _validateSessionEvents() {
+    _check(
+      sessionEvents.map((e) => e.id).toSet().length == sessionEvents.length,
+      'Duplicate session event id',
+    );
+    final latest = <String, SessionLifecycleEvent>{};
+    DateTime? previousAt;
+    for (final event in sessionEvents) {
+      final current = sessionSummary(event.sessionId);
+      _check(
+        event.summary.totalSets == current.totalSets &&
+            event.summary.requiredSets == current.requiredSets,
+        'Session event composition mismatch',
+      );
+      _check(
+        previousAt == null || !event.at.isBefore(previousAt),
+        'Session event time precedes prior event',
+      );
+      previousAt = event.at;
+      final previous = latest[event.sessionId];
+      _check(
+        previous == null
+            ? event.kind == SessionLifecycleKind.closed
+            : previous.kind != event.kind,
+        'Invalid session lifecycle order',
+      );
+      if (event.kind == SessionLifecycleKind.reopened) {
+        _check(
+          jsonEncode(event.summary.toJson()) ==
+              jsonEncode(previous!.summary.toJson()),
+          'Reopening cannot alter the closing snapshot',
+        );
+      }
+      latest[event.sessionId] = event;
+    }
+    for (final event in latest.values.where(
+      (e) => e.kind == SessionLifecycleKind.closed,
+    )) {
+      _check(
+        jsonEncode(event.summary.toJson()) ==
+            jsonEncode(sessionSummary(event.sessionId).toJson()),
+        'Closed session changed without reopening',
+      );
+    }
+  }
+
+  void _requireSessionEditable(String sessionId) {
+    _session(sessionId);
+    _check(!isSessionClosed(sessionId), '운동을 다시 열고 수정해 주세요.');
+  }
+
+  void _requireSetEditable(String setId) {
+    final sessions = activePlan!.sessions.where(
+      (s) => s.exercises.any((e) => e.sets.any((set) => set.id == setId)),
+    );
+    _requireSessionEditable(sessions.single.id);
+  }
+
+  TrainingAppState closeSession(
+    String sessionId, {
+    required String eventId,
+    required DateTime at,
+  }) => _sessionTransition(sessionId, eventId, at, SessionLifecycleKind.closed);
+
+  TrainingAppState reopenSession(
+    String sessionId, {
+    required String eventId,
+    required DateTime at,
+  }) =>
+      _sessionTransition(sessionId, eventId, at, SessionLifecycleKind.reopened);
+
+  TrainingAppState _sessionTransition(
+    String sessionId,
+    String eventId,
+    DateTime at,
+    SessionLifecycleKind kind,
+  ) {
+    final existing = sessionEvents.where((e) => e.id == eventId);
+    if (existing.isNotEmpty) {
+      final event = existing.single;
+      _check(
+        event.sessionId == sessionId &&
+            event.kind == kind &&
+            event.at == at.toUtc(),
+        'Session event id was used for another command',
+      );
+      return this;
+    }
+    _session(sessionId);
+    _check(
+      activePlan?.sessions.any((s) => s.id == sessionId) ?? false,
+      'Session is not in the active plan',
+    );
+    _check(
+      isSessionClosed(sessionId) == (kind == SessionLifecycleKind.reopened),
+      'Invalid session lifecycle transition',
+    );
+    final summary = sessionSummary(sessionId);
+    _check(summary.canClose, '필수 세트를 기록하고 작성 중인 초안을 정리해 주세요.');
+    return TrainingAppState(
+      onboarded: onboarded,
+      recentRecords: recentRecords,
+      activePlan: activePlan,
+      planHistory: planHistory,
+      setActuals: setActuals,
+      setDrafts: setDrafts,
+      sessionNotes: sessionNotes,
+      completionNotified: completionNotified,
+      loadAdjustments: loadAdjustments,
+      legacySessionIds: legacySessionIds,
+      sessionEvents: [
+        ...sessionEvents,
+        SessionLifecycleEvent(
+          id: eventId,
+          sessionId: sessionId,
+          kind: kind,
+          at: at,
+          summary: summary,
+        ),
+      ],
+    );
+  }
+
   TrainingAppState copyWith({
     bool? onboarded,
     List<RecentLiftRecord>? recentRecords,
@@ -753,6 +1100,8 @@ final class TrainingAppState {
     sessionNotes: sessionNotes,
     completionNotified: completionNotified,
     loadAdjustments: loadAdjustments,
+    sessionEvents: sessionEvents,
+    legacySessionIds: legacySessionIds,
   );
   TrainingAppState withActivePlan(ActiveTrainingPlan plan) => TrainingAppState(
     onboarded: onboarded,
@@ -764,12 +1113,15 @@ final class TrainingAppState {
     sessionNotes: sessionNotes,
     completionNotified: completionNotified,
     loadAdjustments: loadAdjustments,
+    sessionEvents: sessionEvents,
+    legacySessionIds: legacySessionIds,
   );
   TrainingAppState withSetActual(String plannedSetId, SetActual? actual) {
     _check(
       activePlan?.targetKgBySetId.containsKey(plannedSetId) ?? false,
       'Set is not in the active plan',
     );
+    _requireSetEditable(plannedSetId);
     final updated = Map.of(setActuals);
     final drafts = Map.of(setDrafts);
     if (actual == null) {
@@ -788,6 +1140,8 @@ final class TrainingAppState {
       sessionNotes: sessionNotes,
       completionNotified: completionNotified,
       loadAdjustments: loadAdjustments,
+      sessionEvents: sessionEvents,
+      legacySessionIds: legacySessionIds,
     );
   }
 
@@ -799,6 +1153,7 @@ final class TrainingAppState {
       activePlan?.targetKgBySetId.containsKey(plannedSetId) ?? false,
       'Set is not in the active plan',
     );
+    _requireSetEditable(plannedSetId);
     final drafts = Map.of(setDrafts);
     if (draft == null) {
       drafts.remove(plannedSetId);
@@ -815,21 +1170,28 @@ final class TrainingAppState {
       sessionNotes: sessionNotes,
       completionNotified: completionNotified,
       loadAdjustments: loadAdjustments,
+      sessionEvents: sessionEvents,
+      legacySessionIds: legacySessionIds,
     );
   }
 
-  TrainingAppState withSessionNote(String sessionId, String note) =>
-      TrainingAppState(
-        onboarded: onboarded,
-        recentRecords: recentRecords,
-        activePlan: activePlan,
-        planHistory: planHistory,
-        setActuals: setActuals,
-        setDrafts: setDrafts,
-        sessionNotes: {...sessionNotes, sessionId: note},
-        completionNotified: completionNotified,
-        loadAdjustments: loadAdjustments,
-      );
+  TrainingAppState withSessionNote(String sessionId, String note) {
+    _requireSessionEditable(sessionId);
+    return TrainingAppState(
+      onboarded: onboarded,
+      recentRecords: recentRecords,
+      activePlan: activePlan,
+      planHistory: planHistory,
+      setActuals: setActuals,
+      setDrafts: setDrafts,
+      sessionNotes: {...sessionNotes, sessionId: note},
+      completionNotified: completionNotified,
+      loadAdjustments: loadAdjustments,
+      sessionEvents: sessionEvents,
+      legacySessionIds: legacySessionIds,
+    );
+  }
+
   TrainingAppState withCompletionNotified(String sessionId) {
     _check(isSessionComplete(sessionId), 'Session is not complete');
     return TrainingAppState(
@@ -842,6 +1204,8 @@ final class TrainingAppState {
       sessionNotes: sessionNotes,
       completionNotified: {...completionNotified, sessionId},
       loadAdjustments: loadAdjustments,
+      sessionEvents: sessionEvents,
+      legacySessionIds: legacySessionIds,
     );
   }
 
@@ -937,6 +1301,8 @@ final class TrainingAppState {
         sessionNotes: sessionNotes,
         completionNotified: completionNotified,
         loadAdjustments: adjustments,
+        sessionEvents: sessionEvents,
+        legacySessionIds: legacySessionIds,
       );
 
   bool isSessionComplete(String sessionId) {
@@ -963,34 +1329,94 @@ final class TrainingAppState {
     'sessionNotes': sessionNotes,
     'completionNotified': completionNotified.toList(),
     'loadAdjustments': loadAdjustments.map((a) => a.toJson()).toList(),
+    'sessionEvents': sessionEvents.map((e) => e.toJson()).toList(),
+    'legacySessionIds': legacySessionIds.toList()..sort(),
   };
-  factory TrainingAppState.fromJson(Map<String, dynamic> j) => TrainingAppState(
-    onboarded: j['onboarded'] as bool,
-    recentRecords: (j['recentRecords'] as List)
-        .map((v) => RecentLiftRecord.fromJson(_map(v)))
-        .toList(),
-    activePlan: j['activePlan'] == null
-        ? null
-        : ActiveTrainingPlan.fromJson(_map(j['activePlan'])),
-    planHistory: (j['planHistory'] as List)
-        .map((v) => ActiveTrainingPlan.fromJson(_map(v)))
-        .toList(),
-    setActuals: _map(
-      j['setActuals'],
-    ).map((key, value) => MapEntry(key, SetActual.fromJson(_map(value)))),
-    setDrafts: _map(
-      j['setDrafts'],
-    ).map((key, value) => MapEntry(key, _map(value).cast<String, String>())),
-    sessionNotes: _map(j['sessionNotes']).cast<String, String>(),
-    completionNotified: (j['completionNotified'] as List)
-        .cast<String>()
-        .toSet(),
-    loadAdjustments: j.containsKey('loadAdjustments')
-        ? (j['loadAdjustments'] as List)
-              .map((v) => TargetLoadAdjustment.fromJson(_map(v)))
-              .toList()
-        : const [],
+  factory TrainingAppState.fromJson(Map<String, dynamic> j) {
+    final hasEvents = j.containsKey('sessionEvents');
+    final hasLegacy = j.containsKey('legacySessionIds');
+    _check(hasEvents == hasLegacy, 'Incomplete lifecycle state');
+    if (!hasEvents) {
+      final plans = [
+        if (j['activePlan'] != null)
+          ActiveTrainingPlan.fromJson(_map(j['activePlan'])),
+        ...(j['planHistory'] as List).map(
+          (v) => ActiveTrainingPlan.fromJson(_map(v)),
+        ),
+      ];
+      final recordedSets = {
+        ..._map(j['setActuals']).keys,
+        ..._map(j['setDrafts']).keys,
+      };
+      final legacy = {
+        ..._map(j['sessionNotes']).keys,
+        ...(j['completionNotified'] as List).cast<String>(),
+      };
+      for (final session in plans.expand((p) => p.sessions)) {
+        if (session.exercises
+            .expand((e) => e.sets)
+            .any((s) => recordedSets.contains(s.id))) {
+          legacy.add(session.id);
+        }
+      }
+      j = {
+        ...j,
+        'sessionEvents': <Object?>[],
+        'legacySessionIds': legacy.toList(),
+      };
+    }
+    final legacyIds = (j['legacySessionIds'] as List).cast<String>();
+    _check(
+      legacyIds.toSet().length == legacyIds.length,
+      'Duplicate legacy session id',
+    );
+    return TrainingAppState(
+      onboarded: j['onboarded'] as bool,
+      recentRecords: (j['recentRecords'] as List)
+          .map((v) => RecentLiftRecord.fromJson(_map(v)))
+          .toList(),
+      activePlan: j['activePlan'] == null
+          ? null
+          : ActiveTrainingPlan.fromJson(_map(j['activePlan'])),
+      planHistory: (j['planHistory'] as List)
+          .map((v) => ActiveTrainingPlan.fromJson(_map(v)))
+          .toList(),
+      setActuals: _map(
+        j['setActuals'],
+      ).map((key, value) => MapEntry(key, SetActual.fromJson(_map(value)))),
+      setDrafts: _map(
+        j['setDrafts'],
+      ).map((key, value) => MapEntry(key, _map(value).cast<String, String>())),
+      sessionNotes: _map(j['sessionNotes']).cast<String, String>(),
+      completionNotified: (j['completionNotified'] as List)
+          .cast<String>()
+          .toSet(),
+      sessionEvents: (j['sessionEvents'] as List)
+          .map((v) => SessionLifecycleEvent.fromJson(_map(v)))
+          .toList(),
+      legacySessionIds: legacyIds.toSet(),
+      loadAdjustments: j.containsKey('loadAdjustments')
+          ? (j['loadAdjustments'] as List)
+                .map((v) => TargetLoadAdjustment.fromJson(_map(v)))
+                .toList()
+          : const [],
+    );
+  }
+}
+
+DateTime _parseUtcInstant(String value) {
+  final match = RegExp(
+    r'^(\d{4}-\d{2}-\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.\d{1,6})?Z$',
+  ).firstMatch(value);
+  _check(match != null, 'Expected UTC event timestamp');
+  parseCalendarDate(match!.group(1)!);
+  _check(
+    int.parse(match.group(2)!) < 24 &&
+        int.parse(match.group(3)!) < 60 &&
+        int.parse(match.group(4)!) < 60,
+    'Invalid UTC event timestamp',
   );
+  return DateTime.parse(value);
 }
 
 DateTime calendarDate(DateTime value) =>
