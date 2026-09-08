@@ -268,37 +268,254 @@ void main() {
       await tester.pumpWidget(const SizedBox());
     },
   );
+  Finder editorAction(String label) =>
+      find.descendant(of: find.byType(SetEditor), matching: find.text(label));
+
+  Future<void> blockWorkoutSave(WidgetTester tester) async {
+    await tester.runAsync(() async {
+      await file.rename('${file.path}.before-failure');
+      await Directory(file.path).create();
+    });
+  }
+
+  Future<void> restoreWorkoutSave(WidgetTester tester) async {
+    await tester.runAsync(() async {
+      await Directory(file.path).delete();
+      await File('${file.path}.before-failure').rename(file.path);
+    });
+  }
+
+  Future<TrainingAppState> persistedState(WidgetTester tester) async =>
+      (await tester.runAsync(() => LocalTrainingStore(file).load()))!;
+
+  for (final retryLabel in ['수정한 기록 저장', '저장하고 다음 세트', '저장 다시 시도']) {
+    testWidgets(
+      'failed first completion becomes durable and starts once through $retryLabel',
+      (tester) async {
+        final set = plan.sessions.first.exercises.single.sets.first;
+        var timerWrites = 0;
+        var timerWasSaving = false;
+        controller.restTimer.addListener(() {
+          if (controller.restTimer.saving && !timerWasSaving) timerWrites++;
+          timerWasSaving = controller.restTimer.saving;
+        });
+        await pump(tester);
+        await openSet(tester, 0);
+        await fill(tester);
+        await blockWorkoutSave(tester);
+        await tap(tester, editorAction('세트 완료'));
+        expect(controller.saveError, isNotNull);
+        expect(controller.restTimer.snapshot, isNull);
+        expect(timerWrites, 0);
+        await capture(tester, 'failed-first-completion');
+        await restoreWorkoutSave(tester);
+        expect((await persistedState(tester)).setActuals, isEmpty);
+        await tap(tester, editorAction(retryLabel));
+        expect(controller.saveError, isNull);
+        final persisted = await persistedState(tester);
+        expect(persisted.setActuals[set.id]!.status, SetActualStatus.completed);
+        expect(persisted.setDrafts.containsKey(set.id), isFalse);
+        final timer = controller.restTimer.available!;
+        expect(timer.setId, set.id);
+        expect(timer.durationSeconds, 90);
+        expect(timerWrites, 1);
+        if (retryLabel == '저장하고 다음 세트') {
+          expect(
+            tester.widget<SetEditor>(find.byType(SetEditor)).set.id,
+            plan.sessions.first.exercises.single.sets[1].id,
+          );
+          await tester.tap(find.byTooltip('기록 초안 저장하고 닫기'));
+          await flush(tester);
+        } else {
+          expect(find.byType(SetEditor), findsNothing);
+        }
+        final deadline = timer.endsAt;
+        await tester.pumpWidget(const SizedBox());
+        await pump(tester);
+        expect(controller.restTimer.available!.endsAt, deadline);
+        expect(timerWrites, 1);
+        await capture(tester, 'retry-completion-timer');
+        await tester.pumpWidget(const SizedBox());
+      },
+    );
+
+    testWidgets(
+      'failed edit of a durable completed record never starts through $retryLabel',
+      (tester) async {
+        final set = plan.sessions.first.exercises.single.sets.first;
+        await tester.runAsync(
+          () => controller.update(
+            (state) => state.withSetActual(
+              set.id,
+              SetActual.completed(
+                weight: 10,
+                unit: WeightUnit.kg,
+                repetitions: 5,
+                performedDate: DateTime.utc(2026, 9, 10),
+              ),
+            ),
+          ),
+        );
+        await pump(tester);
+        await openSet(tester, 0);
+        await tester.enterText(field('set-weight'), '21');
+        await flush(tester);
+        await blockWorkoutSave(tester);
+        await tap(tester, editorAction('수정한 기록 저장'));
+        expect(controller.saveError, isNotNull);
+        expect(controller.restTimer.snapshot, isNull);
+        await restoreWorkoutSave(tester);
+        await tap(tester, editorAction(retryLabel));
+        expect((await persistedState(tester)).setActuals[set.id]!.weight, 21);
+        expect(controller.restTimer.snapshot, isNull);
+        await tester.pumpWidget(const SizedBox());
+      },
+    );
+  }
+
+  for (final cancelLabel in ['이번 세트 제외', '기록 전으로 되돌리기']) {
+    testWidgets(
+      'failed first completion intention is cleared by $cancelLabel even when cancellation also fails',
+      (tester) async {
+        final set = plan.sessions.first.exercises.single.sets.first;
+        await pump(tester);
+        await openSet(tester, 0);
+        await fill(tester);
+        await blockWorkoutSave(tester);
+        await tap(tester, editorAction('세트 완료'));
+        await tap(tester, editorAction(cancelLabel));
+        expect(controller.saveError, isNotNull);
+        expect(controller.restTimer.snapshot, isNull);
+        await restoreWorkoutSave(tester);
+        await tap(tester, editorAction('저장 다시 시도'));
+        final persisted = await persistedState(tester);
+        if (cancelLabel == '이번 세트 제외') {
+          expect(persisted.setActuals[set.id]!.status, SetActualStatus.skipped);
+          expect(persisted.setDrafts.containsKey(set.id), isFalse);
+        } else {
+          expect(persisted.setActuals.containsKey(set.id), isFalse);
+          expect(persisted.setDrafts[set.id]!['weight'], '20');
+        }
+        expect(controller.restTimer.snapshot, isNull);
+        expect(find.byType(SetEditor), findsNothing);
+        await tester.pumpWidget(const SizedBox());
+      },
+    );
+  }
+
   testWidgets(
-    'failed workout save starts no timer until first durable completion retry',
+    'closing a failed completion from an unchanged restored draft cancels automatic rest on retry',
     (tester) async {
+      final set = plan.sessions.first.exercises.single.sets.first;
+      await tester.runAsync(
+        () => controller.update(
+          (state) => state.withSetDraft(set.id, {
+            'weight': '20',
+            'repetitions': '5',
+            'unit': 'kg',
+            'performedDate': '2026-09-10',
+          }),
+        ),
+      );
+      await pump(tester);
+      await openSet(tester, 0);
+      await blockWorkoutSave(tester);
+      await tap(tester, editorAction('세트 완료'));
+      await tester.ensureVisible(find.byTooltip('기록 초안 저장하고 닫기'));
+      await tester.tap(find.byTooltip('기록 초안 저장하고 닫기'));
+      await flush(tester);
+      expect(controller.saveError, isNotNull);
+      await restoreWorkoutSave(tester);
+      await tap(tester, editorAction('저장 다시 시도'));
+      expect(find.byType(SetEditor), findsNothing);
+      expect((await persistedState(tester)).setActuals[set.id]!.weight, 20);
+      expect(controller.restTimer.snapshot, isNull);
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
+
+  testWidgets(
+    'draft changes after a failed first completion require an explicit completion after draft retry',
+    (tester) async {
+      final set = plan.sessions.first.exercises.single.sets.first;
       await pump(tester);
       await openSet(tester, 0);
       await fill(tester);
-      final savedFile = File('${file.path}.before-failure');
-      await tester.runAsync(() async {
-        await file.rename(savedFile.path);
-        await Directory(file.path).create();
-      });
-      await tap(tester, find.text('세트 완료'));
-      expect(controller.saveError, isNotNull);
+      await blockWorkoutSave(tester);
+      await tap(tester, editorAction('세트 완료'));
+      await tester.enterText(field('set-weight'), '23.');
+      await flush(tester);
+      await restoreWorkoutSave(tester);
+      await tap(tester, editorAction('저장 다시 시도'));
+      final drafted = await persistedState(tester);
+      expect(drafted.setActuals[set.id]!.weight, 20);
+      expect(drafted.setDrafts[set.id]!['weight'], '23.');
+      expect(find.byType(SetEditor), findsOneWidget);
       expect(controller.restTimer.snapshot, isNull);
-      await tester.runAsync(() async {
-        await Directory(file.path).delete();
-        await savedFile.rename(file.path);
-      });
-      await tap(
-        tester,
-        find.descendant(
-          of: find.byType(SetEditor),
-          matching: find.text('저장 다시 시도'),
+      await tap(tester, editorAction('수정한 기록 저장'));
+      expect((await persistedState(tester)).setActuals[set.id]!.weight, 23);
+      expect(controller.restTimer.available!.setId, set.id);
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
+
+  testWidgets(
+    'a replaced actual cannot inherit an earlier failed completion intention',
+    (tester) async {
+      final set = plan.sessions.first.exercises.single.sets.first;
+      await pump(tester);
+      await openSet(tester, 0);
+      await fill(tester);
+      await blockWorkoutSave(tester);
+      await tap(tester, editorAction('세트 완료'));
+      await restoreWorkoutSave(tester);
+      await tester.runAsync(
+        () => controller.update(
+          (state) => state.withSetActual(
+            set.id,
+            SetActual.completed(
+              weight: 30,
+              unit: WeightUnit.kg,
+              repetitions: 5,
+              performedDate: DateTime.utc(2026, 9, 10),
+            ),
+          ),
         ),
       );
-      expect(controller.saveError, isNull);
-      expect(controller.restTimer.available, isNotNull);
-      final deadline = controller.restTimer.available!.endsAt;
-      await tester.pump();
       await flush(tester);
-      expect(controller.restTimer.available!.endsAt, deadline);
+      await tap(tester, editorAction('수정한 기록 저장'));
+      expect((await persistedState(tester)).setActuals[set.id]!.weight, 20);
+      expect(controller.restTimer.snapshot, isNull);
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
+
+  testWidgets(
+    'failed first completion retry still asks before replacing another running timer',
+    (tester) async {
+      await pump(tester);
+      await complete(tester, 0);
+      final original = controller.restTimer.available!.toJson();
+      await openSet(tester, 1);
+      await fill(tester);
+      await blockWorkoutSave(tester);
+      await tap(tester, editorAction('세트 완료'));
+      expect(controller.restTimer.available!.toJson(), original);
+      await restoreWorkoutSave(tester);
+      await tap(tester, editorAction('수정한 기록 저장'));
+      expect(find.text('진행 중인 휴식을 바꿀까요?'), findsOneWidget);
+      await tester.tap(find.text('취소'));
+      await flush(tester);
+      expect(controller.restTimer.available!.toJson(), original);
+      expect((await persistedState(tester)).setActuals, hasLength(2));
+      expect(find.byType(SetEditor), findsNothing);
+      expect(find.text('운동 기록을 저장했어요'), findsOneWidget);
+      await tester.tap(find.text('확인'));
+      await flush(tester);
+      await openSet(tester, 1);
+      await tap(tester, editorAction('수정한 기록 저장'));
+      expect(find.byType(AlertDialog), findsNothing);
+      expect(controller.restTimer.available!.toJson(), original);
       await tester.pumpWidget(const SizedBox());
     },
   );

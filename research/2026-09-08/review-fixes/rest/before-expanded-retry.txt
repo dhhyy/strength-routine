@@ -1,0 +1,131 @@
+00:00 +0: loading /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/rest_auto_start_screen_test.dart
+00:00 +0: durable new completion starts custom timer once and page re-entry preserves deadline
+00:25 +1: automatic off preserves manual fallback and explicit zero suppresses fallback
+00:31 +2: existing completed record edit never starts a new automatic interval
+00:32 +3: a running timer requires explicit replacement and cancel preserves both actuals
+00:36 +4: failed first completion becomes durable and starts once through 수정한 기록 저장
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following _TypeError was thrown running a test:
+Null check operator used on a null value
+
+When the exception was thrown, this was the stack:
+#0      main.<anonymous closure> (file:///Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/rest_auto_start_screen_test.dart:324:53)
+<asynchronous suspension>
+#1      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:193:15)
+<asynchronous suspension>
+#2      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1064:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  failed first completion becomes durable and starts once through 수정한 기록 저장
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:40 +4 -1: failed first completion becomes durable and starts once through 수정한 기록 저장 [E]
+  Test failed. See exception logs above.
+  The test description was: failed first completion becomes durable and starts once through 수정한 기록 저장
+
+00:40 +4 -1: failed edit of a durable completed record never starts through 수정한 기록 저장
+00:42 +5 -1: failed first completion becomes durable and starts once through 저장하고 다음 세트
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following _TypeError was thrown running a test:
+Null check operator used on a null value
+
+When the exception was thrown, this was the stack:
+#0      main.<anonymous closure> (file:///Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/rest_auto_start_screen_test.dart:324:53)
+<asynchronous suspension>
+#1      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:193:15)
+<asynchronous suspension>
+#2      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1064:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  failed first completion becomes durable and starts once through 저장하고 다음 세트
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:45 +5 -2: failed first completion becomes durable and starts once through 저장하고 다음 세트 [E]
+  Test failed. See exception logs above.
+  The test description was: failed first completion becomes durable and starts once through 저장하고 다음 세트
+
+00:45 +5 -2: failed edit of a durable completed record never starts through 저장하고 다음 세트
+00:47 +6 -2: failed first completion becomes durable and starts once through 저장 다시 시도
+00:50 +7 -2: failed edit of a durable completed record never starts through 저장 다시 시도
+00:51 +8 -2: failed first completion intention is cleared by 이번 세트 제외 even when cancellation also fails
+00:55 +9 -2: failed first completion intention is cleared by 기록 전으로 되돌리기 even when cancellation also fails
+00:57 +10 -2: closing a failed completion from an unchanged restored draft cancels automatic rest on retry
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: null
+  Actual: <Instance of 'RestTimerSnapshot'>
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/rest_auto_start_screen_test.dart:438:7)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:193:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1064:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/rest_auto_start_screen_test.dart line 438
+The test description was:
+  closing a failed completion from an unchanged restored draft cancels automatic rest on retry
+════════════════════════════════════════════════════════════════════════════════════════════════════
+01:00 +10 -3: closing a failed completion from an unchanged restored draft cancels automatic rest on retry [E]
+  Test failed. See exception logs above.
+  The test description was: closing a failed completion from an unchanged restored draft cancels automatic rest on retry
+
+01:00 +10 -3: draft changes after a failed first completion require an explicit completion after draft retry
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following _TypeError was thrown running a test:
+Null check operator used on a null value
+
+When the exception was thrown, this was the stack:
+#0      main.<anonymous closure> (file:///Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/rest_auto_start_screen_test.dart:463:44)
+<asynchronous suspension>
+#1      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:193:15)
+<asynchronous suspension>
+#2      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1064:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  draft changes after a failed first completion require an explicit completion after draft retry
+════════════════════════════════════════════════════════════════════════════════════════════════════
+01:03 +10 -4: draft changes after a failed first completion require an explicit completion after draft retry [E]
+  Test failed. See exception logs above.
+  The test description was: draft changes after a failed first completion require an explicit completion after draft retry
+
+01:03 +10 -4: a replaced actual cannot inherit an earlier failed completion intention
+01:04 +11 -4: failed first completion retry still asks before replacing another running timer
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: exactly one matching candidate
+  Actual: _TextWidgetFinder:<Found 0 widgets with text "진행 중인 휴식을 바꿀까요?": []>
+   Which: means none were found but one was expected
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/rest_auto_start_screen_test.dart:512:7)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:193:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1064:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/rest_auto_start_screen_test.dart line 512
+The test description was:
+  failed first completion retry still asks before replacing another running timer
+════════════════════════════════════════════════════════════════════════════════════════════════════
+01:07 +11 -5: failed first completion retry still asks before replacing another running timer [E]
+  Test failed. See exception logs above.
+  The test description was: failed first completion retry still asks before replacing another running timer
+
+01:07 +11 -5: timer write failure leaves workout complete and retry keeps original deadline
+01:08 +12 -5: Some tests failed.

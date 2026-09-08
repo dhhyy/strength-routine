@@ -1,0 +1,27 @@
+00:00 +0: loading /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/review_workout_probe_test.dart
+00:00 +0: review: primary save retry after failed first completion starts rest
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: not null
+  Actual: <null>
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/review_workout_probe_test.dart:134:7)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:193:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1064:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/review_workout_probe_test.dart line 134
+The test description was:
+  review: primary save retry after failed first completion starts rest
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:16 +0 -1: review: primary save retry after failed first completion starts rest [E]
+  Test failed. See exception logs above.
+  The test description was: review: primary save retry after failed first completion starts rest
+
+00:16 +0 -1: Some tests failed.

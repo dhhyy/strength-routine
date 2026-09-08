@@ -923,7 +923,7 @@ class _SetEditorState extends State<SetEditor> {
   String? _entryError;
   bool _committing = false, _hasChanges = false, _finished = false;
   _SetEditorResult? _resultAfterRetry;
-  bool _autoRestPending = false;
+  SetActual? _autoRestCandidate;
 
   @override
   void initState() {
@@ -1093,8 +1093,17 @@ class _SetEditorState extends State<SetEditor> {
   }
 
   Future<void> _finishSaved() async {
-    if (_autoRestPending) {
-      _autoRestPending = false;
+    final result = _resultAfterRetry!;
+    final candidate = _autoRestCandidate;
+    _autoRestCandidate = null;
+    if (result != _SetEditorResult.closed &&
+        candidate != null &&
+        identical(
+          widget.controller.state.setActuals[widget.set.id],
+          candidate,
+        ) &&
+        !widget.controller.state.setDrafts.containsKey(widget.set.id) &&
+        _editable) {
       await autoStartCompletedSetRest(
         context,
         widget.controller,
@@ -1103,7 +1112,7 @@ class _SetEditorState extends State<SetEditor> {
     }
     if (!mounted) return;
     setState(() => _committing = false);
-    _finish(_resultAfterRetry!);
+    _finish(result);
   }
 
   Future<void> _complete({bool advance = false}) async {
@@ -1139,11 +1148,19 @@ class _SetEditorState extends State<SetEditor> {
           ? _SetEditorResult.savedAndNext
           : _SetEditorResult.saved;
     });
-    _autoRestPending =
+    final previous = widget.controller.state.setActuals[widget.set.id];
+    // A failed write leaves this exact candidate in memory. A new completion
+    // may retry it, but a replaced actual must not inherit its rest intention.
+    final retriesNewCompletion =
+        _autoRestCandidate != null && identical(previous, _autoRestCandidate);
+    _autoRestCandidate =
         actual?.status == SetActualStatus.completed &&
-        widget.controller.state.setActuals[widget.set.id]?.status !=
-            SetActualStatus.completed &&
-        (SettingsScope.maybeOf(context)?.settings.autoStartRestTimer ?? false);
+            (previous?.status != SetActualStatus.completed ||
+                retriesNewCompletion) &&
+            (SettingsScope.maybeOf(context)?.settings.autoStartRestTimer ??
+                false)
+        ? actual
+        : null;
     final draft = _draft;
     final saved = await widget.controller.update((state) {
       final updated = state.withSetActual(widget.set.id, actual);
@@ -1175,12 +1192,14 @@ class _SetEditorState extends State<SetEditor> {
 
   void _finish(_SetEditorResult result) {
     if (_finished) return;
+    _autoRestCandidate = null;
     _finished = true;
     Navigator.pop(context, result);
   }
 
   Future<void> _close() async {
     if (_committing || _finished) return;
+    _autoRestCandidate = null;
     FocusScope.of(context).unfocus();
     if (!_editable) {
       _finish(_SetEditorResult.closed);
