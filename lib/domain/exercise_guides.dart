@@ -315,8 +315,9 @@ ExerciseGuide? guideForExercise(String name) {
     if ([
       guide.name,
       ...guide.aliases,
-    ].any((alias) => alias.toLowerCase() == exact))
+    ].any((alias) => alias.toLowerCase() == exact)) {
       return guide;
+    }
   }
   return null;
 }

@@ -8,7 +8,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:strength_routine/app/training_controller.dart';
 import 'package:strength_routine/data/local_training_store.dart';
 import 'package:strength_routine/domain/exercise_guides.dart';
-import 'package:strength_routine/domain/training_program.dart';
 import 'package:strength_routine/exercise_guide_screen.dart';
 import 'package:strength_routine/program_screen.dart';
 import 'package:strength_routine/search_screen.dart';

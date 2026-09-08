@@ -35,10 +35,11 @@ class _ExerciseGuideScreenState extends State<ExerciseGuideScreen> {
         throw const FormatException('Source unavailable');
       }
     } catch (_) {
-      if (mounted)
+      if (mounted) {
         setState(
           () => _error = '출처를 열지 못했어요. 출처 열기를 다시 시도해 주세요. 안내 본문은 계속 읽을 수 있어요.',
         );
+      }
     } finally {
       if (mounted) setState(() => _opening = false);
     }
@@ -105,8 +106,9 @@ class ExerciseGuideLink extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final guide = guideForExercise(exerciseName);
-    if (guide == null)
+    if (guide == null) {
       return Text('이 종목은 등록된 가이드가 없어요.', style: AppType.caption);
+    }
     return Align(
       alignment: Alignment.centerLeft,
       child: OutlinedButton.icon(
@@ -245,8 +247,9 @@ class GuideText extends StatelessWidget {
     for (final match in RegExp(
       r'[A-Za-z0-9][A-Za-z0-9 &·.-]*',
     ).allMatches(text)) {
-      if (match.start > offset)
+      if (match.start > offset) {
         spans.add(TextSpan(text: text.substring(offset, match.start)));
+      }
       spans.add(
         TextSpan(
           text: match.group(0),
