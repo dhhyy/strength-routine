@@ -34,6 +34,7 @@ class _DetailedRoutineScreenState extends State<DetailedRoutineScreen> {
   late DetailedRoutineDraft _draft;
   late List<TrainingProgram> _catalog;
   final _undo = <DetailedRoutineDraft>[], _redo = <DetailedRoutineDraft>[];
+  final _expandedSetOptions = <String>{};
   Future<void> _saveQueue = Future.value();
   int _week = 0, _session = 0, _formEpoch = 0, _revision = 0;
   bool _saving = false;
@@ -403,7 +404,7 @@ class _DetailedRoutineScreenState extends State<DetailedRoutineScreen> {
                     Expanded(
                       child: _field(
                         '$path-reps',
-                        '반복 수',
+                        value.isAmrap ? '기준 반복 수' : '반복 수',
                         value.repetitions,
                         (text) => value.repetitions = text,
                         numeric: true,
@@ -478,6 +479,90 @@ class _DetailedRoutineScreenState extends State<DetailedRoutineScreen> {
                       _change(() => value.isRequired = required),
                 ),
               ]),
+              ExpansionTile(
+                key: ValueKey('detail-$_formEpoch-$path-advanced'),
+                tilePadding: EdgeInsets.zero,
+                initiallyExpanded: _expandedSetOptions.contains(path),
+                onExpansionChanged: (expanded) => expanded
+                    ? _expandedSetOptions.add(path)
+                    : _expandedSetOptions.remove(path),
+                childrenPadding: const EdgeInsets.only(
+                  top: AppSpace.x3,
+                  bottom: AppSpace.x2,
+                ),
+                title: Text('고급 세트 설정', style: AppType.body),
+                subtitle: Text(
+                  [
+                    value.restSeconds.isEmpty
+                        ? '휴식 미지정'
+                        : '휴식 ${value.restSeconds}초',
+                    if (value.tempo.isNotEmpty) '템포 ${value.tempo}',
+                    if (value.isAmrap) 'AMRAP',
+                  ].join(' · '),
+                  style: AppType.caption,
+                ),
+                children: [
+                  _setFields([
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        _field(
+                          '$path-rest',
+                          '휴식 시간 · 초',
+                          value.restSeconds,
+                          (text) => value.restSeconds = text,
+                          numeric: true,
+                        ),
+                        const SizedBox(height: AppSpace.x2),
+                        Text(
+                          '비우면 미지정, 0은 쉬지 않음입니다. 최대 3600초.',
+                          style: AppType.caption,
+                        ),
+                      ],
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        _field(
+                          '$path-tempo',
+                          '템포 · 예: 3-1-X-0',
+                          value.tempo,
+                          (text) => value.tempo = text,
+                          latin: true,
+                        ),
+                        const SizedBox(height: AppSpace.x2),
+                        Text(
+                          '내림–하단 정지–올림–상단 정지 순서, 각 0~9초이며 X는 빠른 올림입니다.',
+                          style: AppType.caption,
+                        ),
+                      ],
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        SwitchListTile.adaptive(
+                          key: ValueKey('$path-amrap'),
+                          value: value.isAmrap,
+                          activeColor: AppColors.ctaInk,
+                          activeTrackColor: AppColors.accent,
+                          inactiveThumbColor: AppColors.muted,
+                          inactiveTrackColor: AppColors.fill,
+                          contentPadding: EdgeInsets.zero,
+                          title: Text('AMRAP 세트', style: AppType.body),
+                          onChanged: (enabled) =>
+                              _change(() => value.isAmrap = enabled),
+                        ),
+                        Text(
+                          value.isAmrap
+                              ? '기준 반복 수는 비교용이며 최소 달성 조건이 아닙니다. RIR 처방은 따로 유지합니다.'
+                              : '수행 가능한 반복 수를 기록하는 세트입니다.',
+                          style: AppType.caption,
+                        ),
+                      ],
+                    ),
+                  ]),
+                ],
+              ),
             ],
           ),
         ),
@@ -498,7 +583,7 @@ class _DetailedRoutineScreenState extends State<DetailedRoutineScreen> {
           style: AppType.heading,
         ),
         subtitle: Text(
-          '${index + 1}번째 운동 · ${exercise.sets.length}세트',
+          '${index + 1}번째 운동 · ${exercise.sets.length}세트${exercise.supersetGroup.isEmpty ? '' : ' · 슈퍼세트 ${exercise.supersetGroup}'}',
           style: AppType.caption,
         ),
         children: [
@@ -546,6 +631,31 @@ class _DetailedRoutineScreenState extends State<DetailedRoutineScreen> {
               Text(
                 '같은 운동 ID의 이름과 기록 종목은 모든 주차에서 같아야 합니다. 중량 기준은 세트마다 지정합니다.',
                 style: AppType.caption,
+              ),
+              ExpansionTile(
+                key: ValueKey('$path-superset-options'),
+                tilePadding: EdgeInsets.zero,
+                childrenPadding: const EdgeInsets.only(top: AppSpace.x3),
+                title: Text('운동 묶기 · 슈퍼세트', style: AppType.body),
+                subtitle: Text(
+                  exercise.supersetGroup.isEmpty
+                      ? '묶음 없음'
+                      : '슈퍼세트 ${exercise.supersetGroup}',
+                  style: AppType.caption,
+                ),
+                children: [
+                  _field(
+                    '$path-superset',
+                    '슈퍼세트 그룹 ID · 선택',
+                    exercise.supersetGroup,
+                    (text) => exercise.supersetGroup = text,
+                  ),
+                  const SizedBox(height: AppSpace.x2),
+                  Text(
+                    '같은 세션에서 연속한 운동 2개 이상에 같은 그룹 ID를 입력하면 한 세트씩 번갈아 진행합니다. 비우면 묶음을 해제합니다.',
+                    style: AppType.caption,
+                  ),
+                ],
               ),
               for (var i = 0; i < exercise.sets.length; i++)
                 _setEditor(exercise, index, i),
@@ -917,11 +1027,11 @@ class _DetailedRoutineScreenState extends State<DetailedRoutineScreen> {
 }
 
 String _setDescription(ProgramSet set) =>
-    '${set.repetitions}회 · RIR ${set.rir == null ? '미지정' : formatNumber(set.rir!)} · ${switch (set.load.kind) {
+    '${set.isAmrap ? 'AMRAP · 기준 ' : ''}${set.repetitions}회 · RIR ${set.rir == null ? '미지정' : formatNumber(set.rir!)} · ${switch (set.load.kind) {
       LoadKind.manual => '중량 직접 입력',
       LoadKind.fixedKg => '${formatNumber(set.load.value!)} kg',
       LoadKind.percentOfBaseline => '${liftLabel(set.load.lift!)} 기준 ${formatNumber(set.load.value!)}%',
-    }} · ${set.isRequired ? '필수' : '선택'}';
+    }} · ${set.isRequired ? '필수' : '선택'} · ${set.restSeconds == null ? '휴식 미지정' : '휴식 ${set.restSeconds}초'}${set.tempo == null ? '' : ' · 템포 ${set.tempo}'}';
 
 class _DetailedReview extends StatefulWidget {
   final TrainingProgram program;
@@ -966,16 +1076,27 @@ class _DetailedReviewState extends State<_DetailedReview> {
   Widget build(BuildContext context) {
     final program = widget.program, old = widget.previous;
     final oldSets = <String, ProgramSet>{};
+    final oldExercises = <String, ProgramExercise>{};
+    final exerciseLabels = <String, String>{};
     for (final session in old?.sessions ?? <ProgramSession>[]) {
       for (final exercise in session.exercises) {
+        final key = jsonEncode([session.id, exercise.id]);
+        oldExercises[key] = exercise;
+        exerciseLabels[key] =
+            '${session.week}주차 ${session.dayOrder}회차 · ${exercise.name}';
         for (final set in exercise.sets) {
           oldSets[jsonEncode([session.id, exercise.id, set.id])] = set;
         }
       }
     }
     final newSets = <String, ProgramSet>{};
+    final newExercises = <String, ProgramExercise>{};
     for (final session in program.sessions) {
       for (final exercise in session.exercises) {
+        final key = jsonEncode([session.id, exercise.id]);
+        newExercises[key] = exercise;
+        exerciseLabels[key] =
+            '${session.week}주차 ${session.dayOrder}회차 · ${exercise.name}';
         for (final set in exercise.sets) {
           newSets[jsonEncode([session.id, exercise.id, set.id])] = set;
         }
@@ -993,6 +1114,13 @@ class _DetailedReviewState extends State<_DetailedReview> {
                   jsonEncode(newSets[key]!.toJson()),
         )
         .length;
+    final groupChanges = {...oldExercises.keys, ...newExercises.keys}
+        .where(
+          (key) =>
+              oldExercises[key]?.supersetGroup !=
+              newExercises[key]?.supersetGroup,
+        )
+        .toList();
     return PopScope(
       canPop: !_saving,
       child: FlowPage(
@@ -1018,6 +1146,26 @@ class _DetailedReviewState extends State<_DetailedReview> {
             '세트 수치는 동일 ID의 처방을 비교합니다. 순서·운동 이름·세션 이름 변경은 아래 전체 구성에서 확인해 주세요.',
             style: AppType.caption,
           ),
+          if (groupChanges.isNotEmpty)
+            GlassPanel(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    '슈퍼세트 묶음 변경 ${groupChanges.length}개 운동',
+                    style: AppType.heading,
+                  ),
+                  for (final key in groupChanges)
+                    Padding(
+                      padding: const EdgeInsets.only(top: AppSpace.x2),
+                      child: Text(
+                        '${exerciseLabels[key]} · ${oldExercises[key]?.supersetGroup ?? '묶음 없음'} → ${newExercises[key]?.supersetGroup ?? '묶음 없음'}',
+                        style: AppType.body,
+                      ),
+                    ),
+                ],
+              ),
+            ),
           if (old != null)
             GlassPanel(
               child: Column(
@@ -1057,6 +1205,12 @@ class _DetailedReviewState extends State<_DetailedReview> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           Text(exercise.name, style: AppType.heading),
+                          Text(
+                            exercise.supersetGroup == null
+                                ? '슈퍼세트 · 묶음 없음'
+                                : '슈퍼세트 ${exercise.supersetGroup} · 묶인 운동을 한 세트씩 번갈아 진행',
+                            style: AppType.caption,
+                          ),
                           Text(
                             '기록 종목 · ${exercise.mainLift == null ? '미지정' : liftLabel(exercise.mainLift!)}',
                             style: AppType.caption,
