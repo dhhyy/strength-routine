@@ -1,0 +1,142 @@
+import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:strength_routine/app/settings_controller.dart';
+import 'package:strength_routine/app/training_controller.dart';
+import 'package:strength_routine/data/local_settings_store.dart';
+import 'package:strength_routine/data/local_training_store.dart';
+import 'package:strength_routine/domain/app_settings.dart';
+import 'package:strength_routine/domain/training_program.dart';
+import 'package:strength_routine/theme.dart';
+import 'package:strength_routine/workout_screen.dart';
+import 'training_program_fixtures.dart';
+
+void main() {
+  late Directory directory;
+  late File file;
+  late TrainingController controller;
+  late SettingsController settings;
+  late ActiveTrainingPlan plan;
+  final now = DateTime.utc(2026, 9, 10, 12);
+  setUp(() async {
+    directory = await Directory.systemTemp.createTemp('rest-auto-ui-');
+    file = File('${directory.path}/state.json');
+    plan = fixturePlan();
+    await LocalTrainingStore(file).save(TrainingAppState(activePlan: plan));
+    controller = TrainingController(
+      store: LocalTrainingStore(file),
+      now: () => now,
+      loadPrograms: () async => [],
+    );
+    await controller.initialize();
+    settings = SettingsController(
+      store: LocalSettingsStore(File('${directory.path}/settings.json')),
+    );
+    await settings.initialize();
+    await settings.update(
+      const AppSettings(defaultRestSeconds: 90, autoStartRestTimer: true),
+    );
+  });
+  tearDown(() async {
+    controller.dispose();
+    settings.dispose();
+    await directory.delete(recursive: true);
+  });
+  Future<void> flush(WidgetTester tester) async {
+    for (var i = 0; i < 200; i++) {
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 5)),
+      );
+      await tester.pump();
+      if (!controller.saving &&
+          !controller.restTimer.saving &&
+          !settings.saving) {
+        break;
+      }
+    }
+    if (find.byType(AlertDialog).evaluate().isNotEmpty) {
+      await tester.pump(const Duration(milliseconds: 350));
+    } else {
+      await tester.pumpAndSettle();
+    }
+  }
+
+  Future<void> pump(WidgetTester tester) async {
+    tester.view.devicePixelRatio = 1;
+    tester.view.physicalSize = const Size(375, 900);
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: buildConsoleTheme(),
+        home: SettingsScope(
+          controller: settings,
+          child: WorkoutScreen(
+            controller: controller,
+            session: plan.sessions.first,
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> tap(WidgetTester tester, Finder finder) async {
+    await tester.scrollUntilVisible(
+      finder,
+      200,
+      scrollable: find.byType(Scrollable).last,
+      maxScrolls: 60,
+    );
+    await tester.ensureVisible(finder);
+    await tester.pumpAndSettle();
+    await tester.tap(finder);
+    await flush(tester);
+  }
+
+  Finder field(String key) => find.descendant(
+    of: find.byKey(ValueKey(key)),
+    matching: find.byType(TextFormField),
+  );
+  Future<void> openSet(WidgetTester tester, int index) async {
+    await tap(tester, find.byType(WorkoutSetRow).at(index));
+  }
+
+  Future<void> fill(WidgetTester tester) async {
+    await tester.enterText(field('set-weight'), '20');
+    await flush(tester);
+    await tester.enterText(field('set-repetitions'), '5');
+    await flush(tester);
+  }
+
+  testWidgets(
+    'review: primary save retry after failed first completion starts rest',
+    (tester) async {
+      await pump(tester);
+      await openSet(tester, 0);
+      await fill(tester);
+      final savedFile = File('${file.path}.before-failure');
+      await tester.runAsync(() async {
+        await file.rename(savedFile.path);
+        await Directory(file.path).create();
+      });
+      await tap(tester, find.text('세트 완료'));
+      expect(controller.saveError, isNotNull);
+      expect(controller.restTimer.snapshot, isNull);
+      await tester.runAsync(() async {
+        await Directory(file.path).delete();
+        await savedFile.rename(file.path);
+      });
+      await tap(tester, find.text('수정한 기록 저장'));
+      expect(controller.saveError, isNull);
+      final persisted = await tester.runAsync(() => LocalTrainingStore(file).load());
+      expect(persisted!.setActuals.values.single.status, SetActualStatus.completed);
+      expect(controller.restTimer.available, isNotNull);
+      final deadline = controller.restTimer.available!.endsAt;
+      await tester.pump();
+      await flush(tester);
+      expect(controller.restTimer.available!.endsAt, deadline);
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
+}

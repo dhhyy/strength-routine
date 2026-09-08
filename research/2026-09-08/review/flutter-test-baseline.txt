@@ -1,0 +1,351 @@
+00:00 +0: loading /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart
+00:00 +0: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 목록에서 기존 프로그램의 한 세트를 편집해 새 버전 저장·내보내기·재로딩한다
+00:04 +1: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 목록에서 기존 프로그램의 한 세트를 편집해 새 버전 저장·내보내기·재로딩한다
+00:04 +2: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 목록에서 기존 프로그램의 한 세트를 편집해 새 버전 저장·내보내기·재로딩한다
+00:04 +3: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 목록에서 기존 프로그램의 한 세트를 편집해 새 버전 저장·내보내기·재로딩한다
+00:04 +4: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 목록에서 기존 프로그램의 한 세트를 편집해 새 버전 저장·내보내기·재로딩한다
+00:04 +5: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 목록에서 기존 프로그램의 한 세트를 편집해 새 버전 저장·내보내기·재로딩한다
+00:04 +6: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 목록에서 기존 프로그램의 한 세트를 편집해 새 버전 저장·내보내기·재로딩한다
+00:04 +7: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 목록에서 기존 프로그램의 한 세트를 편집해 새 버전 저장·내보내기·재로딩한다
+00:04 +8: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 목록에서 기존 프로그램의 한 세트를 편집해 새 버전 저장·내보내기·재로딩한다
+00:05 +9: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 목록에서 기존 프로그램의 한 세트를 편집해 새 버전 저장·내보내기·재로딩한다
+00:07 +10: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 목록에서 기존 프로그램의 한 세트를 편집해 새 버전 저장·내보내기·재로딩한다
+00:07 +11: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 목록에서 기존 프로그램의 한 세트를 편집해 새 버전 저장·내보내기·재로딩한다
+00:08 +12: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 목록에서 기존 프로그램의 한 세트를 편집해 새 버전 저장·내보내기·재로딩한다
+00:08 +13: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 목록에서 기존 프로그램의 한 세트를 편집해 새 버전 저장·내보내기·재로딩한다
+00:08 +14: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 목록에서 기존 프로그램의 한 세트를 편집해 새 버전 저장·내보내기·재로딩한다
+00:08 +15: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 목록에서 기존 프로그램의 한 세트를 편집해 새 버전 저장·내보내기·재로딩한다
+00:08 +16: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 목록에서 기존 프로그램의 한 세트를 편집해 새 버전 저장·내보내기·재로딩한다
+00:08 +17: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 목록에서 기존 프로그램의 한 세트를 편집해 새 버전 저장·내보내기·재로딩한다
+00:11 +18: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 목록에서 기존 프로그램의 한 세트를 편집해 새 버전 저장·내보내기·재로딩한다
+00:12 +19: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 목록에서 기존 프로그램의 한 세트를 편집해 새 버전 저장·내보내기·재로딩한다
+00:14 +20: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 목록에서 기존 프로그램의 한 세트를 편집해 새 버전 저장·내보내기·재로딩한다
+00:17 +21: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 목록에서 기존 프로그램의 한 세트를 편집해 새 버전 저장·내보내기·재로딩한다
+00:17 +22: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 목록에서 기존 프로그램의 한 세트를 편집해 새 버전 저장·내보내기·재로딩한다
+00:18 +23: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 목록에서 기존 프로그램의 한 세트를 편집해 새 버전 저장·내보내기·재로딩한다
+00:19 +24: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 목록에서 기존 프로그램의 한 세트를 편집해 새 버전 저장·내보내기·재로딩한다
+00:19 +25: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 목록에서 기존 프로그램의 한 세트를 편집해 새 버전 저장·내보내기·재로딩한다
+00:20 +26: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 목록에서 기존 프로그램의 한 세트를 편집해 새 버전 저장·내보내기·재로딩한다
+00:22 +27: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 목록에서 기존 프로그램의 한 세트를 편집해 새 버전 저장·내보내기·재로딩한다
+00:22 +28: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 목록에서 기존 프로그램의 한 세트를 편집해 새 버전 저장·내보내기·재로딩한다
+00:23 +29: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 목록에서 기존 프로그램의 한 세트를 편집해 새 버전 저장·내보내기·재로딩한다
+00:24 +30: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 목록에서 기존 프로그램의 한 세트를 편집해 새 버전 저장·내보내기·재로딩한다
+00:24 +31: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 목록에서 기존 프로그램의 한 세트를 편집해 새 버전 저장·내보내기·재로딩한다
+00:27 +32: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 목록에서 기존 프로그램의 한 세트를 편집해 새 버전 저장·내보내기·재로딩한다
+00:31 +33: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 목록에서 기존 프로그램의 한 세트를 편집해 새 버전 저장·내보내기·재로딩한다
+00:32 +34: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 목록에서 기존 프로그램의 한 세트를 편집해 새 버전 저장·내보내기·재로딩한다
+00:36 +35: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 목록에서 기존 프로그램의 한 세트를 편집해 새 버전 저장·내보내기·재로딩한다
+00:39 +36: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/exercise_guide_screen_test.dart: guide search opens offline instructions and glossary
+00:39 +37: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/exercise_guide_screen_test.dart: guide search opens offline instructions and glossary
+00:43 +38: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/exercise_guide_screen_test.dart: guide search opens offline instructions and glossary
+00:47 +39: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/exercise_guide_screen_test.dart: guide search opens offline instructions and glossary
+00:47 +40: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/exercise_guide_screen_test.dart: guide search opens offline instructions and glossary
+00:48 +41: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 기본 생성의 카탈로그 확정 중 늦은 입력은 새 프로그램을 되돌려 쓰지 않는다
+00:51 +42: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 기본 생성의 카탈로그 확정 중 늦은 입력은 새 프로그램을 되돌려 쓰지 않는다
+00:51 +43: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 기본 생성의 카탈로그 확정 중 늦은 입력은 새 프로그램을 되돌려 쓰지 않는다
+00:51 +44: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/advanced_admin_screen_test.dart: 고급 입력 375.0 폭에서 큰 글자와 키보드를 포함해 조작한다
+00:52 +45: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/advanced_admin_screen_test.dart: 고급 입력 375.0 폭에서 큰 글자와 키보드를 포함해 조작한다
+00:53 +46: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/advanced_admin_screen_test.dart: 고급 입력 375.0 폭에서 큰 글자와 키보드를 포함해 조작한다
+00:53 +47: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/advanced_admin_screen_test.dart: 고급 입력 375.0 폭에서 큰 글자와 키보드를 포함해 조작한다
+00:54 +48: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/workout_screen_test.dart: 제외와 완료를 구분하고 완료 안내는 되돌린 뒤에도 한 번만 표시한다
+00:54 +49: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/workout_screen_test.dart: 제외와 완료를 구분하고 완료 안내는 되돌린 뒤에도 한 번만 표시한다
+00:54 +50: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 정밀 초안 교체 저장 실패는 이전 초안을 유지하고 상단에 실패를 알린다
+00:54 +51: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 정밀 초안 교체 저장 실패는 이전 초안을 유지하고 상단에 실패를 알린다
+00:55 +52: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 정밀 초안 교체 저장 실패는 이전 초안을 유지하고 상단에 실패를 알린다
+00:55 +53: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 정밀 초안 교체 저장 실패는 이전 초안을 유지하고 상단에 실패를 알린다
+00:55 +54: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 정밀 초안 교체 저장 실패는 이전 초안을 유지하고 상단에 실패를 알린다
+00:55 +55: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 정밀 초안 교체 저장 실패는 이전 초안을 유지하고 상단에 실패를 알린다
+00:55 +56: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 정밀 초안 교체 저장 실패는 이전 초안을 유지하고 상단에 실패를 알린다
+00:55 +57: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 정밀 초안 교체 저장 실패는 이전 초안을 유지하고 상단에 실패를 알린다
+00:56 +58: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 정밀 초안 교체 저장 실패는 이전 초안을 유지하고 상단에 실패를 알린다
+00:56 +59: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 정밀 초안 교체 저장 실패는 이전 초안을 유지하고 상단에 실패를 알린다
+00:56 +60: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 정밀 초안 교체 저장 실패는 이전 초안을 유지하고 상단에 실패를 알린다
+00:56 +61: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 정밀 초안 교체 저장 실패는 이전 초안을 유지하고 상단에 실패를 알린다
+00:56 +62: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 정밀 초안 교체 저장 실패는 이전 초안을 유지하고 상단에 실패를 알린다
+00:56 +63: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 정밀 초안 교체 저장 실패는 이전 초안을 유지하고 상단에 실패를 알린다
+00:56 +64: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 정밀 초안 교체 저장 실패는 이전 초안을 유지하고 상단에 실패를 알린다
+00:56 +65: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 정밀 초안 교체 저장 실패는 이전 초안을 유지하고 상단에 실패를 알린다
+00:56 +66: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 정밀 초안 교체 저장 실패는 이전 초안을 유지하고 상단에 실패를 알린다
+00:56 +67: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 정밀 초안 교체 저장 실패는 이전 초안을 유지하고 상단에 실패를 알린다
+00:56 +68: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 정밀 초안 교체 저장 실패는 이전 초안을 유지하고 상단에 실패를 알린다
+00:56 +69: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/storage_schema_upgrade_test.dart: 기존 v1을 이행하고 v3로 저장하여 구버전 덮어쓰기를 막는다
+00:57 +70: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 초안 교체 취소는 파일을 보존하고 프로그램 복제는 새 ID를 요구한다
+00:57 +71: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 초안 교체 취소는 파일을 보존하고 프로그램 복제는 새 ID를 요구한다
+00:58 +72: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 초안 교체 취소는 파일을 보존하고 프로그램 복제는 새 ID를 요구한다
+00:58 +73: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 초안 교체 취소는 파일을 보존하고 프로그램 복제는 새 ID를 요구한다
+00:58 +74: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 초안 교체 취소는 파일을 보존하고 프로그램 복제는 새 ID를 요구한다
+00:59 +75: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 초안 교체 취소는 파일을 보존하고 프로그램 복제는 새 ID를 요구한다
+00:59 +76: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 초안 교체 취소는 파일을 보존하고 프로그램 복제는 새 ID를 요구한다
+00:59 +77: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 초안 교체 취소는 파일을 보존하고 프로그램 복제는 새 ID를 요구한다
+00:59 +78: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 초안 교체 취소는 파일을 보존하고 프로그램 복제는 새 ID를 요구한다
+00:59 +79: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 초안 교체 취소는 파일을 보존하고 프로그램 복제는 새 ID를 요구한다
+00:59 +80: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 초안 교체 취소는 파일을 보존하고 프로그램 복제는 새 ID를 요구한다
+00:59 +81: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 초안 교체 취소는 파일을 보존하고 프로그램 복제는 새 ID를 요구한다
+00:59 +82: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 초안 교체 취소는 파일을 보존하고 프로그램 복제는 새 ID를 요구한다
+00:59 +83: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 초안 교체 취소는 파일을 보존하고 프로그램 복제는 새 ID를 요구한다
+00:59 +84: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 초안 교체 취소는 파일을 보존하고 프로그램 복제는 새 ID를 요구한다
+00:59 +85: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 초안 교체 취소는 파일을 보존하고 프로그램 복제는 새 ID를 요구한다
+00:59 +86: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 초안 교체 취소는 파일을 보존하고 프로그램 복제는 새 ID를 요구한다
+00:59 +87: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 초안 교체 취소는 파일을 보존하고 프로그램 복제는 새 ID를 요구한다
+00:59 +88: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 초안 교체 취소는 파일을 보존하고 프로그램 복제는 새 ID를 요구한다
+00:59 +89: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 초안 교체 취소는 파일을 보존하고 프로그램 복제는 새 ID를 요구한다
+00:59 +90: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 초안 교체 취소는 파일을 보존하고 프로그램 복제는 새 ID를 요구한다
+00:59 +91: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 초안 교체 취소는 파일을 보존하고 프로그램 복제는 새 ID를 요구한다
+01:00 +92: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 초안 교체 취소는 파일을 보존하고 프로그램 복제는 새 ID를 요구한다
+01:00 +93: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 초안 교체 취소는 파일을 보존하고 프로그램 복제는 새 ID를 요구한다
+01:00 +94: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 초안 교체 취소는 파일을 보존하고 프로그램 복제는 새 ID를 요구한다
+01:00 +95: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 초안 교체 취소는 파일을 보존하고 프로그램 복제는 새 ID를 요구한다
+01:00 +96: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 초안 교체 취소는 파일을 보존하고 프로그램 복제는 새 ID를 요구한다
+01:00 +97: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 초안 교체 취소는 파일을 보존하고 프로그램 복제는 새 ID를 요구한다
+01:00 +98: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 초안 교체 취소는 파일을 보존하고 프로그램 복제는 새 ID를 요구한다
+01:00 +99: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 초안 교체 취소는 파일을 보존하고 프로그램 복제는 새 ID를 요구한다
+01:00 +100: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 초안 교체 취소는 파일을 보존하고 프로그램 복제는 새 ID를 요구한다
+01:00 +101: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 초안 교체 취소는 파일을 보존하고 프로그램 복제는 새 ID를 요구한다
+01:00 +102: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 초안 교체 취소는 파일을 보존하고 프로그램 복제는 새 ID를 요구한다
+01:00 +103: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 초안 교체 취소는 파일을 보존하고 프로그램 복제는 새 ID를 요구한다
+01:00 +104: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 초안 교체 취소는 파일을 보존하고 프로그램 복제는 새 ID를 요구한다
+01:00 +105: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 초안 교체 취소는 파일을 보존하고 프로그램 복제는 새 ID를 요구한다
+01:00 +106: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_integration_test.dart: 초안 교체 취소는 파일을 보존하고 프로그램 복제는 새 ID를 요구한다
+01:01 +107: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 기존 혼합 처방에서 2주차 2세트만 바꾸고 전체 검토 후 저장한다
+01:01 +108: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 기존 혼합 처방에서 2주차 2세트만 바꾸고 전체 검토 후 저장한다
+01:01 +109: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 기존 혼합 처방에서 2주차 2세트만 바꾸고 전체 검토 후 저장한다
+01:01 +110: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 기존 혼합 처방에서 2주차 2세트만 바꾸고 전체 검토 후 저장한다
+01:01 +111: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 기존 혼합 처방에서 2주차 2세트만 바꾸고 전체 검토 후 저장한다
+01:03 +112: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 기존 혼합 처방에서 2주차 2세트만 바꾸고 전체 검토 후 저장한다
+01:03 +113: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 기존 혼합 처방에서 2주차 2세트만 바꾸고 전체 검토 후 저장한다
+01:03 +114: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 기존 혼합 처방에서 2주차 2세트만 바꾸고 전체 검토 후 저장한다
+01:03 +115: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 기존 혼합 처방에서 2주차 2세트만 바꾸고 전체 검토 후 저장한다
+01:03 +116: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 기존 혼합 처방에서 2주차 2세트만 바꾸고 전체 검토 후 저장한다
+01:04 +117: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 기존 혼합 처방에서 2주차 2세트만 바꾸고 전체 검토 후 저장한다
+01:04 +118: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 기존 혼합 처방에서 2주차 2세트만 바꾸고 전체 검토 후 저장한다
+01:04 +119: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 기존 혼합 처방에서 2주차 2세트만 바꾸고 전체 검토 후 저장한다
+01:04 +120: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 기존 혼합 처방에서 2주차 2세트만 바꾸고 전체 검토 후 저장한다
+01:04 +121: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 기존 혼합 처방에서 2주차 2세트만 바꾸고 전체 검토 후 저장한다
+01:05 +122: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 기존 혼합 처방에서 2주차 2세트만 바꾸고 전체 검토 후 저장한다
+01:05 +123: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 기존 혼합 처방에서 2주차 2세트만 바꾸고 전체 검토 후 저장한다
+01:05 +124: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 기존 혼합 처방에서 2주차 2세트만 바꾸고 전체 검토 후 저장한다
+01:05 +125: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 기존 혼합 처방에서 2주차 2세트만 바꾸고 전체 검토 후 저장한다
+01:05 +126: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 기존 혼합 처방에서 2주차 2세트만 바꾸고 전체 검토 후 저장한다
+01:05 +127: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 기존 혼합 처방에서 2주차 2세트만 바꾸고 전체 검토 후 저장한다
+01:05 +128: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 기존 혼합 처방에서 2주차 2세트만 바꾸고 전체 검토 후 저장한다
+01:05 +129: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 기존 혼합 처방에서 2주차 2세트만 바꾸고 전체 검토 후 저장한다
+01:05 +130: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 기존 혼합 처방에서 2주차 2세트만 바꾸고 전체 검토 후 저장한다
+01:13 +131: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 기존 혼합 처방에서 2주차 2세트만 바꾸고 전체 검토 후 저장한다
+01:14 +132: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 기존 혼합 처방에서 2주차 2세트만 바꾸고 전체 검토 후 저장한다
+01:14 +133: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/settings_integration_test.dart: 프로필 설정·도움말·구독을 실제로 열고 저장한 lb로 새 세트를 기록한다
+01:15 +134: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/settings_integration_test.dart: 프로필 설정·도움말·구독을 실제로 열고 저장한 lb로 새 세트를 기록한다
+01:15 +135: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/settings_integration_test.dart: 프로필 설정·도움말·구독을 실제로 열고 저장한 lb로 새 세트를 기록한다
+01:15 +136: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/habits_screen_test.dart: date navigation and archive keep the historical check
+01:16 +137: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 주차 덮어쓰기 취소는 입력을 보존하고 복사 뒤 되돌리기와 다시 실행이 독립적이다
+01:17 +138: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 주차 덮어쓰기 취소는 입력을 보존하고 복사 뒤 되돌리기와 다시 실행이 독립적이다
+01:17 +139: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 주차 덮어쓰기 취소는 입력을 보존하고 복사 뒤 되돌리기와 다시 실행이 독립적이다
+01:18 +140: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 주차 덮어쓰기 취소는 입력을 보존하고 복사 뒤 되돌리기와 다시 실행이 독립적이다
+01:18 +141: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 주차 덮어쓰기 취소는 입력을 보존하고 복사 뒤 되돌리기와 다시 실행이 독립적이다
+01:19 +142: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 주차 덮어쓰기 취소는 입력을 보존하고 복사 뒤 되돌리기와 다시 실행이 독립적이다
+01:19 +143: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 주차 덮어쓰기 취소는 입력을 보존하고 복사 뒤 되돌리기와 다시 실행이 독립적이다
+01:20 +144: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 주차 덮어쓰기 취소는 입력을 보존하고 복사 뒤 되돌리기와 다시 실행이 독립적이다
+01:21 +145: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/schedule_previous_screen_test.dart: copy confirms provenance and overwrite, preserves raw fields and reloads draft
+01:22 +146: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/schedule_previous_screen_test.dart: copy confirms provenance and overwrite, preserves raw fields and reloads draft
+01:22 +147: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/settings_integration_test.dart: 프로필에서 바꾼 단위를 프로그램 선택·상세·설정 경로의 새 최근 기록에도 적용한다
+01:22 +148: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/settings_integration_test.dart: 프로필에서 바꾼 단위를 프로그램 선택·상세·설정 경로의 새 최근 기록에도 적용한다
+01:24 +149: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/settings_integration_test.dart: 프로필에서 바꾼 단위를 프로그램 선택·상세·설정 경로의 새 최근 기록에도 적용한다
+01:24 +150: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/advanced_workout_screen_test.dart: AMRAP instructions keep actual input empty and permit fewer than reference reps
+01:25 +151: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/advanced_workout_screen_test.dart: AMRAP instructions keep actual input empty and permit fewer than reference reps
+01:25 +152: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/advanced_workout_screen_test.dart: AMRAP instructions keep actual input empty and permit fewer than reference reps
+01:25 +153: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/advanced_workout_screen_test.dart: AMRAP instructions keep actual input empty and permit fewer than reference reps
+01:25 +154: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/advanced_workout_screen_test.dart: AMRAP instructions keep actual input empty and permit fewer than reference reps
+01:25 +155: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/advanced_workout_screen_test.dart: AMRAP instructions keep actual input empty and permit fewer than reference reps
+01:25 +156: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/advanced_workout_screen_test.dart: AMRAP instructions keep actual input empty and permit fewer than reference reps
+01:25 +157: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/advanced_workout_screen_test.dart: AMRAP instructions keep actual input empty and permit fewer than reference reps
+01:25 +158: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/advanced_workout_screen_test.dart: AMRAP instructions keep actual input empty and permit fewer than reference reps
+01:25 +159: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/advanced_workout_screen_test.dart: AMRAP instructions keep actual input empty and permit fewer than reference reps
+01:25 +160: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/advanced_workout_screen_test.dart: AMRAP instructions keep actual input empty and permit fewer than reference reps
+01:25 +161: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/advanced_workout_screen_test.dart: AMRAP instructions keep actual input empty and permit fewer than reference reps
+01:25 +162: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/advanced_workout_screen_test.dart: AMRAP instructions keep actual input empty and permit fewer than reference reps
+01:25 +163: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/advanced_workout_screen_test.dart: AMRAP instructions keep actual input empty and permit fewer than reference reps
+01:26 +164: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/advanced_workout_screen_test.dart: AMRAP instructions keep actual input empty and permit fewer than reference reps
+01:26 +165: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/advanced_workout_screen_test.dart: AMRAP instructions keep actual input empty and permit fewer than reference reps
+01:26 +166: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/advanced_workout_screen_test.dart: AMRAP instructions keep actual input empty and permit fewer than reference reps
+01:27 +167: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/advanced_workout_screen_test.dart: AMRAP instructions keep actual input empty and permit fewer than reference reps
+01:27 +168: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/advanced_workout_screen_test.dart: AMRAP instructions keep actual input empty and permit fewer than reference reps
+01:27 +169: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/advanced_workout_screen_test.dart: AMRAP instructions keep actual input empty and permit fewer than reference reps
+01:28 +170: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/advanced_workout_screen_test.dart: AMRAP instructions keep actual input empty and permit fewer than reference reps
+01:28 +171: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/advanced_workout_screen_test.dart: AMRAP instructions keep actual input empty and permit fewer than reference reps
+01:28 +172: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 같은 ID와 버전은 카탈로그 교체 전에 차단한다
+01:28 +173: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 같은 ID와 버전은 카탈로그 교체 전에 차단한다
+01:28 +174: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 같은 ID와 버전은 카탈로그 교체 전에 차단한다
+01:28 +175: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 같은 ID와 버전은 카탈로그 교체 전에 차단한다
+01:28 +176: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 같은 ID와 버전은 카탈로그 교체 전에 차단한다
+01:28 +177: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 같은 ID와 버전은 카탈로그 교체 전에 차단한다
+01:29 +178: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 같은 ID와 버전은 카탈로그 교체 전에 차단한다
+01:29 +179: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 같은 ID와 버전은 카탈로그 교체 전에 차단한다
+01:29 +180: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 같은 ID와 버전은 카탈로그 교체 전에 차단한다
+01:29 +181: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 같은 ID와 버전은 카탈로그 교체 전에 차단한다
+01:29 +182: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 같은 ID와 버전은 카탈로그 교체 전에 차단한다
+01:29 +183: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 같은 ID와 버전은 카탈로그 교체 전에 차단한다
+01:29 +184: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/advanced_workout_screen_test.dart: next set follows superset rounds and skips completed sets
+01:29 +185: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/advanced_workout_screen_test.dart: next set follows superset rounds and skips completed sets
+01:29 +186: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/advanced_workout_screen_test.dart: next set follows superset rounds and skips completed sets
+01:31 +187: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/bundled_programs_test.dart: 수동 중량 프로그램은 최근 기록 없이 설정에서 결과 확인까지 열린다
+01:32 +188: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/bundled_programs_test.dart: 수동 중량 프로그램은 최근 기록 없이 설정에서 결과 확인까지 열린다
+01:34 +189: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/bundled_programs_test.dart: 수동 중량 프로그램은 최근 기록 없이 설정에서 결과 확인까지 열린다
+01:37 +190: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/bundled_programs_test.dart: 수동 중량 프로그램은 최근 기록 없이 설정에서 결과 확인까지 열린다
+01:37 +191: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/bundled_programs_test.dart: 수동 중량 프로그램은 최근 기록 없이 설정에서 결과 확인까지 열린다
+01:37 +192: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/bundled_programs_test.dart: 수동 중량 프로그램은 최근 기록 없이 설정에서 결과 확인까지 열린다
+01:38 +193: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/bundled_programs_test.dart: 수동 중량 프로그램은 최근 기록 없이 설정에서 결과 확인까지 열린다
+01:39 +194: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/bundled_programs_test.dart: 수동 중량 프로그램은 최근 기록 없이 설정에서 결과 확인까지 열린다
+01:39 +195: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/bundled_programs_test.dart: 수동 중량 프로그램은 최근 기록 없이 설정에서 결과 확인까지 열린다
+01:40 +196: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/bundled_programs_test.dart: 수동 중량 프로그램은 최근 기록 없이 설정에서 결과 확인까지 열린다
+01:41 +197: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/bundled_programs_test.dart: 수동 중량 프로그램은 최근 기록 없이 설정에서 결과 확인까지 열린다
+01:43 +198: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/backup_screen_test.dart: review cancellation and explicit restore replace only after confirmation
+01:43 +199: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/detailed_admin_screen_test.dart: 1200 너비에서 세트 필수 여부와 순서를 바꾸어 검토한다
+01:44 +200: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:44 +201: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:45 +202: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:46 +203: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:46 +204: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:47 +205: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:47 +206: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:48 +207: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:48 +208: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:48 +209: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:49 +210: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:49 +211: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:50 +212: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:50 +213: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:50 +214: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:50 +215: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:50 +216: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:50 +217: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:50 +218: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:50 +219: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:50 +220: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:50 +221: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:50 +222: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:50 +223: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:50 +224: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:50 +225: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:50 +226: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:51 +227: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:51 +228: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:51 +229: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:51 +230: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:51 +231: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:51 +232: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:51 +233: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:51 +234: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:51 +235: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:51 +236: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:52 +237: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:52 +238: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:52 +239: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:53 +240: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:54 +241: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:54 +242: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:55 +243: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:55 +244: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:56 +245: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:56 +246: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:57 +247: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:57 +248: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:57 +249: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:57 +250: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:57 +251: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:57 +252: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:57 +253: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:57 +254: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:57 +255: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:57 +256: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:57 +257: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:57 +258: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:58 +259: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:58 +260: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:58 +261: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:58 +262: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:58 +263: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:58 +264: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:58 +265: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:58 +266: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:58 +267: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:58 +268: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:59 +269: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+01:59 +270: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+02:00 +271: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+02:00 +272: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+02:00 +273: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+02:00 +274: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+02:00 +275: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+02:00 +276: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+02:00 +277: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+02:00 +278: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+02:00 +279: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+02:01 +280: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+02:02 +281: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+02:03 +282: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+02:03 +283: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+02:03 +284: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+02:03 +285: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+02:03 +286: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/program_flow_test.dart: 프로그램 선택과 기록·일정 입력 후 시작한 원본 계획을 새 저장소로 복원한다
+02:03 +287: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 반복 범위와 세트 종류를 편집/검토하고 새 버전으로 저장한다
+02:03 +288: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 반복 범위와 세트 종류를 편집/검토하고 새 버전으로 저장한다
+02:03 +289: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 반복 범위와 세트 종류를 편집/검토하고 새 버전으로 저장한다
+02:04 +290: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 반복 범위와 세트 종류를 편집/검토하고 새 버전으로 저장한다
+02:04 +291: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 반복 범위와 세트 종류를 편집/검토하고 새 버전으로 저장한다
+02:04 +292: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 반복 범위와 세트 종류를 편집/검토하고 새 버전으로 저장한다
+02:04 +293: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 반복 범위와 세트 종류를 편집/검토하고 새 버전으로 저장한다
+02:04 +294: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 반복 범위와 세트 종류를 편집/검토하고 새 버전으로 저장한다
+02:04 +295: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 반복 범위와 세트 종류를 편집/검토하고 새 버전으로 저장한다
+02:04 +296: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 반복 범위와 세트 종류를 편집/검토하고 새 버전으로 저장한다
+02:04 +297: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 반복 범위와 세트 종류를 편집/검토하고 새 버전으로 저장한다
+02:04 +298: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 반복 범위와 세트 종류를 편집/검토하고 새 버전으로 저장한다
+02:04 +299: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 반복 범위와 세트 종류를 편집/검토하고 새 버전으로 저장한다
+02:04 +300: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 반복 범위와 세트 종류를 편집/검토하고 새 버전으로 저장한다
+02:04 +301: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 반복 범위와 세트 종류를 편집/검토하고 새 버전으로 저장한다
+02:04 +302: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 반복 범위와 세트 종류를 편집/검토하고 새 버전으로 저장한다
+02:04 +303: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 반복 범위와 세트 종류를 편집/검토하고 새 버전으로 저장한다
+02:04 +304: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 반복 범위와 세트 종류를 편집/검토하고 새 버전으로 저장한다
+02:04 +305: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 반복 범위와 세트 종류를 편집/검토하고 새 버전으로 저장한다
+02:04 +306: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 반복 범위와 세트 종류를 편집/검토하고 새 버전으로 저장한다
+02:04 +307: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 반복 범위와 세트 종류를 편집/검토하고 새 버전으로 저장한다
+02:04 +308: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 반복 범위와 세트 종류를 편집/검토하고 새 버전으로 저장한다
+02:04 +309: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 반복 범위와 세트 종류를 편집/검토하고 새 버전으로 저장한다
+02:04 +310: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 반복 범위와 세트 종류를 편집/검토하고 새 버전으로 저장한다
+02:05 +311: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 반복 범위와 세트 종류를 편집/검토하고 새 버전으로 저장한다
+02:05 +312: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 반복 범위와 세트 종류를 편집/검토하고 새 버전으로 저장한다
+02:05 +313: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 반복 범위와 세트 종류를 편집/검토하고 새 버전으로 저장한다
+02:05 +314: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/admin_screen_test.dart: 손상된 작업공간은 빈폼으로 덮어쓰지 않는다
+02:05 +315: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/admin_screen_test.dart: 손상된 작업공간은 빈폼으로 덮어쓰지 않는다
+02:05 +316: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/admin_screen_test.dart: 손상된 작업공간은 빈폼으로 덮어쓰지 않는다
+02:05 +317: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/admin_screen_test.dart: 손상된 작업공간은 빈폼으로 덮어쓰지 않는다
+02:05 +318: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/admin_screen_test.dart: 손상된 작업공간은 빈폼으로 덮어쓰지 않는다
+02:05 +319: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/admin_screen_test.dart: 손상된 작업공간은 빈폼으로 덮어쓰지 않는다
+02:05 +320: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/admin_screen_test.dart: 손상된 작업공간은 빈폼으로 덮어쓰지 않는다
+02:05 +321: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/admin_screen_test.dart: 손상된 작업공간은 빈폼으로 덮어쓰지 않는다
+02:05 +322: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/settings_screen_test.dart: failed choice stays visible but not applied until retry, including page re-entry
+02:05 +323: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 일괄 수정은 미리보기/취소/확정/한 단계 되돌리기를 연결한다
+02:05 +324: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 일괄 수정은 미리보기/취소/확정/한 단계 되돌리기를 연결한다
+02:06 +325: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 일괄 수정은 미리보기/취소/확정/한 단계 되돌리기를 연결한다
+02:06 +326: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 일괄 수정은 미리보기/취소/확정/한 단계 되돌리기를 연결한다
+02:06 +327: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 일괄 수정은 미리보기/취소/확정/한 단계 되돌리기를 연결한다
+02:06 +328: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 일괄 수정은 미리보기/취소/확정/한 단계 되돌리기를 연결한다
+02:06 +329: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 일괄 수정은 미리보기/취소/확정/한 단계 되돌리기를 연결한다
+02:06 +330: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 일괄 수정은 미리보기/취소/확정/한 단계 되돌리기를 연결한다
+02:06 +331: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 일괄 수정은 미리보기/취소/확정/한 단계 되돌리기를 연결한다
+02:06 +332: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 일괄 수정은 미리보기/취소/확정/한 단계 되돌리기를 연결한다
+02:06 +333: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 일괄 수정은 미리보기/취소/확정/한 단계 되돌리기를 연결한다
+02:06 +334: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 일괄 수정은 미리보기/취소/확정/한 단계 되돌리기를 연결한다
+02:06 +335: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 일괄 수정은 미리보기/취소/확정/한 단계 되돌리기를 연결한다
+02:06 +336: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 일괄 수정은 미리보기/취소/확정/한 단계 되돌리기를 연결한다
+02:06 +337: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 일괄 수정은 미리보기/취소/확정/한 단계 되돌리기를 연결한다
+02:06 +338: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 일괄 수정은 미리보기/취소/확정/한 단계 되돌리기를 연결한다
+02:06 +339: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 일괄 수정은 미리보기/취소/확정/한 단계 되돌리기를 연결한다
+02:06 +340: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 일괄 수정은 미리보기/취소/확정/한 단계 되돌리기를 연결한다
+02:07 +341: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 일괄 수정은 미리보기/취소/확정/한 단계 되돌리기를 연결한다
+02:07 +342: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 일괄 수정은 미리보기/취소/확정/한 단계 되돌리기를 연결한다
+02:08 +343: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 일괄 수정은 미리보기/취소/확정/한 단계 되돌리기를 연결한다
+02:08 +344: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 잘못된 일괄 값과 미완성 반복 범위는 원문을 유지하고 오류를 보인다
+02:10 +345: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 보관 취소/실패 보존/재시도/복원과 실제 파일 재로딩을 연결한다
+02:12 +346: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 이력에서 과거 구성을 불러와 새 버전으로 저장하고 과거 스냅샷을 보존한다
+02:14 +347: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 반복 범위/일괄 1200.0px 큰 글자 렌더와 키보드 조작
+02:15 +348: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/local_admin_extension_screen_test.dart: 반복 범위/일괄 375.0px 큰 글자 렌더와 키보드 조작
+02:17 +349: All tests passed!

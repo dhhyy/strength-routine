@@ -1,0 +1,18 @@
+원문 로그가 아닌 도구 실행 결과 요약
+기준 HEAD: 5eaaed8
+환경: macOS 로컬 /opt/homebrew/bin/flutter
+
+실행 명령:
+/opt/homebrew/bin/flutter test test/training_insights_test.dart test/training_insights_screen_test.dart test/advanced_insights_test.dart test/rest_timer_test.dart test/rest_preferences_test.dart test/rest_auto_start_screen_test.dart test/advanced_workout_screen_test.dart test/exercise_guides_test.dart test/exercise_guide_screen_test.dart test/bundled_programs_test.dart --reporter expanded
+
+도구 실행 식별:
+exec session_id 50012, initial chunk a175ff, final chunk f38099
+최종 process exit code: 0
+도구가 반환한 마지막 진행 출력:
+00:09 +72: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/rest_auto_start_screen_test.dart: failed workout save starts no timer until first durable completion retry
+00:10 +73: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/rest_auto_start_screen_test.dart: timer write failure leaves workout complete and retry keeps original deadline
+00:10 +74: All tests passed!
+
+위 74개는 기본 시험이며 별도 재현 1개는 포함하지 않는다.
+전체 stdout은 당시 파일로 저장하지 않았으므로 이 파일을 원문 전체 로그로 부르지 않는다.
+원문 로그 확보를 위한 추가 실행 시도는 SDK engine.stamp 쓰기 권한으로 테스트 시작 전에 끝났다. workout-log-capture-attempt.txt에 그 도구 출력만 보존했다. 추가 실행으로 74개를 재검증했다고 계산하지 않는다.

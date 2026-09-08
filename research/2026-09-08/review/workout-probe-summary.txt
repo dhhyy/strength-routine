@@ -1,0 +1,28 @@
+원문 로그가 아닌 도구 실행 결과 요약 및 실패 발췌
+기준 HEAD: 5eaaed8
+환경: macOS 로컬 /opt/homebrew/bin/flutter
+최종 보관 재현: review_workout_probe_test.dart.txt (test/로 복사하여 실행)
+
+실행 명령:
+/opt/homebrew/bin/flutter test test/review_workout_probe_test.dart --reporter expanded
+
+도구 실행 식별: chunk 486727
+최종 process exit code: 1
+최종 도구 결과 wall_time_seconds: 5.118099416
+
+도구 출력 발췌:
+00:00 +0: loading /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/review_workout_probe_test.dart
+00:00 +0: review: primary save retry after failed first completion starts rest
+The following TestFailure was thrown running a test:
+Expected: not null
+  Actual: <null>
+
+#4 main.<anonymous closure> (file:///Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/review_workout_probe_test.dart:134:7)
+
+The test description was:
+  review: primary save retry after failed first completion starts rest
+00:01 +0 -1: Some tests failed.
+
+실패 단정 전에 LocalTrainingStore(file).load()에서 completed 실제 기록을 검증했다.
+파일 전체 원문 stdout을 당시 저장하지 않았으며 이 파일은 도구에서 받은 결과를 요약하고 일부 발췌한 것이다.
+재현 시험은 test/에서 제거하고 .dart.txt로 보관했다.

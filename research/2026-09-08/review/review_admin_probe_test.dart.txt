@@ -1,0 +1,54 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:strength_routine/admin/admin_program_store.dart';
+import 'package:strength_routine/admin/detailed_routine.dart';
+import 'package:strength_routine/admin/detailed_routine_screen.dart';
+import 'package:strength_routine/admin/routine_builder.dart';
+import 'package:strength_routine/domain/training_program.dart';
+import 'package:strength_routine/theme.dart';
+
+void main() {
+  testWidgets('review probe: previous version is offered a futile save retry after sequential saves', (tester) async {
+    final original = TrainingProgram(id: 'probe', version: '1', title: 'Probe', trainerName: 'Operator', description: 'Review fixture', weeks: 1, sessions: [ProgramSession(id: 'session', week: 1, dayOrder: 1, title: 'Session', exercises: [ProgramExercise(id: 'exercise', name: 'Exercise', sets: [ProgramSet(id: 'set', repetitions: 8, load: const LoadPrescription.manual())])])]);
+    var workspace = AdminWorkspace(draft: RoutineBlueprint(), programs: [original]);
+    var saveCalls = 0;
+    final draft = DetailedRoutineDraft.fromProgram(original)..version = '2';
+    tester.view.physicalSize = const Size(1200,900);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    await tester.pumpWidget(MaterialApp(theme: buildConsoleTheme(), home: DetailedRoutineScreen(initialDraft: draft, catalog: workspace.programs, versionHistory: workspace.versionHistory, onDraftChanged: (_) async => true, onSaveProgram: (program, draft) async {
+      saveCalls++;
+      try { workspace = workspace.withProgram(program, draft); return true; } on FormatException { return false; }
+    })));
+    await tester.pumpAndSettle();
+    Future<void> reveal(Finder finder) async {
+      tester.state<ScrollableState>(find.byType(Scrollable).first).position.jumpTo(0);
+      await tester.pumpAndSettle();
+      await tester.scrollUntilVisible(finder, 250, scrollable: find.byType(Scrollable).first, maxScrolls: 100);
+      await tester.ensureVisible(finder);
+      await tester.pumpAndSettle();
+    }
+    Future<void> tap(Finder finder) async { await reveal(finder); await tester.tap(finder); await tester.pumpAndSettle(); }
+    await tap(find.text('변경 검토'));
+    await tap(find.text('검토한 프로그램 저장'));
+    expect(workspace.programs.single.version, '2');
+    expect(workspace.isVersionUsed('probe','1'), isTrue);
+    await tap(find.text('프로그램 정보'));
+    final version = find.byWidgetPredicate((w) => w is TextFormField && w.key.toString().contains("version'"));
+    await reveal(version);
+    await tester.enterText(version, '1');
+    await tester.pumpAndSettle();
+    await tap(find.text('변경 검토'));
+    // This should be rejected before review, but the original version fell out of the screen's cache.
+    expect(find.text('프로그램 변경 검토'), findsOneWidget);
+    await tap(find.text('검토한 프로그램 저장'));
+    expect(find.text('카탈로그 저장 재시도'), findsOneWidget);
+    expect(find.text('카탈로그에 저장하지 못했습니다. 검토한 입력을 유지했습니다. 다시 시도해 주세요.'), findsOneWidget);
+    await tap(find.text('카탈로그 저장 재시도'));
+    expect(saveCalls, 3);
+    expect(workspace.programs.single.version, '2');
+    expect(workspace.versionsFor('probe').length, 2);
+    expect(tester.takeException(), isNull);
+  });
+}

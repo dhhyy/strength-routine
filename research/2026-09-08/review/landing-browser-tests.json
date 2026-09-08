@@ -1,0 +1,2077 @@
+{
+  "startedAt": "2026-09-08T11:33:19.017Z",
+  "baseUrl": "http://127.0.0.1:59587/landing/concepts/",
+  "environment": {
+    "browser": "Chromium headless",
+    "desktop": [
+      1440,
+      1000
+    ],
+    "narrow": [
+      390,
+      320
+    ],
+    "webgl": "SwiftShader",
+    "screenshots": false,
+    "browserVersion": "151.0.7922.34"
+  },
+  "scope": "Public local landing demo; isolated browser storage. No app backend, native simulator, real workout records, or payment operations.",
+  "checks": [
+    {
+      "id": "route-load",
+      "name": "load: HTTP, document mode, visible main, rendered WebGL",
+      "status": "passed",
+      "durationMs": 3873,
+      "evidence": {
+        "url": "http://127.0.0.1:59587/landing/concepts/01-load.html",
+        "scene": {
+          "mode": "load",
+          "weight": 60,
+          "rotation": 0,
+          "ready": true,
+          "paused": false,
+          "calls": 119,
+          "geometries": 64,
+          "textures": 3
+        }
+      }
+    },
+    {
+      "id": "route-atlas",
+      "name": "atlas: HTTP, document mode, visible main, rendered WebGL",
+      "status": "passed",
+      "durationMs": 1939,
+      "evidence": {
+        "url": "http://127.0.0.1:59587/landing/concepts/02-atlas.html",
+        "scene": {
+          "mode": "atlas",
+          "selected": 0,
+          "rotation": 0,
+          "ready": true,
+          "paused": false,
+          "calls": 100,
+          "geometries": 53,
+          "textures": 3
+        }
+      }
+    },
+    {
+      "id": "route-schedule",
+      "name": "schedule: HTTP, document mode, visible main, rendered WebGL",
+      "status": "passed",
+      "durationMs": 1772,
+      "evidence": {
+        "url": "http://127.0.0.1:59587/landing/concepts/03-schedule.html",
+        "scene": {
+          "mode": "schedule",
+          "days": [
+            0,
+            2,
+            4
+          ],
+          "rotation": 0,
+          "ready": true,
+          "paused": false,
+          "calls": 100,
+          "geometries": 71,
+          "textures": 3
+        }
+      }
+    },
+    {
+      "id": "route-session",
+      "name": "session: HTTP, document mode, visible main, rendered WebGL",
+      "status": "passed",
+      "durationMs": 1367,
+      "evidence": {
+        "url": "http://127.0.0.1:59587/landing/concepts/04-session.html",
+        "scene": {
+          "mode": "session",
+          "completed": 0,
+          "completedSets": [
+            false,
+            false
+          ],
+          "rotation": 0,
+          "ready": true,
+          "paused": false,
+          "calls": 47,
+          "geometries": 29,
+          "textures": 3
+        }
+      }
+    },
+    {
+      "id": "route-insights",
+      "name": "insights: HTTP, document mode, visible main, rendered WebGL",
+      "status": "passed",
+      "durationMs": 927,
+      "evidence": {
+        "url": "http://127.0.0.1:59587/landing/concepts/05-insights.html",
+        "scene": {
+          "mode": "insights",
+          "applied": false,
+          "rotation": 0,
+          "ready": true,
+          "paused": false,
+          "calls": 51,
+          "geometries": 38,
+          "textures": 3
+        }
+      }
+    },
+    {
+      "id": "fonts",
+      "name": "Local KR/Mono fonts load and are assigned to Korean body and numeric output",
+      "status": "passed",
+      "durationMs": 11,
+      "evidence": {
+        "loaded": [
+          {
+            "family": "IBM Plex Sans KR",
+            "weight": "400"
+          },
+          {
+            "family": "IBM Plex Sans KR",
+            "weight": "600"
+          },
+          {
+            "family": "IBM Plex Sans KR",
+            "weight": "700"
+          },
+          {
+            "family": "IBM Plex Mono",
+            "weight": "400"
+          },
+          {
+            "family": "IBM Plex Mono",
+            "weight": "500"
+          },
+          {
+            "family": "IBM Plex Mono",
+            "weight": "700"
+          },
+          {
+            "family": "Strength Latin",
+            "weight": "400"
+          },
+          {
+            "family": "Strength Latin",
+            "weight": "600 700"
+          }
+        ],
+        "kr": true,
+        "mono": true,
+        "body": "\"Strength Latin\", \"IBM Plex Sans KR\", sans-serif",
+        "number": "\"IBM Plex Mono\", monospace"
+      }
+    },
+    {
+      "id": "load-step",
+      "name": "Plus/minus update total, range, and 3D weight together",
+      "status": "passed",
+      "durationMs": 541,
+      "evidence": {
+        "mode": "load",
+        "weight": 60,
+        "rotation": 0,
+        "ready": true,
+        "paused": false,
+        "calls": 119,
+        "geometries": 64,
+        "textures": 3
+      }
+    },
+    {
+      "id": "load-keyboard",
+      "name": "Range keyboard input changes accessible value and scene",
+      "status": "passed",
+      "durationMs": 129,
+      "evidence": {
+        "mode": "load",
+        "weight": 62.5,
+        "rotation": 0,
+        "ready": true,
+        "paused": false,
+        "calls": 127,
+        "geometries": 68,
+        "textures": 3
+      }
+    },
+    {
+      "id": "load-bounds-reset",
+      "name": "20/120 bounds disable only the unavailable step; reset restores 60",
+      "status": "passed",
+      "durationMs": 254,
+      "evidence": {
+        "mode": "load",
+        "weight": 60,
+        "rotation": 0,
+        "ready": true,
+        "paused": false,
+        "calls": 119,
+        "geometries": 64,
+        "textures": 3
+      }
+    },
+    {
+      "id": "load-pointer",
+      "name": "Pointer drag changes angle while pointer is held; reset restores zero",
+      "status": "passed",
+      "durationMs": 971,
+      "evidence": {
+        "before": 0,
+        "during": 0.8099999999999999,
+        "reset": 0
+      }
+    },
+    {
+      "id": "atlas-1",
+      "name": "Program 1: selected button, full title, exercises, and scene match catalog",
+      "status": "passed",
+      "durationMs": 55,
+      "evidence": {
+        "mode": "atlas",
+        "selected": 0,
+        "rotation": 0,
+        "ready": true,
+        "paused": false,
+        "calls": 100,
+        "geometries": 53,
+        "textures": 3
+      }
+    },
+    {
+      "id": "atlas-2",
+      "name": "Program 2: selected button, full title, exercises, and scene match catalog",
+      "status": "passed",
+      "durationMs": 44,
+      "evidence": {
+        "mode": "atlas",
+        "selected": 1,
+        "rotation": 0,
+        "ready": true,
+        "paused": false,
+        "calls": 100,
+        "geometries": 53,
+        "textures": 3
+      }
+    },
+    {
+      "id": "atlas-3",
+      "name": "Program 3: selected button, full title, exercises, and scene match catalog",
+      "status": "passed",
+      "durationMs": 51,
+      "evidence": {
+        "mode": "atlas",
+        "selected": 2,
+        "rotation": 0,
+        "ready": true,
+        "paused": false,
+        "calls": 100,
+        "geometries": 53,
+        "textures": 3
+      }
+    },
+    {
+      "id": "atlas-4",
+      "name": "Program 4: selected button, full title, exercises, and scene match catalog",
+      "status": "passed",
+      "durationMs": 120,
+      "evidence": {
+        "mode": "atlas",
+        "selected": 3,
+        "rotation": 0,
+        "ready": true,
+        "paused": false,
+        "calls": 100,
+        "geometries": 53,
+        "textures": 3
+      }
+    },
+    {
+      "id": "atlas-5",
+      "name": "Program 5: selected button, full title, exercises, and scene match catalog",
+      "status": "passed",
+      "durationMs": 47,
+      "evidence": {
+        "mode": "atlas",
+        "selected": 4,
+        "rotation": 0,
+        "ready": true,
+        "paused": false,
+        "calls": 100,
+        "geometries": 53,
+        "textures": 3
+      }
+    },
+    {
+      "id": "atlas-pagination",
+      "name": "Program next/previous wrap with title and 3D selection",
+      "status": "passed",
+      "durationMs": 214,
+      "evidence": {
+        "mode": "atlas",
+        "selected": 4,
+        "rotation": 0,
+        "ready": true,
+        "paused": false,
+        "calls": 100,
+        "geometries": 53,
+        "textures": 3
+      }
+    },
+    {
+      "id": "atlas-schedule-link",
+      "name": "Selected program ID survives the real schedule navigation link",
+      "status": "passed",
+      "durationMs": 1034,
+      "evidence": {
+        "url": "http://127.0.0.1:59587/landing/concepts/03-schedule.html?program=strength-full-body-3d",
+        "title": "전신 습관 · 주 3일"
+      }
+    },
+    {
+      "id": "schedule-default",
+      "name": "Three-day program starts with three matching DOM and 3D weekdays",
+      "status": "passed",
+      "durationMs": 10,
+      "evidence": {
+        "mode": "schedule",
+        "days": [
+          0,
+          2,
+          4
+        ],
+        "rotation": 0,
+        "ready": true,
+        "paused": false,
+        "calls": 100,
+        "geometries": 71,
+        "textures": 3
+      }
+    },
+    {
+      "id": "schedule-invalid-count",
+      "name": "Removing one weekday exposes 2/3 error and blocks schedule dialog",
+      "status": "passed",
+      "durationMs": 70,
+      "evidence": {
+        "mode": "schedule",
+        "days": [
+          0,
+          4
+        ],
+        "rotation": 0,
+        "ready": true,
+        "paused": false,
+        "calls": 100,
+        "geometries": 71,
+        "textures": 3
+      }
+    },
+    {
+      "id": "schedule-restore",
+      "name": "Restoring the weekday clears error and enables schedule preview",
+      "status": "passed",
+      "durationMs": 42,
+      "evidence": {
+        "mode": "schedule",
+        "days": [
+          0,
+          2,
+          4
+        ],
+        "rotation": 0,
+        "ready": true,
+        "paused": false,
+        "calls": 100,
+        "geometries": 71,
+        "textures": 3
+      }
+    },
+    {
+      "id": "schedule-four-weeks",
+      "name": "Changed start date yields every trainer session in order on selected weekdays",
+      "status": "passed",
+      "durationMs": 1873,
+      "evidence": {
+        "selectedDays": [
+          0,
+          2,
+          4
+        ],
+        "rows": [
+          [
+            "1",
+            "2026-09-09",
+            "전신 A · 머신 중심"
+          ],
+          [
+            "1",
+            "2026-09-11",
+            "전신 B · 덤벨 중심"
+          ],
+          [
+            "1",
+            "2026-09-14",
+            "전신 C · 기본 반복"
+          ],
+          [
+            "2",
+            "2026-09-16",
+            "전신 A · 머신 중심"
+          ],
+          [
+            "2",
+            "2026-09-18",
+            "전신 B · 덤벨 중심"
+          ],
+          [
+            "2",
+            "2026-09-21",
+            "전신 C · 기본 반복"
+          ],
+          [
+            "3",
+            "2026-09-23",
+            "전신 A · 머신 중심"
+          ],
+          [
+            "3",
+            "2026-09-25",
+            "전신 B · 덤벨 중심"
+          ],
+          [
+            "3",
+            "2026-09-28",
+            "전신 C · 기본 반복"
+          ],
+          [
+            "4",
+            "2026-09-30",
+            "전신 A · 머신 중심"
+          ],
+          [
+            "4",
+            "2026-10-02",
+            "전신 B · 덤벨 중심"
+          ],
+          [
+            "4",
+            "2026-10-05",
+            "전신 C · 기본 반복"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "session-empty-invalid",
+      "name": "Empty completion is rejected without creating performed sets",
+      "status": "passed",
+      "durationMs": 294,
+      "evidence": {
+        "mode": "session",
+        "completed": 0,
+        "completedSets": [
+          false,
+          false
+        ],
+        "rotation": 0,
+        "ready": true,
+        "paused": false,
+        "calls": 47,
+        "geometries": 29,
+        "textures": 3
+      }
+    },
+    {
+      "id": "session-negative-invalid",
+      "name": "Negative weight and zero repetitions remain editable drafts",
+      "status": "passed",
+      "durationMs": 259,
+      "evidence": {
+        "completed": "false",
+        "badge": "작성 중",
+        "values": {
+          "weight": "-1",
+          "reps": "0",
+          "rir": "0"
+        },
+        "readOnly": false,
+        "error": "중량은 0 이상의 유한한 수로 입력해 주세요."
+      }
+    },
+    {
+      "id": "session-rir-invalid",
+      "name": "RIR above ten blocks completion with an RIR field error",
+      "status": "passed",
+      "durationMs": 919,
+      "evidence": {
+        "completed": "false",
+        "badge": "작성 중",
+        "values": {
+          "weight": "0",
+          "reps": "5",
+          "rir": "11"
+        },
+        "readOnly": false,
+        "error": "RIR은 0부터 10 사이의 수로 입력하거나 비워 주세요."
+      }
+    },
+    {
+      "id": "session-zero-valid",
+      "name": "Zero kg and RIR zero complete, persist exact strings, and focus next set",
+      "status": "passed",
+      "durationMs": 236,
+      "evidence": {
+        "mode": "session",
+        "completed": 1,
+        "completedSets": [
+          true,
+          false
+        ],
+        "rotation": 0,
+        "ready": true,
+        "paused": false,
+        "calls": 47,
+        "geometries": 29,
+        "textures": 3
+      }
+    },
+    {
+      "id": "session-second-complete",
+      "name": "Two valid completions produce count two and matching 3D state",
+      "status": "passed",
+      "durationMs": 82,
+      "evidence": {
+        "mode": "session",
+        "completed": 2,
+        "completedSets": [
+          true,
+          true
+        ],
+        "rotation": 0,
+        "ready": true,
+        "paused": false,
+        "calls": 51,
+        "geometries": 31,
+        "textures": 3
+      }
+    },
+    {
+      "id": "session-edit",
+      "name": "Editing a completed set reopens only that set and reduces completion count",
+      "status": "passed",
+      "durationMs": 394,
+      "evidence": {
+        "mode": "session",
+        "completed": 1,
+        "completedSets": [
+          false,
+          true
+        ],
+        "rotation": 0,
+        "ready": true,
+        "paused": false,
+        "calls": 51,
+        "geometries": 33,
+        "textures": 3
+      }
+    },
+    {
+      "id": "session-reload-draft",
+      "name": "Reload preserves raw unfinished input alongside completed second set",
+      "status": "passed",
+      "durationMs": 761,
+      "evidence": {
+        "draft": {
+          "completed": "false",
+          "badge": "작성 중",
+          "values": {
+            "weight": " 060.50 ",
+            "reps": "005",
+            "rir": "0.0"
+          },
+          "readOnly": false,
+          "error": ""
+        },
+        "actual": {
+          "completed": "true",
+          "badge": "수행 완료",
+          "values": {
+            "weight": "60",
+            "reps": "5",
+            "rir": ""
+          },
+          "readOnly": true,
+          "error": ""
+        },
+        "stored": {
+          "version": 1,
+          "step": 0,
+          "startDate": "2026-09-08",
+          "weekday": 2,
+          "sets": [
+            {
+              "weight": " 060.50 ",
+              "reps": "005",
+              "rir": "0.0",
+              "status": "pending"
+            },
+            {
+              "weight": "60",
+              "reps": "5",
+              "rir": "",
+              "status": "completed"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "session-reset-cancel",
+      "name": "Cancel reset leaves draft, completed set, and local storage unchanged",
+      "status": "passed",
+      "durationMs": 74,
+      "evidence": {
+        "version": 1,
+        "step": 0,
+        "startDate": "2026-09-08",
+        "weekday": 2,
+        "sets": [
+          {
+            "weight": " 060.50 ",
+            "reps": "005",
+            "rir": "0.0",
+            "status": "pending"
+          },
+          {
+            "weight": "60",
+            "reps": "5",
+            "rir": "",
+            "status": "completed"
+          }
+        ]
+      }
+    },
+    {
+      "id": "session-reset-confirm",
+      "name": "Confirmed reset clears only this demo key, preserving unrelated storage",
+      "status": "passed",
+      "durationMs": 820,
+      "evidence": {
+        "demo": {
+          "version": 1,
+          "step": 0,
+          "startDate": "2026-09-08",
+          "weekday": 2,
+          "sets": [
+            {
+              "weight": "",
+              "reps": "",
+              "rir": "",
+              "status": "pending"
+            },
+            {
+              "weight": "",
+              "reps": "",
+              "rir": "",
+              "status": "pending"
+            }
+          ]
+        },
+        "unrelatedKeyPreserved": true
+      }
+    },
+    {
+      "id": "session-second-only",
+      "name": "Completing only set two marks the second 3D record, not the first",
+      "status": "passed",
+      "durationMs": 291,
+      "evidence": {
+        "mode": "session",
+        "completed": 1,
+        "completedSets": [
+          false,
+          true
+        ],
+        "rotation": 0,
+        "ready": true,
+        "paused": false,
+        "calls": 47,
+        "geometries": 31,
+        "textures": 3
+      }
+    },
+    {
+      "id": "insights-review-cancel",
+      "name": "Review alone and cancel preserve future target 60 and original past value",
+      "status": "passed",
+      "durationMs": 622,
+      "evidence": null
+    },
+    {
+      "id": "insights-apply",
+      "name": "Apply changes both future targets to 57.5; past remains 60",
+      "status": "passed",
+      "durationMs": 347,
+      "evidence": {
+        "mode": "insights",
+        "applied": true,
+        "rotation": 0,
+        "ready": true,
+        "paused": false,
+        "calls": 51,
+        "geometries": 38,
+        "textures": 3
+      }
+    },
+    {
+      "id": "insights-undo",
+      "name": "Undo restores 60, preserves past, and prevents repeating the same suggestion",
+      "status": "passed",
+      "durationMs": 302,
+      "evidence": {
+        "mode": "insights",
+        "applied": false,
+        "rotation": 0,
+        "ready": true,
+        "paused": false,
+        "calls": 51,
+        "geometries": 38,
+        "textures": 3
+      }
+    },
+    {
+      "id": "insights-reset",
+      "name": "Start over resets demo controls and allows a fresh review",
+      "status": "passed",
+      "durationMs": 32,
+      "evidence": null
+    },
+    {
+      "id": "overflow-390-load",
+      "name": "load: no horizontal document overflow at 390px",
+      "status": "passed",
+      "durationMs": 664,
+      "evidence": {
+        "viewport": 390,
+        "document": 390,
+        "body": 390,
+        "offenders": []
+      }
+    },
+    {
+      "id": "overflow-390-atlas",
+      "name": "atlas: no horizontal document overflow at 390px",
+      "status": "passed",
+      "durationMs": 767,
+      "evidence": {
+        "viewport": 390,
+        "document": 390,
+        "body": 390,
+        "offenders": []
+      }
+    },
+    {
+      "id": "overflow-390-schedule",
+      "name": "schedule: no horizontal document overflow at 390px",
+      "status": "passed",
+      "durationMs": 579,
+      "evidence": {
+        "viewport": 390,
+        "document": 390,
+        "body": 390,
+        "offenders": []
+      }
+    },
+    {
+      "id": "overflow-390-session",
+      "name": "session: no horizontal document overflow at 390px",
+      "status": "passed",
+      "durationMs": 765,
+      "evidence": {
+        "viewport": 390,
+        "document": 390,
+        "body": 390,
+        "offenders": []
+      }
+    },
+    {
+      "id": "overflow-390-insights",
+      "name": "insights: no horizontal document overflow at 390px",
+      "status": "passed",
+      "durationMs": 599,
+      "evidence": {
+        "viewport": 390,
+        "document": 390,
+        "body": 390,
+        "offenders": []
+      }
+    },
+    {
+      "id": "dialog-width-390",
+      "name": "Schedule and adjustment dialogs keep content and controls inside 390px viewport",
+      "status": "passed",
+      "durationMs": 733,
+      "evidence": {
+        "adjustment": {
+          "open": true,
+          "left": 20,
+          "right": 370,
+          "viewport": 390,
+          "client": 348,
+          "scroll": 348
+        },
+        "schedule": {
+          "open": true,
+          "left": 20,
+          "right": 370,
+          "viewport": 390,
+          "client": 348,
+          "scroll": 348
+        }
+      }
+    },
+    {
+      "id": "overflow-320-load",
+      "name": "load: no horizontal document overflow at 320px",
+      "status": "passed",
+      "durationMs": 1212,
+      "evidence": {
+        "viewport": 320,
+        "document": 320,
+        "body": 320,
+        "offenders": []
+      }
+    },
+    {
+      "id": "overflow-320-atlas",
+      "name": "atlas: no horizontal document overflow at 320px",
+      "status": "passed",
+      "durationMs": 765,
+      "evidence": {
+        "viewport": 320,
+        "document": 320,
+        "body": 320,
+        "offenders": []
+      }
+    },
+    {
+      "id": "overflow-320-schedule",
+      "name": "schedule: no horizontal document overflow at 320px",
+      "status": "passed",
+      "durationMs": 662,
+      "evidence": {
+        "viewport": 320,
+        "document": 320,
+        "body": 320,
+        "offenders": []
+      }
+    },
+    {
+      "id": "overflow-320-session",
+      "name": "session: no horizontal document overflow at 320px",
+      "status": "passed",
+      "durationMs": 846,
+      "evidence": {
+        "viewport": 320,
+        "document": 320,
+        "body": 320,
+        "offenders": []
+      }
+    },
+    {
+      "id": "overflow-320-insights",
+      "name": "insights: no horizontal document overflow at 320px",
+      "status": "passed",
+      "durationMs": 614,
+      "evidence": {
+        "viewport": 320,
+        "document": 320,
+        "body": 320,
+        "offenders": []
+      }
+    },
+    {
+      "id": "dialog-width-320",
+      "name": "Schedule and adjustment dialogs keep content and controls inside 320px viewport",
+      "status": "passed",
+      "durationMs": 765,
+      "evidence": {
+        "adjustment": {
+          "open": true,
+          "left": 20,
+          "right": 300,
+          "viewport": 320,
+          "client": 278,
+          "scroll": 278
+        },
+        "schedule": {
+          "open": true,
+          "left": 20,
+          "right": 300,
+          "viewport": 320,
+          "client": 278,
+          "scroll": 278
+        }
+      }
+    },
+    {
+      "id": "reduced-selection",
+      "name": "Reduced motion keeps program selection and scene synchronization usable",
+      "status": "passed",
+      "durationMs": 937,
+      "evidence": {
+        "mode": "atlas",
+        "selected": 3,
+        "rotation": 0,
+        "ready": true,
+        "paused": false,
+        "calls": 100,
+        "geometries": 53,
+        "textures": 3
+      }
+    },
+    {
+      "id": "webgl-fallback-load",
+      "name": "WebGL creation failure shows fallback and keeps real load DOM controls working",
+      "status": "passed",
+      "durationMs": 229,
+      "evidence": {
+        "fallback": true,
+        "controlResult": "60"
+      }
+    },
+    {
+      "id": "webgl-fallback-atlas",
+      "name": "Catalog selection and schedule link work without WebGL",
+      "status": "passed",
+      "durationMs": 445,
+      "evidence": null
+    },
+    {
+      "id": "catalog-abort",
+      "name": "Catalog fetch failure exposes retry rather than fabricated programs",
+      "status": "passed",
+      "durationMs": 56,
+      "evidence": null
+    },
+    {
+      "id": "catalog-retry",
+      "name": "Removing the network fault and clicking retry restores five usable programs",
+      "status": "passed",
+      "durationMs": 622,
+      "evidence": {
+        "mode": "atlas",
+        "selected": 2,
+        "rotation": 0,
+        "ready": true,
+        "paused": false,
+        "calls": 100,
+        "geometries": 53,
+        "textures": 3
+      }
+    },
+    {
+      "id": "storage-write-failure",
+      "name": "Write failure retains typed values and accurately reports unsaved state",
+      "status": "passed",
+      "durationMs": 484,
+      "evidence": null
+    },
+    {
+      "id": "storage-memory-continue",
+      "name": "After write failure, in-memory edit and completion remain usable without claiming save",
+      "status": "passed",
+      "durationMs": 385,
+      "evidence": {
+        "inMemory": {
+          "completed": "false",
+          "badge": "작성 중",
+          "values": {
+            "weight": "64.25",
+            "reps": "5",
+            "rir": "0"
+          },
+          "readOnly": false,
+          "error": ""
+        },
+        "persisted": null
+      }
+    },
+    {
+      "id": "corrupt-storage-preserved",
+      "name": "Unreadable saved demo remains untouched while new input stays in memory",
+      "status": "passed",
+      "durationMs": 1634,
+      "evidence": null
+    },
+    {
+      "id": "webgl-context-restore",
+      "name": "Real context loss/recovery restores scene and rotation controls while preserving DOM changes",
+      "status": "passed",
+      "durationMs": 1522,
+      "evidence": {
+        "mode": "load",
+        "weight": 60,
+        "rotation": 0,
+        "ready": true,
+        "paused": false,
+        "calls": 119,
+        "geometries": 64,
+        "textures": 3
+      }
+    },
+    {
+      "id": "scene-pause-resume",
+      "name": "Hidden scene pauses while DOM controls still change data; restoring visibility resumes",
+      "status": "passed",
+      "durationMs": 155,
+      "evidence": {
+        "mode": "load",
+        "weight": 62.5,
+        "rotation": 0,
+        "ready": true,
+        "paused": false,
+        "calls": 127,
+        "geometries": 68,
+        "textures": 3
+      }
+    },
+    {
+      "id": "scene-resize-resources",
+      "name": "Repeated weight changes and resize keep one canvas and bounded reported resources",
+      "status": "passed",
+      "durationMs": 795,
+      "evidence": {
+        "baseline": {
+          "mode": "load",
+          "weight": 60,
+          "rotation": 0,
+          "ready": true,
+          "paused": false,
+          "calls": 119,
+          "geometries": 64,
+          "textures": 3
+        },
+        "end": {
+          "mode": "load",
+          "weight": 60,
+          "rotation": 0,
+          "ready": true,
+          "paused": false,
+          "calls": 119,
+          "geometries": 64,
+          "textures": 3
+        }
+      }
+    },
+    {
+      "id": "no-uncaught-normal-errors",
+      "name": "Normal, reduced-motion, and handled storage paths have no uncaught page exceptions",
+      "status": "passed",
+      "durationMs": 0,
+      "evidence": {
+        "pageErrors": []
+      }
+    }
+  ],
+  "diagnostics": [
+    {
+      "kind": "console-error",
+      "label": "injected-webgl-failure",
+      "expectedErrors": true,
+      "message": "THREE.WebGLRenderer: THREE.WebGLRenderer: Error creating WebGL context."
+    },
+    {
+      "kind": "console-error",
+      "label": "injected-webgl-failure",
+      "expectedErrors": true,
+      "message": "THREE.WebGLRenderer: THREE.WebGLRenderer: Error creating WebGL context."
+    },
+    {
+      "kind": "requestfailed",
+      "label": "injected-catalog-abort",
+      "expectedErrors": true,
+      "url": "http://127.0.0.1:59587/assets/programs.json",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "kind": "console-error",
+      "label": "injected-catalog-abort",
+      "expectedErrors": true,
+      "message": "Failed to load resource: net::ERR_FAILED"
+    }
+  ],
+  "fontResponses": [
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Medium.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-SemiBold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-SemiBold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Medium.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-SemiBold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Medium.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-SemiBold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Medium.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-SemiBold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Medium.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-SemiBold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Medium.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-SemiBold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Medium.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-SemiBold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Medium.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-SemiBold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Medium.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-SemiBold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Medium.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-SemiBold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Medium.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-SemiBold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Medium.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-SemiBold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Medium.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-SemiBold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Medium.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-SemiBold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Medium.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-SemiBold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Medium.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-SemiBold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Medium.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-SemiBold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Medium.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-SemiBold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Medium.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-SemiBold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Medium.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-SemiBold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Medium.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-SemiBold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Medium.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-SemiBold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Medium.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "reduced-motion",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "reduced-motion",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "reduced-motion",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "reduced-motion",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "reduced-motion",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-SemiBold.ttf",
+      "status": 200
+    },
+    {
+      "label": "injected-webgl-failure",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "injected-webgl-failure",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "injected-webgl-failure",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "injected-webgl-failure",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Medium.ttf",
+      "status": 200
+    },
+    {
+      "label": "injected-webgl-failure",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "injected-webgl-failure",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-SemiBold.ttf",
+      "status": 200
+    },
+    {
+      "label": "injected-webgl-failure",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "injected-webgl-failure",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-SemiBold.ttf",
+      "status": 200
+    },
+    {
+      "label": "injected-webgl-failure",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "injected-webgl-failure",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "injected-webgl-failure",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Medium.ttf",
+      "status": 200
+    },
+    {
+      "label": "injected-webgl-failure",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "injected-catalog-abort",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "injected-catalog-abort",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "injected-catalog-abort",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "injected-catalog-abort",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "injected-catalog-abort",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-SemiBold.ttf",
+      "status": 200
+    },
+    {
+      "label": "injected-storage-write-failure",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "injected-storage-write-failure",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "injected-storage-write-failure",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Medium.ttf",
+      "status": 200
+    },
+    {
+      "label": "injected-storage-write-failure",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "injected-storage-write-failure",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-SemiBold.ttf",
+      "status": 200
+    },
+    {
+      "label": "injected-storage-write-failure",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "corrupt-storage",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "corrupt-storage",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "corrupt-storage",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "corrupt-storage",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Medium.ttf",
+      "status": 200
+    },
+    {
+      "label": "corrupt-storage",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-SemiBold.ttf",
+      "status": 200
+    },
+    {
+      "label": "corrupt-storage",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "corrupt-storage",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "corrupt-storage",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-SemiBold.ttf",
+      "status": 200
+    },
+    {
+      "label": "corrupt-storage",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "corrupt-storage",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "corrupt-storage",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Medium.ttf",
+      "status": 200
+    },
+    {
+      "label": "corrupt-storage",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-SemiBold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexSansKR-Bold.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Regular.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Medium.ttf",
+      "status": 200
+    },
+    {
+      "label": "normal",
+      "url": "http://127.0.0.1:59587/assets/fonts/IBMPlexMono-Bold.ttf",
+      "status": 200
+    }
+  ],
+  "limitations": [
+    "data-scene-state validates published scene state, not a visual pixel comparison; root performs visual screenshot QA separately.",
+    "WebGL failure and storage failure are injected test conditions. Hidden-host pause is synthetic; operating-system background suspension is not tested.",
+    "Resource checks inspect reported geometry/texture counts across changes, not total GPU or process memory.",
+    "Narrow viewport checks detect horizontal layout overflow; they do not substitute for visual or screen-reader review."
+  ],
+  "programs": [
+    {
+      "id": "strength-full-body-2d",
+      "title": "전신 시작 · 주 2일",
+      "weeks": 4,
+      "sessions": 8
+    },
+    {
+      "id": "strength-full-body-3d",
+      "title": "전신 습관 · 주 3일",
+      "weeks": 4,
+      "sessions": 12
+    },
+    {
+      "id": "strength-upper-lower-4d",
+      "title": "상하체 나누기 · 주 4일",
+      "weeks": 4,
+      "sessions": 16
+    },
+    {
+      "id": "strength-barbell-basics-3d",
+      "title": "바벨 기본 동작 · 주 3일",
+      "weeks": 4,
+      "sessions": 12
+    },
+    {
+      "id": "strength-dumbbell-2d",
+      "title": "덤벨로 전신 · 주 2일",
+      "weeks": 4,
+      "sessions": 8
+    }
+  ],
+  "finishedAt": "2026-09-08T11:34:00.708Z",
+  "durationMs": 41691,
+  "summary": {
+    "total": 59,
+    "passed": 59,
+    "failed": 0,
+    "fatal": null
+  },
+  "ok": true
+}
