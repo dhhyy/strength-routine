@@ -14,9 +14,11 @@ Future<List<TrainingProgram>> loadBundledPrograms() async {
   final json =
       jsonDecode(await rootBundle.loadString('assets/programs.json'))
           as Map<String, dynamic>;
-  if (![1, 2].contains(json['schemaVersion']) ||
+  if (![1, 2, 3].contains(json['schemaVersion']) ||
       (json['schemaVersion'] == 1 &&
-          containsAdvancedPrescriptionFields(json))) {
+          containsAdvancedPrescriptionFields(json)) ||
+      (json['schemaVersion'] != 3 &&
+          containsExtendedPrescriptionFields(json))) {
     throw const FormatException('Unsupported program catalog');
   }
   final programs = (json['programs'] as List)
@@ -40,6 +42,7 @@ class TrainingController extends ChangeNotifier {
   bool sessionActionPending = false;
   String? sessionActionError;
   int _revision = 0;
+  int get revision => _revision;
   bool _disposed = false;
   TrainingController({
     required this.store,
@@ -57,6 +60,7 @@ class TrainingController extends ChangeNotifier {
   String restSourceStamp(String sessionId, String setId) => jsonEncode([
     state.setActuals[setId]?.toJson(),
     state.sessionEvents.where((e) => e.sessionId == sessionId).length,
+    if (store.restorationGeneration.isNotEmpty) store.restorationGeneration,
   ]);
 
   bool _isRestEligible(RestTimerSnapshot timer) {
@@ -71,7 +75,9 @@ class TrainingController extends ChangeNotifier {
         .where((e) => e.set.id == timer.setId)
         .firstOrNull;
     return entry != null &&
-        entry.set.restSeconds == timer.durationSeconds &&
+        (timer.durationSource == RestDurationSource.prescription
+            ? entry.set.restSeconds == timer.durationSeconds
+            : entry.set.restSeconds == null) &&
         entry.exercise.name == timer.exerciseName &&
         entry.number == timer.setNumber &&
         state.setActuals[timer.setId]?.status == SetActualStatus.completed &&
@@ -84,12 +90,13 @@ class TrainingController extends ChangeNotifier {
   }
 
   Future<void> initialize() async {
-    if (sessionActionPending) return;
+    if (sessionActionPending || saving) return;
     loading = true;
     loadError = null;
     _emit();
     try {
       state = await store.load();
+      _revision++;
     } catch (_) {
       loadError = '저장된 기록을 읽지 못했어요. 다시 시도해 주세요.';
     }
@@ -144,6 +151,52 @@ class TrainingController extends ChangeNotifier {
   }
 
   Future<bool> retrySave() => update((state) => state);
+
+  /// A reviewed replacement is published only after durable storage succeeds.
+  /// The generation changes only on restore, invalidating older rest timers.
+  Future<bool> commitReviewedState(
+    TrainingAppState candidate, {
+    required int expectedRevision,
+    Future<void> Function(TrainingAppState previous)? beforeSave,
+    String? restoredGeneration,
+    bool allowUnreadableRecovery = false,
+  }) async {
+    if (expectedRevision != _revision) {
+      sessionActionError = '검토한 뒤 기록이 바뀌었어요. 최신 상태에서 다시 검토해 주세요.';
+      _emit();
+      return false;
+    }
+    if (sessionActionPending ||
+        loading ||
+        (loadError != null && !allowUnreadableRecovery) ||
+        saving ||
+        saveError != null) {
+      sessionActionError = '입력 저장을 마친 뒤 다시 시도해 주세요.';
+      _emit();
+      return false;
+    }
+    sessionActionPending = true;
+    sessionActionError = null;
+    _emit();
+    try {
+      await beforeSave?.call(state);
+      await store.save(candidate, restoredGeneration: restoredGeneration);
+      state = candidate;
+      loadError = null;
+      _revision++;
+      if (allowUnreadableRecovery) {
+        await restTimer.initialize();
+        await refreshPrograms();
+      }
+      return true;
+    } catch (_) {
+      sessionActionError = '변경을 저장하지 못했어요. 기존 기록은 유지돼요. 다시 시도해 주세요.';
+      return false;
+    } finally {
+      sessionActionPending = false;
+      _emit();
+    }
+  }
 
   /// 마감/재개는 저장이 성공한 뒤에만 화면 상태를 바꾼다.
   /// 실패 시 기존 세트/초안/마감을 보존하고 호출자가 같은 동작 ID로 재시도한다.

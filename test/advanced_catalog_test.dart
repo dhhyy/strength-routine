@@ -125,7 +125,7 @@ void main() {
   });
 
   test('지원하지 않는 카탈로그 버전과 잘못된 루트 구조를 거부한다', () async {
-    for (final version in [0, 3, '2', null]) {
+    for (final version in [0, 4, '2', null]) {
       mockCatalog({'schemaVersion': version, 'programs': []});
       await expectLater(loadBundledPrograms(), throwsFormatException);
     }

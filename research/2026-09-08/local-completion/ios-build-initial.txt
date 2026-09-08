@@ -1,0 +1,6 @@
+Warning: Building for device with codesigning disabled. You will have to manually codesign before deploying to device.
+Building tech.vibe.strengthRoutine for device (ios)...
+Running pod install...                                             11.6s
+Running Xcode build...                                          
+Xcode build done.                                           41.8s
+✓ Built build/ios/iphoneos/Runner.app

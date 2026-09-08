@@ -92,3 +92,17 @@
 ## 10. 구현·검증 기록
 
 상태: 구현 전 명세 작성 완료. 아래에 기능별 실제 결과를 순차 기록한다.
+
+### LC01 구현 상세와 데이터 계약
+
+- 코드: `lib/data/training_backup.dart`, `lib/data/backup_file_gateway.dart`, `lib/backup_screen.dart`, `lib/data/local_training_store.dart`, `lib/app/training_controller.dart`, 앱 진입 `lib/main.dart`, 프로필 `lib/training_screens.dart`.
+- `TrainingBackup`은 kind=`strength-workout-backup`, backupVersion=1, 생성 UTC, 운동 envelope, FNV-1a 32bit checksum을 쓴다. 키 정렬 후 계산하며 암호화/서명/진위 검증을 제공하지 않는다. 10MiB·중첩64·컨테이너250,000개 한도를 읽기 전에 검사한다. 복원 파일 자체는 수정하지 않는다.
+- 백업 payload는 새 프로그램 확장에 따라 운동 schema3/4/5이며 자체 복원 세대·휴식 타이머는 내보내지 않는다. 로컬 운동 envelope는 복원 뒤 schema6과 `restorationGeneration`을 쓴다. 일반 저장에도 그 세대를 유지한다. 옛 앱은6을 거부하므로 구 타이머 재활성화/새 필드 손실을 막는다.
+- `commitReviewedState`가 revision·저장 상태를 확인하고 쓰기 진입을 잠근다. 이미 시작한 저장 중에는 교체가 거절되며 새 검토 뒤 재시도한다. 기존 writer 큐가 끝나기 전에 복원을 끼워 넣지 않는다. 디스크 저장이 성공해야 메모리와 revision을 바꾼다. 이 보장은 공유 controller/store 인스턴스 범위이며 다중 프로세스 동기화가 아니다.
+- 복원 직전 정상 상태를 `${trainingFile.path}.before-restore.json`에 검증 후 기록한다. 최근 한 개이며 UI에서 검토/복원/파일 저장할 수 있다. 복구본 쓰기가 실패하면 주 파일을 건드리지 않는다. 주 파일 교체 실패 시 기존 메모리와 생성한 복구본을 유지한다.
+- 기기 기록이 손상되어 앱 초기 진입이 막혀도 ‘백업으로 기록 복원’을 제공한다. 이 경우 읽지 못한 원본 바이트를 `.unreadable-before-restore.json`으로 먼저 복사하고, 정상 외부 백업을 저장한 뒤 읽기 오류를 해제한다. 읽지 못한 기록의 개수를0으로 추정하거나 빈 복구본으로 바꾸지 않는다. 손상 원본은 정규 백업이 아니며 자동 가져오기 대상으로 안내하지 않는다.
+- 복원 전 타이머의 sourceStamp에 새 복원 세대가 없으므로 같은 계획·실제값을 복원해도 구 타이머가 다시 살아나지 않는다. 타이머 파일을 동시에 삭제/rename하는 다중 파일 원자성을 주장하지 않는다.
+- 기기 대화상자는 file_picker10.3.10의 pickFiles(readStream)와 saveFile(bytes)를 쓴다. 읽기 스트림에 크기 한도를 다시 적용하고 저장 취소와 완료 응답을 분리한다. macOS 사용자 선택 파일 read-write entitlement를 추가했다. 링크 열기는 url_launcher6.3.2를 공통 의존성으로 추가했다. 구현 API는 [file_picker 공식 패키지](https://pub.dev/packages/file_picker/versions/10.3.10) 및 설치된 패키지 소스를 확인했다.
+- 첫 렌더에서 오류가 영어 파서 문구였고 생성 시각의 초/마이크로초가 큰 글자 검토 영역을 차지했다. 오류를 한국어로 정리하고 날짜·시각을 분 단위 보조 크기로 바꿨다. `research/2026-09-08/local-completion/backup-first`와 `backup-final`에375×900/1.5배 실제 폰트 결과가 있다.
+
+LC01 수동 확인 순서: 프로필→운동 기록 백업→백업 파일 저장→OS 취소를 먼저 확인→다시 저장→운동 기록 하나 변경→백업 파일 가져오기→현재/가져올 개수 확인→검토 취소→재가져오기→교체 확인→기록 확인→복구본 검토로 직전 상태 복원. 손상/다른 앱 JSON은 오류 후 기존 상태가 그대로인지 확인한다. 실제 OS 파일 공급자와 물리 기기 재실행은 별도 검증표에 미실행으로 남긴다.

@@ -137,7 +137,7 @@ void main() {
     ).toJson();
     for (final invalid in [
       deepJson(original)..remove('detailedDraft'),
-      deepJson(original)..['schemaVersion'] = 4,
+      deepJson(original)..['schemaVersion'] = 5,
     ]) {
       expect(() => AdminWorkspace.fromJson(invalid), throwsFormatException);
     }
@@ -326,7 +326,7 @@ void main() {
       expect(await stateFile.readAsString(), bytes);
     }
     final future = jsonEncode({
-      'schemaVersion': 5,
+      'schemaVersion': 7,
       'state': TrainingAppState().toJson(),
     });
     await stateFile.writeAsString(future);

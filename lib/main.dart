@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'backup_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
@@ -142,6 +143,14 @@ class _RootGateState extends State<RootGate> {
                 title: '기록을 불러오지 못했어요',
                 message: c.loadError!,
                 action: PrimaryAction(label: '다시 시도', onPressed: _open),
+              ),
+              PrimaryAction(
+                label: '백업으로 기록 복원',
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => BackupScreen(controller: c),
+                  ),
+                ),
               ),
             ],
           );

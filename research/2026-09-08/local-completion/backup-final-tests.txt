@@ -1,0 +1,20 @@
+00:00 +0: loading /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/training_backup_test.dart
+00:00 +0: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/training_backup_test.dart: workout backup preserves complete state, raw drafts and dates
+00:00 +1: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/training_backup_test.dart: damage, unknown backup version and extra envelope field fail
+00:00 +2: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/training_backup_test.dart: future state, orphan references and unsupported fields fail
+00:00 +3: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/training_backup_test.dart: size and deep nesting limits are applied before parsing
+00:00 +4: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/training_backup_test.dart: legacy state migrates only missing lifecycle metadata
+00:00 +5: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/training_backup_test.dart: restore writes recovery then publishes durable state and unique generation
+00:00 +6: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/training_backup_test.dart: stale review refuses replacement and preserves file
+00:00 +7: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/training_backup_test.dart: pending save blocks restore/export and cannot overwrite restored state
+00:00 +8: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/training_backup_test.dart: review lock rejects late updates and duplicate commits
+00:00 +9: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/training_backup_test.dart: recovery write failure preserves original memory and bytes
+00:00 +10: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/training_backup_test.dart: main write failure retains memory and readable recovery
+00:00 +11: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/training_backup_test.dart: restore invalidates old timer even when same plan and actual are restored
+00:00 +12: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/training_backup_test.dart: schema6 requires restoration generation and older schemas reject it
+00:00 +13: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/training_backup_test.dart: unreadable state restores only after exact original bytes are preserved
+00:00 +14: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/backup_screen_test.dart: export creates restorable file and cancel preserves current state
+00:02 +15: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/backup_screen_test.dart: review cancellation and explicit restore replace only after confirmation
+00:04 +16: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/backup_screen_test.dart: corrupt import retains current record and supports retry
+00:05 +17: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/backup_screen_test.dart: review and recovery controls fit narrow large text
+00:07 +18: All tests passed!
