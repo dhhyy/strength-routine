@@ -7,6 +7,8 @@ import '../flow_components.dart';
 import '../tokens.dart';
 import '../widgets.dart';
 import 'admin_program_store.dart';
+import 'detailed_routine.dart';
+import 'detailed_routine_screen.dart';
 import 'routine_builder.dart';
 
 class AdminScreen extends StatefulWidget {
@@ -19,9 +21,11 @@ class AdminScreen extends StatefulWidget {
 
 class _AdminScreenState extends State<AdminScreen> {
   RoutineBlueprint _draft = RoutineBlueprint();
+  DetailedRoutineDraft? _detailedDraft;
   List<TrainingProgram> _programs = [];
   bool _loading = true, _saving = false, _exporting = false;
-  String? _loadError, _saveError, _message;
+  bool _committing = false;
+  String? _loadError, _saveError, _actionError, _message;
   int _revision = 0, _formVersion = 0;
   @override
   void initState() {
@@ -42,6 +46,7 @@ class _AdminScreenState extends State<AdminScreen> {
       if (!mounted) return;
       setState(() {
         _draft = saved?.draft ?? RoutineBlueprint();
+        _detailedDraft = saved?.detailedDraft;
         _programs = programs;
         _formVersion++;
       });
@@ -53,9 +58,13 @@ class _AdminScreenState extends State<AdminScreen> {
     if (mounted) setState(() => _loading = false);
   }
 
-  AdminWorkspace get _workspace =>
-      AdminWorkspace(draft: _draft, programs: _programs);
+  AdminWorkspace get _workspace => AdminWorkspace(
+    draft: _draft,
+    programs: _programs,
+    detailedDraft: _detailedDraft,
+  );
   Future<bool> _save() async {
+    if (_committing) return false;
     final revision = ++_revision;
     setState(() {
       _saving = true;
@@ -83,6 +92,7 @@ class _AdminScreenState extends State<AdminScreen> {
   }
 
   Future<void> _generate() async {
+    if (_saving || _committing) return;
     try {
       final program = generateRoutine(_draft);
       final old = _programs.where((p) => p.id == program.id).firstOrNull;
@@ -96,13 +106,7 @@ class _AdminScreenState extends State<AdminScreen> {
         ),
       );
       if (!mounted || approved != true) return;
-      setState(
-        () => _programs = [
-          ..._programs.where((p) => p.id != program.id),
-          program,
-        ],
-      );
-      final saved = await _save();
+      final saved = await _commitProgram(program, _detailedDraft);
       if (mounted && saved) {
         setState(() => _message = '관리자 카탈로그에 저장했습니다. 사용자 앱에는 내보내기 후 반영해 주세요.');
       }
@@ -111,8 +115,127 @@ class _AdminScreenState extends State<AdminScreen> {
     }
   }
 
+  Future<bool> _commitWorkspace(AdminWorkspace candidate) async {
+    if (_saving || _exporting || _committing) return false;
+    if (_saveError != null) {
+      setState(() => _actionError = '작성 중인 입력의 저장을 재시도한 뒤 작업을 다시 선택해 주세요.');
+      return false;
+    }
+    setState(() {
+      _committing = true;
+      _saving = true;
+      _actionError = null;
+      _message = null;
+    });
+    FocusManager.instance.primaryFocus?.unfocus();
+    try {
+      await widget.store.save(candidate);
+      if (!mounted) return true;
+      setState(() {
+        _programs = candidate.programs;
+        _detailedDraft = candidate.detailedDraft;
+        _revision++;
+      });
+      return true;
+    } catch (_) {
+      if (mounted) {
+        setState(
+          () => _actionError =
+              '변경을 저장하지 못했어요. 이전 카탈로그와 초안을 유지했습니다. 같은 작업을 다시 선택해 주세요.',
+        );
+      }
+      return false;
+    } finally {
+      if (mounted) {
+        setState(() {
+          _saving = false;
+          _committing = false;
+        });
+      }
+    }
+  }
+
+  Future<bool> _commitProgram(
+    TrainingProgram program,
+    DetailedRoutineDraft? detailed,
+  ) async {
+    final old = _programs.where((p) => p.id == program.id).firstOrNull;
+    if (old?.version == program.version) return false;
+    return _commitWorkspace(
+      AdminWorkspace(
+        draft: _draft,
+        detailedDraft: detailed?.copy(),
+        programs: [..._programs.where((p) => p.id != program.id), program],
+      ),
+    );
+  }
+
+  Future<void> _openDetailed(DetailedRoutineDraft? next) async {
+    if (_saving || _exporting) return;
+    if (next != null && _detailedDraft != null) {
+      final replace = await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          backgroundColor: AppColors.bgLift,
+          title: Text('정밀 초안을 바꿀까요?', style: AppType.heading),
+          content: Text(
+            '작성 중인 정밀 초안을 선택한 구성으로 바꿉니다. 저장한 프로그램과 기본 생성 초안은 유지됩니다.',
+            style: AppType.body,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text('취소', style: AppType.action),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: Text('초안 바꾸기', style: AppType.action),
+            ),
+          ],
+        ),
+      );
+      if (replace != true || !mounted) return;
+    }
+    if (next != null) {
+      final saved = await _commitWorkspace(
+        AdminWorkspace(
+          draft: _draft,
+          programs: _programs,
+          detailedDraft: next.copy(),
+        ),
+      );
+      if (!saved || !mounted) return;
+    }
+    if (_detailedDraft == null || !mounted) return;
+    await Navigator.of(context).push<void>(
+      MaterialPageRoute(
+        builder: (_) => DetailedRoutineScreen(
+          initialDraft: _detailedDraft!.copy(),
+          catalog: List.of(_programs),
+          onDraftChanged: (draft) {
+            if (_committing) return Future.value(false);
+            _detailedDraft = draft.copy();
+            return _save();
+          },
+          onSaveProgram: (program, draft) => _commitProgram(program, draft),
+        ),
+      ),
+    );
+    if (mounted) setState(() {});
+  }
+
+  Future<void> _expandBasicDraft() async {
+    try {
+      await _openDetailed(
+        DetailedRoutineDraft.fromProgram(generateRoutine(_draft)),
+      );
+    } on FormatException catch (error) {
+      if (mounted) setState(() => _message = error.message);
+    }
+  }
+
   Future<void> _export() async {
-    if (_exporting) return;
+    if (_exporting || _committing) return;
     setState(() => _exporting = true);
     try {
       if (!await _save() || !mounted) return;
@@ -182,6 +305,7 @@ class _AdminScreenState extends State<AdminScreen> {
     int lines = 1,
   }) => TextFormField(
     key: ValueKey('$_formVersion-$key'),
+    enabled: !_committing,
     initialValue: value,
     maxLines: lines,
     maxLength: lines > 1 ? 2000 : 80,
@@ -190,6 +314,7 @@ class _AdminScreenState extends State<AdminScreen> {
         : TextInputType.text,
     style: numeric || monoText ? AppType.number : AppType.body,
     onChanged: (text) {
+      if (_committing) return;
       update(text);
       _save();
     },
@@ -357,143 +482,241 @@ class _AdminScreenState extends State<AdminScreen> {
         ],
       );
     }
-    return FlowPage(
-      title: '프로그램 관리',
-      children: [
-        Text(
-          '관리자 내부 도구',
-          style: AppType.caption.copyWith(color: AppColors.accent),
-        ),
-        Text('주간 운동 구성을 입력하고 원하는 기간만큼 반복 생성합니다.', style: AppType.body),
-        Text(
-          '세트·반복·중량은 관리자가 정합니다. 자동 처방이나 온라인 게시를 하지 않습니다.',
-          style: AppType.caption,
-        ),
-        Text('관리자 카탈로그 ${_programs.length}개', style: AppType.heading),
-        for (final program in _programs)
-          Text(
-            '${program.title} · ${program.weeks}주 · 주 ${program.sessionsPerWeek}회 · v${program.version}',
-            style: AppType.caption,
-          ),
-        PrimaryAction(label: '카탈로그 내보내기', onPressed: _saving ? null : _export),
-        const Divider(color: AppColors.hair),
-        Text('새 루틴 생성', style: AppType.title),
-        _field(
-          'id',
-          '프로그램 ID',
-          _draft.id,
-          (v) => _draft.id = v,
-          monoText: true,
-        ),
-        _field('title', '프로그램 이름', _draft.title, (v) => _draft.title = v),
-        _field(
-          'description',
-          '대상·장비·중량 선택 안내',
-          _draft.description,
-          (v) => _draft.description = v,
-          lines: 3,
-        ),
-        Row(
-          children: [
-            Expanded(
-              child: _field(
-                'version',
-                '버전',
-                _draft.version,
-                (v) => _draft.version = v,
+    return PopScope(
+      canPop: !_committing,
+      child: ExcludeFocus(
+        excluding: _committing,
+        child: AbsorbPointer(
+          absorbing: _committing,
+          child: FlowPage(
+            title: '프로그램 관리',
+            children: [
+              Text(
+                '관리자 내부 도구',
+                style: AppType.caption.copyWith(color: AppColors.accent),
               ),
-            ),
-            const SizedBox(width: AppSpace.x3),
-            Expanded(
-              child: _field(
-                'weeks',
-                '기간 · 주',
-                _draft.weeks,
-                (v) => _draft.weeks = v,
-                numeric: true,
+              Text('프로그램을 불러와 주차·세션·세트별로 편집할 수 있어요.', style: AppType.body),
+              Text(
+                '세트·반복·중량은 관리자가 정합니다. 자동 처방이나 온라인 게시를 하지 않습니다.',
+                style: AppType.caption,
               ),
-            ),
-          ],
-        ),
-        for (var day = 0; day < _draft.sessions.length; day++)
-          GlassPanel(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text('주간 세션 ${day + 1}', style: AppType.heading),
-                    ),
-                    if (_draft.sessions.length > 1)
-                      IconButton(
-                        tooltip: '세션 삭제',
-                        onPressed: () {
-                          setState(() {
-                            _draft.sessions.removeAt(day);
-                            _formVersion++;
-                          });
-                          _save();
-                        },
-                        icon: const Icon(Icons.delete_outline),
+              Text('관리자 카탈로그 ${_programs.length}개', style: AppType.heading),
+              if (_actionError != null)
+                StatePanel(title: '변경 저장 실패', message: _actionError!),
+              if (_saveError != null)
+                StatePanel(
+                  title: '초안 저장 실패',
+                  message: _saveError!,
+                  action: PrimaryAction(label: '저장 재시도', onPressed: _save),
+                ),
+              for (final program in _programs)
+                GlassPanel(
+                  padding: const EdgeInsets.all(AppSpace.x4),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(program.title, style: AppType.heading),
+                      const SizedBox(height: AppSpace.x2),
+                      Text(
+                        '${program.weeks}주 · 주 ${program.sessionsPerWeek}회 · v${program.version}',
+                        style: AppType.caption,
                       ),
-                  ],
-                ),
-                const SizedBox(height: AppSpace.x3),
-                _field(
-                  'd$day-title',
-                  '세션 이름',
-                  _draft.sessions[day].title,
-                  (v) => _draft.sessions[day].title = v,
-                ),
-                for (
-                  var index = 0;
-                  index < _draft.sessions[day].exercises.length;
-                  index++
-                )
-                  _exercise(day, index, _draft.sessions[day].exercises[index]),
-                if (_draft.sessions[day].exercises.length < 20)
-                  TextButton.icon(
-                    onPressed: () {
-                      setState(
-                        () => _draft.sessions[day].exercises.add(
-                          ExerciseBlueprint(),
-                        ),
-                      );
-                      _save();
-                    },
-                    icon: const Icon(Icons.add),
-                    label: Text('운동 추가', style: AppType.action),
+                      Wrap(
+                        spacing: AppSpace.x3,
+                        children: [
+                          TextButton(
+                            key: ValueKey('precise-edit-${program.id}'),
+                            onPressed: _saving || _exporting
+                                ? null
+                                : () => _openDetailed(
+                                    DetailedRoutineDraft.fromProgram(program),
+                                  ),
+                            child: Text('정밀 편집', style: AppType.action),
+                          ),
+                          TextButton(
+                            key: ValueKey('precise-clone-${program.id}'),
+                            onPressed: _saving || _exporting
+                                ? null
+                                : () {
+                                    final copy =
+                                        DetailedRoutineDraft.fromProgram(
+                                          program,
+                                        );
+                                    copy.id = '';
+                                    copy.version = '1';
+                                    _openDetailed(copy);
+                                  },
+                            child: Text('복제해서 만들기', style: AppType.action),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-              ],
-            ),
+                ),
+              if (_detailedDraft != null)
+                PrimaryAction(
+                  label: '정밀 초안 이어서',
+                  onPressed: _saving || _exporting
+                      ? null
+                      : () => _openDetailed(null),
+                ),
+              OutlinedButton(
+                onPressed: _saving || _exporting
+                    ? null
+                    : () => _openDetailed(
+                        DetailedRoutineDraft(
+                          weeks: [
+                            DetailedWeekDraft(
+                              sessions: [
+                                DetailedSessionDraft(
+                                  id: 'session-1',
+                                  exercises: [
+                                    DetailedExerciseDraft(
+                                      sets: [DetailedSetDraft(id: 'set-1')],
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                child: Text('새 정밀 프로그램', style: AppType.action),
+              ),
+              PrimaryAction(
+                label: '카탈로그 내보내기',
+                onPressed: _saving ? null : _export,
+              ),
+              const Divider(color: AppColors.hair),
+              Text('새 루틴 생성', style: AppType.title),
+              _field(
+                'id',
+                '프로그램 ID',
+                _draft.id,
+                (v) => _draft.id = v,
+                monoText: true,
+              ),
+              _field('title', '프로그램 이름', _draft.title, (v) => _draft.title = v),
+              _field(
+                'description',
+                '대상·장비·중량 선택 안내',
+                _draft.description,
+                (v) => _draft.description = v,
+                lines: 3,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: _field(
+                      'version',
+                      '버전',
+                      _draft.version,
+                      (v) => _draft.version = v,
+                    ),
+                  ),
+                  const SizedBox(width: AppSpace.x3),
+                  Expanded(
+                    child: _field(
+                      'weeks',
+                      '기간 · 주',
+                      _draft.weeks,
+                      (v) => _draft.weeks = v,
+                      numeric: true,
+                    ),
+                  ),
+                ],
+              ),
+              for (var day = 0; day < _draft.sessions.length; day++)
+                GlassPanel(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              '주간 세션 ${day + 1}',
+                              style: AppType.heading,
+                            ),
+                          ),
+                          if (_draft.sessions.length > 1)
+                            IconButton(
+                              tooltip: '세션 삭제',
+                              onPressed: () {
+                                setState(() {
+                                  _draft.sessions.removeAt(day);
+                                  _formVersion++;
+                                });
+                                _save();
+                              },
+                              icon: const Icon(Icons.delete_outline),
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: AppSpace.x3),
+                      _field(
+                        'd$day-title',
+                        '세션 이름',
+                        _draft.sessions[day].title,
+                        (v) => _draft.sessions[day].title = v,
+                      ),
+                      for (
+                        var index = 0;
+                        index < _draft.sessions[day].exercises.length;
+                        index++
+                      )
+                        _exercise(
+                          day,
+                          index,
+                          _draft.sessions[day].exercises[index],
+                        ),
+                      if (_draft.sessions[day].exercises.length < 20)
+                        TextButton.icon(
+                          onPressed: () {
+                            setState(
+                              () => _draft.sessions[day].exercises.add(
+                                ExerciseBlueprint(),
+                              ),
+                            );
+                            _save();
+                          },
+                          icon: const Icon(Icons.add),
+                          label: Text('운동 추가', style: AppType.action),
+                        ),
+                    ],
+                  ),
+                ),
+              if (_draft.sessions.length < 7)
+                TextButton.icon(
+                  onPressed: () {
+                    setState(() => _draft.sessions.add(SessionBlueprint()));
+                    _save();
+                  },
+                  icon: const Icon(Icons.add),
+                  label: Text('주간 세션 추가', style: AppType.action),
+                ),
+              if (_message != null) Text(_message!, style: AppType.body),
+              Text(
+                _saving
+                    ? '초안 저장 중'
+                    : _saveError == null
+                    ? '초안은 관리자 기기에 저장됩니다.'
+                    : '아직 저장되지 않았습니다.',
+                style: AppType.caption,
+              ),
+              PrimaryAction(
+                label: '생성 결과 확인',
+                busy: _saving,
+                onPressed: _generate,
+              ),
+              OutlinedButton(
+                onPressed: _saving || _exporting ? null : _expandBasicDraft,
+                child: Text('주차·세트별로 편집', style: AppType.action),
+              ),
+            ],
           ),
-        if (_draft.sessions.length < 7)
-          TextButton.icon(
-            onPressed: () {
-              setState(() => _draft.sessions.add(SessionBlueprint()));
-              _save();
-            },
-            icon: const Icon(Icons.add),
-            label: Text('주간 세션 추가', style: AppType.action),
-          ),
-        if (_saveError != null)
-          StatePanel(
-            title: '초안 저장 실패',
-            message: _saveError!,
-            action: PrimaryAction(label: '저장 재시도', onPressed: _save),
-          ),
-        if (_message != null) Text(_message!, style: AppType.body),
-        Text(
-          _saving
-              ? '초안 저장 중'
-              : _saveError == null
-              ? '초안은 관리자 기기에 저장됩니다.'
-              : '아직 저장되지 않았습니다.',
-          style: AppType.caption,
         ),
-        PrimaryAction(label: '생성 결과 확인', busy: _saving, onPressed: _generate),
-      ],
+      ),
     );
   }
 }
