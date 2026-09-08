@@ -1,9 +1,10 @@
 # 디자인 시스템 — Console v2 (깊이·은은함)
 
-> 상태: v0.2 · 기준일: 2026-09-05
+> 상태: v0.4 · 기준일: 2026-09-08
 > 위계: `05-design-philosophy.md`(왜/불변) → **이 문서(어떻게/토큰·가변)** → `../CLAUDE.md`·`design` 스킬(강제)
 > 관련: `01-requirements.md`, `02-engine-logic.md`
 > 코드 SSOT: `../lib/tokens.dart`, `theme.dart`, `widgets.dart`
+> 웹 랜딩 SSOT: [`../landing/tokens.css`](../landing/tokens.css), [`../landing/styles.css`](../landing/styles.css) · 앱과 별개 체험
 
 ---
 
@@ -13,7 +14,7 @@
 
 **절대 규칙 3가지**
 1. 여기 없는 **색·간격·폰트를 새로 만들지 않는다.** 토큰에서만.
-2. 새 UI는 **먼저 조립**을 시도. 없을 때만 새 컴포넌트를 `widgets.dart` + §7에 등록.
+2. 새 UI는 **먼저 조립**을 시도. 없을 때만 새 컴포넌트를 등록한다. Flutter는 `widgets.dart` + §7, 웹 랜딩은 `landing/styles.css` + §7의 웹 카탈로그를 따른다.
 3. 새 화면은 **`design` 스킬 절차 + §10 체크리스트**를 통과.
 
 > **스타일은 이 문서(토큰)에서만 바뀐다.** 스타일 변경 = 토큰 교체. 컴포넌트·레이아웃·프로세스는 불변(`05`).
@@ -79,6 +80,28 @@
 - **경계**: `hair`(반투명). 하드 라인 지양.
 - **깊이**: 글래스(`AppGradients.glass` + `BackdropFilter` blur) + `AppShadow.card` + 액센트 글로우. **"모든 게 카드가 아니다"** — 깊이는 은은하게, 한 곳에 몰지 않게 균형.
 
+### 9/8 웹 랜딩 토큰
+
+색·폰트·곡률은 Console v2를 유지하고 웹의 폭·제목·간격 역할을 추가한다. 구현 정본은 [tokens.css](../landing/tokens.css)다. CSS 색의 알파는 `#RRGGBBAA` 순서이므로 Flutter의 `#AARRGGBB`와 혼동하지 않는다.
+
+| 역할 / CSS 토큰 | 값·사용 기준 |
+|---|---|
+| 바탕·글자 `--bg`, `--bg-lift`, `--ink`, `--ink-dim`, `--muted` | §3과 동일한 기본 색. 단계별 텍스트 대비 유지 |
+| 의미색 `--accent`, `--good`, `--warn`, `--danger` | 시안 액션, 초록 실제 수행, 저장 경고, 입력 오류. 색과 상태 문구를 함께 표시 |
+| 경계·표면 `--hair`, `--hair-strong`, `--hair-faint`, `--fill`, `--glass` | 흰색 알파 `12/1f/05/14`, 기존 글래스 양끝의 150° 그라디언트 |
+| 폰트 `--font-kr`, `--font-mono` | 한글 IBM Plex Sans KR, `.mono` 및 수치 입력 IBM Plex Mono + tabular 숫자. 웹 로드: KR 400/600/700, Mono 400/500/700 |
+| 본문 `--text-xs/sm/base/lg/xl` | `.75/.875/1/1.125/1.5rem`. 필드 라벨·본문·구성 제목 역할 |
+| 큰 제목 `--text-section`, `--text-display`, `--text-stat` | `clamp(1.75rem,3vw,2.5rem)`, `clamp(2.5rem,4.45vw,4rem)`, `2rem`. 본문보다 히어로 한 곳을 강조 |
+| 반응형 제목 `--text-display-compact`, `--text-display-mobile` | `clamp(2.5rem,4.25vw,3.25rem)`, `clamp(2rem,10.25vw,2.5rem)`. 좁은 2열과 420px 이하 제목 역할 |
+| 줄 높이·굵기 | `--line-tight/heading/body`: 1.2/1.4/1.8. `--weight-regular/medium/semibold/bold`: 400/500/600/700 |
+| 간격 `--s1`~`--s32` | 4·8·12·16·20·24·32·40·48·64·80·96·128px. 명명 숫자×4, 정의된 단계만 사용 |
+| 형태 `--radius-panel/control/bar/pill` | 20/14/6/999px. 체험 패널·버튼·입력·태그 역할 |
+| 폭·높이 `--content-width`, `--text-width`, `--demo-width/height` | 1200/520/500/510px. 체험 폭은 최대값, 패널 높이는 최소값 |
+| 조작·초점 `--touch`, `--icon`, `--nav-height`, `--focus` | 최소 조작 48px, 아이콘 20px, 탐색 높이 80px, 초점선 2px. 기본 CTA는 56px 높이 |
+| 깊이·움직임 `--shadow-panel/control`, `--duration-fast/duration/slow`, `--ease` | 소프트 패널/조작 그림자, 160/260/600ms. `prefers-reduced-motion`에서는 전환·애니메이션·부드러운 스크롤 해제 |
+
+웹 크기 전환은 [styles.css](../landing/styles.css)의 1100/820/420px 경계를 따른다. 820px 이하에서 설명→체험의 한 열로 쌓고, 420px 이하에서는 탐색 높이 72px·좌우 간격 20px로 줄인다. 작은 화면의 탐색 높이·제목 토큰 재정의는 `tokens.css`에 둔다. 중량·반복·RIR은 작은 화면에서도 `minmax(0,1fr)` 세 열을 유지한다. 이는 코드의 배치 계약이며 모든 폭의 렌더 통과를 뜻하지 않는다.
+
 ---
 
 ## 6. 레이아웃 — Fluid / Fixed / Hybrid
@@ -129,6 +152,28 @@
 
 설계 근거와 렌더 검증은 [DESIGN.md](../DESIGN.md), [9/7 작업 기록](2026-09-07-work-log.md)에 남긴다.
 
+### 9/8 웹 랜딩 구성 요소
+
+[landing/index.html](../landing/index.html)의 의미 있는 HTML과 [styles.css](../landing/styles.css)의 클래스를 조립한다. Flutter의 화면·5탭·저장 파일을 대체하지 않는다. 실행·데이터 범위는 [랜딩 README](../landing/README.md)를 따른다.
+
+| 구성 요소 / 선택자 | 역할·상태 |
+|---|---|
+| `.site-header`, `.nav`, `.brand`, `.skip-link` | sticky 탐색·인라인 로고·키보드의 체험 바로가기. 모바일에서 보조 탐색 접음 |
+| `.hero`, `.hero-copy`, `.experience-wrap` | 설명과 실제 체험의 2열 → 1열 배치. 개발 중·체험용 예시를 가까이 표시 |
+| `.button-primary/outline`, `.button-small/full`, `.text-link` | 주요/보조 행동, hover·focus-visible·disabled. 서버 신청이나 다운로드로 연결하지 않음 |
+| `.demo`, `.step-tabs`, `.demo-panel` | 글래스 패널과 구성/일정/기록 3단계. tab/tabpanel, 선택 상태·roving tabindex, 좌우/Home/End 키 |
+| `.program-meta`, `.program-outline`, `.target-row` | 합성 예시 1주·주 1회·2세트의 원래 구성을 표시. 실제 프로그램 목록이 아님 |
+| `.date-input`, `.weekdays`, `.next-workout` | 시작일·요일 한 개·계산 날짜. 잘못된 날짜의 오류와 완료/제외 후 일정 잠금 |
+| `.set-editor`, `.set-fields`, `.set-actions`, `.field-error` | 빈 입력/작성 중/수행 완료/제외. 필드 오류·첫 오류 초점·수정하기·다음 미기록 초점. 실제값을 목표로 자동 채우지 않음 |
+| `.completion-count`, `.progress-track`, `.workout-summary` | 수행 수만 진행 막대에 반영. 제외·작성 중은 별도 문구, live region과 progressbar 속성 |
+| `.demo-footer`, `#save-status`, `.reset-button`, `#reset-dialog` | 저장 성공/차단/손상·초기화 실패 안내. native dialog의 확인 후 체험 키 삭제→새 상태 저장, 취소/Escape는 유지 |
+| `.feature-row`, `.scope-lines`, `.faq-list`, `.rir-help` | 기능 설명·현재 범위·native details/summary. 외부 설명 영상이나 모집 폼 없음 |
+| `.closing`, `.site-footer`, `.notice` | 기록 체험 이동·로컬 폰트 라이선스·JavaScript 비활성 안내 |
+
+초기 상태는 값 없는 두 세트다. 저장은 동기식 `localStorage`이며 원격 로딩 화면은 없다. 읽기 손상 시 기존 저장값을 덮어쓰지 않고, 쓰기 차단 시 현재 화면에서만 유지됨을 알린다. 초기화의 키 삭제가 실패하면 화면만 초기화하고 재접속 시 이전 기록이 나타날 수 있다는 경고를 남긴다. 이 웹 체험의 상태 계약을 Flutter 앱 전체의 저장·일정 정책으로 확대하지 않는다. 브라우저 검증 결과는 코드 등록과 구별해 담당자의 실제 확인 후 기록한다.
+
+9/8 담당 실행 결과: headless Chromium의 35개 브라우저 검사 통과. 정확한 버전·검사 항목은 [검증 로그](../research/2026-09-08/landing/browser-check.json), 렌더 증거와 실행 범위는 [랜딩 README](../landing/README.md)를 따른다. 다른 브라우저·실제 모바일 기기의 통과를 뜻하지 않는다.
+
 ---
 
 ## 8. 상태 디자인 (필수) — `01` 연동
@@ -164,6 +209,7 @@
 - 이 문서(토큰)와 코드는 항상 일치.
 
 ## 변경 이력
+- v0.4 (2026-09-08): 독립 웹 랜딩의 Console v2 토큰 매핑·반응형 계약·HTML/CSS 컴포넌트와 상태 등록. 렌더 검증 결과와 구별.
 - v0.3 (2026-09-07): 프로그램 선택→결과 확인→실제 세트 기록 구성 요소와 로컬 폰트 등록.
 - v0.2 (2026-09-05): Console v2 — 그라디언트·글래스·은은한 깊이·점진적 노출 반영. `05` 철학 연결.
 - v0.1: 최초 (플랫 Console).

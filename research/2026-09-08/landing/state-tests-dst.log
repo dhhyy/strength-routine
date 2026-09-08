@@ -1,0 +1,76 @@
+TAP version 13
+# Subtest: 처음 상태는 현지 오늘과 ISO 요일, 독립된 빈 세트 2개를 가진다
+ok 1 - 처음 상태는 현지 오늘과 ISO 요일, 독립된 빈 세트 2개를 가진다
+  ---
+  duration_ms: 4.618
+  type: 'test'
+  ...
+# Subtest: 요일 계산은 시작일을 포함하고 월·연도·윤년 경계를 넘는다
+ok 2 - 요일 계산은 시작일을 포함하고 월·연도·윤년 경계를 넘는다
+  ---
+  duration_ms: 0.523625
+  type: 'test'
+  ...
+# Subtest: 잘못된 달력 날짜와 ISO 요일은 거부한다
+ok 3 - 잘못된 달력 날짜와 ISO 요일은 거부한다
+  ---
+  duration_ms: 0.282792
+  type: 'test'
+  ...
+# Subtest: 중량 0과 JS 숫자 0은 유효하고 RIR은 선택 입력이다
+ok 4 - 중량 0과 JS 숫자 0은 유효하고 RIR은 선택 입력이다
+  ---
+  duration_ms: 0.850792
+  type: 'test'
+  ...
+# Subtest: 빈 중량·무한값·소수 반복·범위 밖 RIR을 필드별로 거부한다
+ok 5 - 빈 중량·무한값·소수 반복·범위 밖 RIR을 필드별로 거부한다
+  ---
+  duration_ms: 0.282208
+  type: 'test'
+  ...
+# Subtest: 미완성 초안의 원문과 추가 키는 정규화하거나 삭제하지 않는다
+ok 6 - 미완성 초안의 원문과 추가 키는 정규화하거나 삭제하지 않는다
+  ---
+  duration_ms: 0.461
+  type: 'test'
+  ...
+# Subtest: 완료와 빈 제외 세트는 왕복 저장하고 수행·제외를 따로 집계한다
+ok 7 - 완료와 빈 제외 세트는 왕복 저장하고 수행·제외를 따로 집계한다
+  ---
+  duration_ms: 0.249458
+  type: 'test'
+  ...
+# Subtest: 공백 초안도 작성 중이며 빈 pending이나 제외는 초안 집계에 넣지 않는다
+ok 8 - 공백 초안도 작성 중이며 빈 pending이나 제외는 초안 집계에 넣지 않는다
+  ---
+  duration_ms: 0.1025
+  type: 'test'
+  ...
+# Subtest: 손상 JSON·미지원 버전·잘못된 단계·요일·날짜·세트 구조를 거부한다
+ok 9 - 손상 JSON·미지원 버전·잘못된 단계·요일·날짜·세트 구조를 거부한다
+  ---
+  duration_ms: 0.87825
+  type: 'test'
+  ...
+# Subtest: 미완성 값을 완료 상태로 저장하거나 잘못된 완료 상태를 복원할 수 없다
+ok 10 - 미완성 값을 완료 상태로 저장하거나 잘못된 완료 상태를 복원할 수 없다
+  ---
+  duration_ms: 0.601292
+  type: 'test'
+  ...
+# Subtest: 직렬화 결과도 검증해 toJSON으로 잘못된 상태를 저장하지 않는다
+ok 11 - 직렬화 결과도 검증해 toJSON으로 잘못된 상태를 저장하지 않는다
+  ---
+  duration_ms: 0.173208
+  type: 'test'
+  ...
+1..11
+# tests 11
+# suites 0
+# pass 11
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 73.24425
