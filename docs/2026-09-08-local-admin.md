@@ -2,6 +2,8 @@
 
 작성일: 2026-09-08. 구현 전 상세 계약이며, 실제 검증 결과는 마지막에 별도로 기록한다. 상위 범위는 [로컬 기능 전체 명세](2026-09-08-local-completion.md)다.
 
+현재 전체 상태·스키마는 [상태표](2026-09-08-remaining-work.md), 연속 버전 충돌과 시험 대기의 검토 후 수정 상태는 [안정화 기록](2026-09-08-review-fixes.md)을 따른다. 아래 담당 검증은 LC04 구현 당시 결과이며 후속 수정의 시험 수로 재사용하지 않는다.
+
 ## 1. 반복 범위와 세트 종류
 
 기존 `repetitions`는 하한으로 유지한다. `repetitionsMax`는 비어 있으면 고정 반복이고 지정하면 하한 이상 100 이하인 상한이다. 관리자 입력은 원문 문자열로 자동 저장하며 잘못된 값도 입력 화면에서 사라지지 않는다. 범위와 AMRAP을 동시에 지정하면 생성 검토를 차단한다. 범위를 지정한 사용자 목표는 `8–12회`처럼 표시하며 실제 횟수의 입력은 계속 독립적이다.
@@ -50,7 +52,7 @@ D5 비교 근거와 미래 감량 대상은 작업 세트만 포함한다. 반�
 |---|---|
 | `lib/domain/training_program.dart` | `ProgramSet.repetitionsMax`, `kind`, 기본값 생략 JSON, 검증, `PlannedSet` 전달, `hasExtendedPrescriptions`와 재귀 envelope 키 감지 |
 | `lib/admin/detailed_routine.dart` | 반복 상한 원문과 종류의 복사·JSON·생성, 상한/AMRAP 충돌 검증 |
-| `lib/admin/detailed_bulk_edit.dart` | 네 범위·일곱 필드의 독립 후보, 대상 수/변경 수, 개별 전후, 원문 fingerprint, 구조 검증 |
+| `lib/admin/detailed_bulk_edit.dart` | 네 범위·여섯 필드의 독립 후보, 대상 수/변경 수, 개별 전후, 원문 fingerprint, 구조 검증 |
 | `lib/admin/detailed_bulk_screen.dart` | 범위/필드/값 입력, 오류, 전후 검토, 취소, 적용할 후보 반환 |
 | `lib/admin/detailed_routine_screen.dart` | 종류 선택·인접 하한/상한·운동별 일괄 수정 진입, 한 단계 undo/redo, 버전 이력까지 사용 버전 검사, 처방 비교 |
 | `lib/admin/admin_program_store.dart` | 불변 보관 ID/버전 스냅샷, 과거 버전 충돌 거부, 새 버전 제안, schema4 작업 저장, 배포 대상만 export |
