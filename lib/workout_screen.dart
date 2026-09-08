@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'app/training_controller.dart';
+import 'app/settings_controller.dart';
 import 'domain/previous_record.dart';
+import 'domain/rest_timer.dart';
 import 'previous_record_dialog.dart';
 import 'domain/recent_lift_record.dart';
 import 'domain/training_program.dart';
@@ -208,7 +210,14 @@ class WorkoutScreen extends StatelessWidget {
                             ),
                     ),
                     if (!locked &&
-                        (exercise.sets[index].restSeconds ?? 0) > 0 &&
+                        (resolveRestSeconds(
+                                  exercise.sets[index].restSeconds,
+                                  SettingsScope.maybeOf(
+                                    context,
+                                  )?.settings.defaultRestSeconds,
+                                ) ??
+                                0) >
+                            0 &&
                         actuals[exercise.sets[index].id]?.status ==
                             SetActualStatus.completed &&
                         !controller.state.setDrafts.containsKey(
@@ -235,6 +244,9 @@ class WorkoutScreen extends StatelessWidget {
                                     exercise,
                                     exercise.sets[index],
                                     index + 1,
+                                    defaultRestSeconds: SettingsScope.maybeOf(
+                                      context,
+                                    )?.settings.defaultRestSeconds,
                                   );
                                   if (!context.mounted) return;
                                   // The lazy list may have disposed its top panel.
@@ -256,7 +268,7 @@ class WorkoutScreen extends StatelessWidget {
                             size: AppSize.icon,
                           ),
                           label: Text(
-                            '${index + 1}세트 휴식 시작 · ${exercise.sets[index].restSeconds}초',
+                            '${index + 1}세트 휴식 시작 · ${resolveRestSeconds(exercise.sets[index].restSeconds, SettingsScope.maybeOf(context)?.settings.defaultRestSeconds)}초',
                             style: AppType.action,
                           ),
                         ),
@@ -393,20 +405,23 @@ class WorkoutScreen extends StatelessWidget {
             top: Radius.circular(AppRadius.panel),
           ),
         ),
-        builder: (_) => SetEditor(
-          key: ValueKey(editing.set.id),
-          controller: controller,
-          exerciseName: editing.exercise.name,
-          set: editing.set,
-          number: editing.number,
-          defaultUnit: defaultUnit,
-          hasNextSet:
-              _nextUnrecordedSet(
-                orderedSets,
-                editing.set.id,
-                controller.state.setActuals,
-              ) !=
-              null,
+        builder: (_) => _withSettings(
+          context,
+          SetEditor(
+            key: ValueKey(editing.set.id),
+            controller: controller,
+            exerciseName: editing.exercise.name,
+            set: editing.set,
+            number: editing.number,
+            defaultUnit: defaultUnit,
+            hasNextSet:
+                _nextUnrecordedSet(
+                  orderedSets,
+                  editing.set.id,
+                  controller.state.setActuals,
+                ) !=
+                null,
+          ),
         ),
       );
       saved =
@@ -908,6 +923,7 @@ class _SetEditorState extends State<SetEditor> {
   String? _entryError;
   bool _committing = false, _hasChanges = false, _finished = false;
   _SetEditorResult? _resultAfterRetry;
+  bool _autoRestPending = false;
 
   @override
   void initState() {
@@ -1076,6 +1092,20 @@ class _SetEditorState extends State<SetEditor> {
     _changed('');
   }
 
+  Future<void> _finishSaved() async {
+    if (_autoRestPending) {
+      _autoRestPending = false;
+      await autoStartCompletedSetRest(
+        context,
+        widget.controller,
+        widget.set.id,
+      );
+    }
+    if (!mounted) return;
+    setState(() => _committing = false);
+    _finish(_resultAfterRetry!);
+  }
+
   Future<void> _complete({bool advance = false}) async {
     if (_committing || _finished || !_editable) return;
     if (!_form.currentState!.validate()) return;
@@ -1109,6 +1139,11 @@ class _SetEditorState extends State<SetEditor> {
           ? _SetEditorResult.savedAndNext
           : _SetEditorResult.saved;
     });
+    _autoRestPending =
+        actual?.status == SetActualStatus.completed &&
+        widget.controller.state.setActuals[widget.set.id]?.status !=
+            SetActualStatus.completed &&
+        (SettingsScope.maybeOf(context)?.settings.autoStartRestTimer ?? false);
     final draft = _draft;
     final saved = await widget.controller.update((state) {
       final updated = state.withSetActual(widget.set.id, actual);
@@ -1117,9 +1152,10 @@ class _SetEditorState extends State<SetEditor> {
           : updated;
     });
     if (!mounted) return;
-    setState(() => _committing = false);
     if (saved && widget.controller.saveError == null) {
-      _finish(_resultAfterRetry!);
+      await _finishSaved();
+    } else {
+      setState(() => _committing = false);
     }
   }
 
@@ -1128,11 +1164,12 @@ class _SetEditorState extends State<SetEditor> {
     setState(() => _committing = true);
     final saved = await widget.controller.retrySave();
     if (!mounted) return;
-    setState(() => _committing = false);
     if (saved &&
         widget.controller.saveError == null &&
         _resultAfterRetry != null) {
-      _finish(_resultAfterRetry!);
+      await _finishSaved();
+    } else {
+      setState(() => _committing = false);
     }
   }
 
@@ -1491,4 +1528,11 @@ class _SetEditorState extends State<SetEditor> {
         ? '0 이상의 숫자를 입력하거나 비워 주세요.'
         : null;
   }
+}
+
+Widget _withSettings(BuildContext source, Widget child) {
+  final settings = SettingsScope.maybeOf(source);
+  return settings == null
+      ? child
+      : SettingsScope(controller: settings, child: child);
 }

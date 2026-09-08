@@ -255,6 +255,9 @@ void main() {
     addTearDown(tester.view.resetViewInsets);
     await tester.pumpAndSettle();
     await tester.ensureVisible(find.text('운동 구성 보기'));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('운동 구성 보기'));
+    await tester.pumpAndSettle();
     expect(find.text('운동 구성 보기').hitTestable(), findsOneWidget);
     await tester.tap(find.text('운동 구성 보기'));
     tester.view.resetViewInsets();

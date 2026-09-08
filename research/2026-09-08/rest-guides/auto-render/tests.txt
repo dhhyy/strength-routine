@@ -1,0 +1,8 @@
+00:00 +0: loading /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/rest_auto_start_screen_test.dart
+00:00 +0: durable new completion starts custom timer once and page re-entry preserves deadline
+00:04 +1: automatic off preserves manual fallback and explicit zero suppresses fallback
+00:07 +2: existing completed record edit never starts a new automatic interval
+00:07 +3: a running timer requires explicit replacement and cancel preserves both actuals
+00:10 +4: failed workout save starts no timer until first durable completion retry
+00:11 +5: timer write failure leaves workout complete and retry keeps original deadline
+00:12 +6: All tests passed!

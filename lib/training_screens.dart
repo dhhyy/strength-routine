@@ -110,8 +110,10 @@ class ActiveTodayScreen extends StatelessWidget {
             key: const ValueKey('open-missed-workouts'),
             onPressed: () => Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (_) =>
-                    MissedWorkoutsScreen(controller: controller, today: today),
+                builder: (_) => _inheritSettings(
+                  context,
+                  MissedWorkoutsScreen(controller: controller, today: today),
+                ),
               ),
             ),
             child: Text(

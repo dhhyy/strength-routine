@@ -1,0 +1,72 @@
+00:00 +0: loading /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/rest_auto_start_screen_test.dart
+00:00 +0: durable new completion starts custom timer once and page re-entry preserves deadline
+00:05 +1: automatic off preserves manual fallback and explicit zero suppresses fallback
+00:07 +2: existing completed record edit never starts a new automatic interval
+00:08 +3: a running timer requires explicit replacement and cancel preserves both actuals
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following assertion was thrown running a test:
+pumpAndSettle timed out
+
+When the exception was thrown, this was the stack:
+#0      WidgetTester.pumpAndSettle.<anonymous closure> (package:flutter_test/src/widget_tester.dart:718:11)
+<asynchronous suspension>
+#1      TestAsyncUtils.guard.<anonymous closure> (package:flutter_test/src/test_async_utils.dart:130:27)
+<asynchronous suspension>
+#2      main.flush (file:///Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/rest_auto_start_screen_test.dart:59:5)
+<asynchronous suspension>
+#3      main.tap (file:///Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/rest_auto_start_screen_test.dart:92:5)
+<asynchronous suspension>
+#4      main.complete (file:///Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/rest_auto_start_screen_test.dart:113:5)
+<asynchronous suspension>
+#5      main.<anonymous closure> (file:///Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/rest_auto_start_screen_test.dart:211:7)
+<asynchronous suspension>
+#6      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:193:15)
+<asynchronous suspension>
+#7      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1064:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  a running timer requires explicit replacement and cancel preserves both actuals
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:19 +3 -1: a running timer requires explicit replacement and cancel preserves both actuals [E]
+  Test failed. See exception logs above.
+  The test description was: a running timer requires explicit replacement and cancel preserves both actuals
+  
+00:19 +3 -1: failed workout save starts no timer until first durable completion retry
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following StateError was thrown running a test:
+Bad state: Too many elements
+
+When the exception was thrown, this was the stack:
+#0      Iterable.single (dart:core/iterable.dart:696:24)
+#1      WidgetController.element (package:flutter_test/src/controller.dart:864:30)
+#2      WidgetController.dragUntilVisible.<anonymous closure> (package:flutter_test/src/controller.dart:2394:38)
+<asynchronous suspension>
+#3      TestAsyncUtils.guard.<anonymous closure> (package:flutter_test/src/test_async_utils.dart:130:27)
+<asynchronous suspension>
+#4      WidgetController.scrollUntilVisible.<anonymous closure> (package:flutter_test/src/controller.dart:2351:7)
+<asynchronous suspension>
+#5      TestAsyncUtils.guard.<anonymous closure> (package:flutter_test/src/test_async_utils.dart:130:27)
+<asynchronous suspension>
+#6      main.tap (file:///Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/rest_auto_start_screen_test.dart:83:5)
+<asynchronous suspension>
+#7      main.<anonymous closure> (file:///Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/rest_auto_start_screen_test.dart:238:7)
+<asynchronous suspension>
+#8      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:193:15)
+<asynchronous suspension>
+#9      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1064:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  failed workout save starts no timer until first durable completion retry
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:19 +3 -2: failed workout save starts no timer until first durable completion retry [E]
+  Test failed. See exception logs above.
+  The test description was: failed workout save starts no timer until first durable completion retry
+  
+00:19 +3 -2: timer write failure leaves workout complete and retry keeps original deadline
+00:21 +4 -2: Some tests failed.

@@ -274,6 +274,15 @@ void main() {
     await tester.ensureVisible(
       find.byKey(const ValueKey('auto-start-rest-timer')),
     );
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(
+      find.byKey(const ValueKey('auto-start-rest-timer')),
+    );
+    await tester.pumpAndSettle();
+    expect(
+      find.byKey(const ValueKey('auto-start-rest-timer')).hitTestable(),
+      findsOneWidget,
+    );
     await tester.tap(find.byKey(const ValueKey('auto-start-rest-timer')));
     await flush(tester);
     expect(controller.settings.autoStartRestTimer, isTrue);

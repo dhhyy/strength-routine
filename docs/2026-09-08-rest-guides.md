@@ -33,7 +33,7 @@
 
 ## 4. 조사 출처 및 구현 결과
 
-상태: 휴식 설정·저장·출처 모델 구현 및 개별 검증 진행, 가이드는 구현 중.
+상태: LC05 휴식 설정·자동 시작과 LC06 운동·용어 가이드 구현 완료. 아래에 단위·연결·실제 폰트 렌더 검증을 구분하여 기록했다. 실제 기기 OS 동작은 사용자 확인 항목으로 남긴다.
 
 
 ### 4.1 휴식 설정 구현 증거
@@ -117,8 +117,25 @@
 - 진행 중인 타이머의 처방/사용자 출처와 시작 당시 시간을 보존한다.
 - 기존 타이머를 교체할 때 사용자의 확인을 받는다.
 - 기본5개 프로그램의24개 종목에 오프라인 동작 설명을 연결한다.
--9개 운동 용어를 앱의 실제 기록·처방 규칙과 함께 설명한다.
+- 9개 운동 용어를 앱의 실제 기록·처방 규칙과 함께 설명한다.
 - 미등록 종목에는 다른 종목의 가이드를 추정해서 보여주지 않는다.
 - 출처 링크 열기 실패 뒤에도 본문과 재시도 버튼을 유지한다.
 
 가이드 연결 회귀: `flutter test test/exercise_guides_test.dart test/exercise_guide_screen_test.dart test/advanced_workout_screen_test.dart --reporter expanded` **16개 통과**. 기존 고급 처방 표시·슈퍼세트 순서·수동 타이머·실패/재시도·보관 읽기 전용 검사를 함께 통과했다. [회귀 로그](../research/2026-09-08/rest-guides/guide-regression.txt).
+
+
+## 7. 자동 시작 연결 최종 검증
+
+운동 입력 화면에서 아직 완료하지 않은 세트를 완료할 때 자동 시작 여부를 한 번 캡처한다. 운동 파일 저장 성공 후에만 휴식 시작을 호출하고, 호출 전에 대기 플래그를 해제하여 중복 실행을 막는다. 저장 실패 후 재시도는 완료가 확정된 시점에 한 번 시작한다. 기존 완료 기록 수정, 초안, 제외, 화면 재진입은 새 타이머를 시작하지 않는다.
+
+설정 범위가 Navigator 아래에 있는 앱 구조를 고려하여 오늘/놓친 운동 경로와 세트 입력 시트에 같은 SettingsController를 전달했다. 수동 시작 표시도 처방과 사용자 기본값을 함께 해석하여, 처방 미지정·사용자 기본 90초인 경우 `1세트 휴식 시작 · 90초`로 표시한다. 명시 0초는 버튼과 자동 시작을 모두 생략한다. 기존 타이머의 교체 확인 동안 기록 저장 잠금을 유지하며, 교체를 취소해도 완료 기록과 기존 타이머를 보존한다.
+
+`flutter test test/rest_auto_start_screen_test.dart --reporter expanded` **6개 통과**. 새 완료의 기본 90초 시작·재진입 및 설정 변경 시 원래 기한 유지, 자동 꺼짐과 명시 0초, 기존 완료 수정, 타이머 교체 취소, 운동 파일 저장 실패/재시도, 타이머 파일 저장 실패/재시도를 검증했다. 두 저장 실패 시험은 실제 임시 파일 경로의 쓰기를 막아 재현했으며, 타이머 실패 때 운동 파일에 완료가 남는지 별도로 읽어 확인했다.
+
+`flutter test test/rest_auto_start_screen_test.dart test/settings_screen_test.dart test/exercise_search_test.dart test/settings_integration_test.dart --reporter expanded` **21개 통과**. 새 가이드 진입이 추가된 검색 화면의 300px 키보드와 큰 글자 설정 화면에서 스크롤이 정착한 후 실제 버튼이 터치 가능한지를 확인했다. 기존 시험은 `ensureVisible` 직후 재배치가 완료되기 전에 터치해 실패했으므로, 애니메이션 정착과 재노출 뒤 `hitTestable` 검사를 유지했다. 기능 검증을 제거하거나 화면 제약을 완화하지 않았다.
+
+`flutter test test/rest_auto_start_screen_test.dart --dart-define=REST_AUTO_RENDER_DIR=research/2026-09-08/rest-guides/auto-render --reporter expanded` **6개 통과**. 실제 KR/Mono 폰트의 375px 렌더에서 자동 시작 완료 패널과 타이머 교체 확인 창을 직접 열어 확인했다. 기본 90초·출처·완료 기록·수동 시작 문구가 읽히며 확인 창의 취소/교체 버튼이 잘리지 않는다. 처음 자동 시작 시험의 대화상자 대기 중 spinner 정착 실패와 중복 재시도 finder 문제는 테스트를 실제 입력 시트/대화상자 상태에 맞게 수정했다. 첫 실패 로그와 최종 로그를 함께 보존했다.
+
+증거: [자동 시작 시험](../research/2026-09-08/rest-guides/rest-auto-tests.txt), [연결 회귀](../research/2026-09-08/rest-guides/rest-integration-tests.txt), [실제 폰트 렌더](../research/2026-09-08/rest-guides/auto-render/). LC05의 새 시험은 설정/도메인 9개와 자동 시작 6개이고 LC06의 새 시험은 10개다. 실행 명령별 개수는 중복 실행을 포함하므로 합산하여 전체 고유 시험 수로 사용하지 않는다. 이 검증에서는 Simulator를 실행하지 않았다.
+
+최종 담당 파일 정적분석: 휴식/설정/가이드 도메인·저장·화면·전용 시험에 `dart analyze`를 실행하여 **No issues found**를 확인했다. 발견한 if 블록 중괄호 5곳과 사용하지 않는 테스트 import 1곳을 정리했으며 동작은 바꾸지 않았다.
