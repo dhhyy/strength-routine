@@ -34,14 +34,20 @@ final class LocalTrainingStore {
       }
       final envelope =
           jsonDecode(await file.readAsString()) as Map<String, dynamic>;
-      if (![1, 2, 3].contains(envelope['schemaVersion'])) {
+      if (![1, 2, 3, 4].contains(envelope['schemaVersion'])) {
         throw const FormatException('Unsupported local state schema');
       }
       final json = Map<String, dynamic>.from(envelope['state'] as Map);
-      if (envelope['schemaVersion'] == 3 &&
+      if ([3, 4].contains(envelope['schemaVersion']) &&
           (!json.containsKey('sessionEvents') ||
               !json.containsKey('legacySessionIds'))) {
         throw const FormatException('Incomplete session lifecycle state');
+      }
+      if (envelope['schemaVersion'] != 4 &&
+          containsAdvancedPrescriptionFields(json)) {
+        throw const FormatException(
+          'Advanced prescriptions require state schema 4',
+        );
       }
       return TrainingAppState.fromJson(json);
     } catch (error) {
@@ -58,7 +64,10 @@ final class LocalTrainingStore {
       '${file.path}.tmp.$pid.${DateTime.now().microsecondsSinceEpoch}.${_temporaryId++}',
     );
     try {
-      final text = jsonEncode({'schemaVersion': 3, 'state': state.toJson()});
+      final text = jsonEncode({
+        'schemaVersion': state.hasAdvancedPrescriptions ? 4 : 3,
+        'state': state.toJson(),
+      });
       await file.parent.create(recursive: true);
       await temporary.writeAsString(text, flush: true);
       await temporary.rename(file.path);

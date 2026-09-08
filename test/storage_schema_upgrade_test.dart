@@ -26,7 +26,7 @@ void main() {
     final envelope = jsonDecode(await file.readAsString()) as Map;
     expect(envelope['schemaVersion'], 3);
     expect((await LocalTrainingStore(file).load()).toJson(), restored.toJson());
-    final future = jsonEncode({'schemaVersion': 4, 'state': restored.toJson()});
+    final future = jsonEncode({'schemaVersion': 5, 'state': restored.toJson()});
     await file.writeAsString(future);
     await expectLater(
       store.load(),

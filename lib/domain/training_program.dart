@@ -86,23 +86,42 @@ final class ProgramSet {
   final double? rir;
   final LoadPrescription load;
   final bool isRequired;
+  final int? restSeconds;
+  final String? tempo;
+  final bool isAmrap;
   ProgramSet({
     required this.id,
     required this.repetitions,
     this.rir,
     required this.load,
     this.isRequired = true,
+    this.restSeconds,
+    this.tempo,
+    this.isAmrap = false,
   }) {
     _id(id);
     _check(repetitions > 0, 'Repetitions must be positive');
     _rir(rir);
+    _check(
+      restSeconds == null || restSeconds! >= 0 && restSeconds! <= 3600,
+      'Rest must be 0 to 3600 seconds',
+    );
+    _check(
+      tempo == null || RegExp(r'^[0-9]-[0-9]-[0-9X]-[0-9]$').hasMatch(tempo!),
+      'Tempo must contain four phases, for example 3-1-X-0',
+    );
   }
+  bool get hasAdvancedPrescriptions =>
+      restSeconds != null || tempo != null || isAmrap;
   Map<String, Object?> toJson() => {
     'id': id,
     'repetitions': repetitions,
     'rir': rir,
     'load': load.toJson(),
     'isRequired': isRequired,
+    if (restSeconds != null) 'restSeconds': restSeconds,
+    if (tempo != null) 'tempo': tempo,
+    if (isAmrap) 'isAmrap': isAmrap,
   };
   factory ProgramSet.fromJson(Map<String, dynamic> j) => ProgramSet(
     id: j['id'] as String,
@@ -110,33 +129,47 @@ final class ProgramSet {
     rir: (j['rir'] as num?)?.toDouble(),
     load: LoadPrescription.fromJson(_map(j['load'])),
     isRequired: j['isRequired'] as bool,
+    restSeconds: j['restSeconds'] as int?,
+    tempo: j['tempo'] as String?,
+    isAmrap: j.containsKey('isAmrap') ? j['isAmrap'] as bool : false,
   );
 }
 
 final class ProgramExercise {
   final String id, name;
   final MainLift? mainLift;
+  final String? supersetGroup;
   final List<ProgramSet> sets;
   ProgramExercise({
     required this.id,
     required this.name,
     this.mainLift,
+    this.supersetGroup,
     required List<ProgramSet> sets,
   }) : sets = List.unmodifiable(sets) {
     _id(id);
     _id(name);
+    _check(
+      supersetGroup == null ||
+          supersetGroup!.isNotEmpty &&
+              supersetGroup!.trim() == supersetGroup &&
+              supersetGroup!.length <= 40,
+      'Invalid superset group ID',
+    );
     _unique(sets.map((set) => set.id));
   }
   Map<String, Object?> toJson() => {
     'id': id,
     'name': name,
     'mainLift': mainLift?.key,
+    if (supersetGroup != null) 'supersetGroup': supersetGroup,
     'sets': sets.map((set) => set.toJson()).toList(),
   };
   factory ProgramExercise.fromJson(Map<String, dynamic> j) => ProgramExercise(
     id: j['id'] as String,
     name: j['name'] as String,
     mainLift: j['mainLift'] == null ? null : _lift(j['mainLift']),
+    supersetGroup: j['supersetGroup'] as String?,
     sets: (j['sets'] as List).map((v) => ProgramSet.fromJson(_map(v))).toList(),
   );
 }
@@ -156,6 +189,19 @@ final class ProgramSession {
     _id(title);
     _check(week > 0 && dayOrder > 0, 'Invalid week or session order');
     _unique(exercises.map((exercise) => exercise.id));
+    final groups = <String, List<int>>{};
+    for (var i = 0; i < exercises.length; i++) {
+      final group = exercises[i].supersetGroup;
+      if (group != null) groups.putIfAbsent(group, () => []).add(i);
+    }
+    for (final entry in groups.entries) {
+      final positions = entry.value;
+      _check(
+        positions.length >= 2 &&
+            positions.last - positions.first + 1 == positions.length,
+        'Superset ${entry.key} needs at least two consecutive exercises',
+      );
+    }
   }
   Map<String, Object?> toJson() => {
     'id': id,
@@ -211,6 +257,13 @@ final class TrainingProgram {
       );
     }
   }
+  bool get hasAdvancedPrescriptions => sessions.any(
+    (session) => session.exercises.any(
+      (exercise) =>
+          exercise.supersetGroup != null ||
+          exercise.sets.any((set) => set.hasAdvancedPrescriptions),
+    ),
+  );
   int get sessionsPerWeek => sessions.length ~/ weeks;
   List<ProgramSession> get orderedSessions => List.of(sessions)
     ..sort(
@@ -248,13 +301,21 @@ final class PlannedSet {
   int get repetitions => template.repetitions;
   double? get rir => template.rir;
   bool get isRequired => template.isRequired;
+  int? get restSeconds => template.restSeconds;
+  String? get tempo => template.tempo;
+  bool get isAmrap => template.isAmrap;
 }
 
 final class PlannedExercise {
   final String id, name;
   final List<PlannedSet> sets;
-  PlannedExercise._(this.id, this.name, List<PlannedSet> sets)
-    : sets = List.unmodifiable(sets);
+  final String? supersetGroup;
+  PlannedExercise._(
+    this.id,
+    this.name,
+    List<PlannedSet> sets,
+    this.supersetGroup,
+  ) : sets = List.unmodifiable(sets);
 }
 
 final class PlannedSession {
@@ -270,6 +331,43 @@ final class PlannedSession {
     this.date,
     List<PlannedExercise> exercises,
   ) : exercises = List.unmodifiable(exercises);
+
+  /// Exercise order is stable; consecutive superset members alternate by round.
+  /// [number] is the one-based set number within its own exercise.
+  List<({PlannedExercise exercise, PlannedSet set, int number})>
+  get executionSets {
+    final result = <({PlannedExercise exercise, PlannedSet set, int number})>[];
+    var index = 0;
+    while (index < exercises.length) {
+      final first = exercises[index];
+      final group = first.supersetGroup;
+      var end = index + 1;
+      if (group != null) {
+        while (end < exercises.length &&
+            exercises[end].supersetGroup == group) {
+          end++;
+        }
+      }
+      final members = exercises.sublist(index, end);
+      final rounds = members.fold<int>(
+        0,
+        (max, e) => e.sets.length > max ? e.sets.length : max,
+      );
+      for (var round = 0; round < rounds; round++) {
+        for (final exercise in members) {
+          if (round < exercise.sets.length) {
+            result.add((
+              exercise: exercise,
+              set: exercise.sets[round],
+              number: round + 1,
+            ));
+          }
+        }
+      }
+      index = end;
+    }
+    return List.unmodifiable(result);
+  }
 }
 
 /// 저장된 날짜·중량은 현재 시각이나 새 프로그램에서 다시 계산하지 않는다.
@@ -355,6 +453,7 @@ final class ActiveTrainingPlan {
                   final key = _path([id, s.id, e.id, set.id]);
                   return PlannedSet._(key, set, targetKgBySetId[key]);
                 }).toList(),
+                e.supersetGroup,
               ),
             )
             .toList(),
@@ -915,6 +1014,10 @@ final class TrainingAppState {
       }
     }
   }
+  bool get hasAdvancedPrescriptions =>
+      (activePlan?.program.hasAdvancedPrescriptions ?? false) ||
+      planHistory.any((plan) => plan.program.hasAdvancedPrescriptions);
+
   PlannedSession _session(String sessionId) {
     final matching = [
       ...planHistory,
@@ -1473,3 +1576,15 @@ Map<String, ProgramSet> _sets(TrainingProgram program, String planId) => {
       for (final set in exercise.sets)
         _path([planId, session.id, exercise.id, set.id]): set,
 };
+
+/// Detects authored extension fields before decoding an older storage envelope.
+/// Even an explicit default value requires a reader that understands the field.
+bool containsAdvancedPrescriptionFields(Object? value) {
+  if (value is Map) {
+    return value.keys.any(
+          const {'restSeconds', 'tempo', 'isAmrap', 'supersetGroup'}.contains,
+        ) ||
+        value.values.any(containsAdvancedPrescriptionFields);
+  }
+  return value is List && value.any(containsAdvancedPrescriptionFields);
+}

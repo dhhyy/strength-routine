@@ -5,10 +5,10 @@ import '../domain/training_program.dart';
 /// Exercises identify the movement; each set independently identifies its load
 /// baseline. Those two lifts are deliberately not inferred from each other.
 final class DetailedSetDraft {
-  String id, repetitions, rir, loadValue;
+  String id, repetitions, rir, loadValue, restSeconds, tempo;
   LoadKind loadKind;
   MainLift? loadLift;
-  bool isRequired;
+  bool isRequired, isAmrap;
 
   DetailedSetDraft({
     this.id = '',
@@ -18,6 +18,9 @@ final class DetailedSetDraft {
     this.loadKind = LoadKind.manual,
     this.loadLift,
     this.isRequired = true,
+    this.restSeconds = '',
+    this.tempo = '',
+    this.isAmrap = false,
   });
 
   factory DetailedSetDraft.fromProgram(ProgramSet set) => DetailedSetDraft(
@@ -28,6 +31,9 @@ final class DetailedSetDraft {
     loadKind: set.load.kind,
     loadLift: set.load.lift,
     isRequired: set.isRequired,
+    restSeconds: set.restSeconds?.toString() ?? '',
+    tempo: set.tempo ?? '',
+    isAmrap: set.isAmrap,
   );
 
   Map<String, Object?> toJson() => {
@@ -38,21 +44,33 @@ final class DetailedSetDraft {
     'loadKind': loadKind.name,
     'loadLift': loadLift?.key,
     'isRequired': isRequired,
+    if (restSeconds.isNotEmpty) 'restSeconds': restSeconds,
+    if (tempo.isNotEmpty) 'tempo': tempo,
+    if (isAmrap) 'isAmrap': isAmrap,
   };
 
   factory DetailedSetDraft.fromJson(Map<String, dynamic> json) {
-    _keys(json, {
-      'id',
-      'repetitions',
-      'rir',
-      'loadValue',
-      'loadKind',
-      'loadLift',
-      'isRequired',
-    }, '세트 초안');
+    _keys(
+      json,
+      {
+        'id',
+        'repetitions',
+        'rir',
+        'loadValue',
+        'loadKind',
+        'loadLift',
+        'isRequired',
+      },
+      '세트 초안',
+      optional: {'restSeconds', 'tempo', 'isAmrap'},
+    );
     final required = json['isRequired'];
     if (required is! bool) {
       throw const FormatException('세트 초안: 필수 여부가 올바르지 않아요.');
+    }
+    final amrap = json.containsKey('isAmrap') ? json['isAmrap'] : false;
+    if (amrap is! bool) {
+      throw const FormatException('세트 초안: AMRAP 여부가 올바르지 않아요.');
     }
     return DetailedSetDraft(
       id: _text(json, 'id'),
@@ -62,6 +80,11 @@ final class DetailedSetDraft {
       loadKind: _loadKind(json['loadKind']),
       loadLift: _lift(json['loadLift']),
       isRequired: required,
+      restSeconds: json.containsKey('restSeconds')
+          ? _text(json, 'restSeconds')
+          : '',
+      tempo: json.containsKey('tempo') ? _text(json, 'tempo') : '',
+      isAmrap: amrap,
     );
   }
 
@@ -69,7 +92,7 @@ final class DetailedSetDraft {
 }
 
 final class DetailedExerciseDraft {
-  String id, name;
+  String id, name, supersetGroup;
   MainLift? mainLift;
   final List<DetailedSetDraft> sets;
 
@@ -77,6 +100,7 @@ final class DetailedExerciseDraft {
     this.id = '',
     this.name = '',
     this.mainLift,
+    this.supersetGroup = '',
     List<DetailedSetDraft>? sets,
   }) : sets = sets ?? [DetailedSetDraft()];
 
@@ -85,6 +109,7 @@ final class DetailedExerciseDraft {
         id: exercise.id,
         name: exercise.name,
         mainLift: exercise.mainLift,
+        supersetGroup: exercise.supersetGroup ?? '',
         sets: exercise.sets.map(DetailedSetDraft.fromProgram).toList(),
       );
 
@@ -92,15 +117,24 @@ final class DetailedExerciseDraft {
     'id': id,
     'name': name,
     'mainLift': mainLift?.key,
+    if (supersetGroup.isNotEmpty) 'supersetGroup': supersetGroup,
     'sets': sets.map((set) => set.toJson()).toList(),
   };
 
   factory DetailedExerciseDraft.fromJson(Map<String, dynamic> json) {
-    _keys(json, {'id', 'name', 'mainLift', 'sets'}, '운동 초안');
+    _keys(
+      json,
+      {'id', 'name', 'mainLift', 'sets'},
+      '운동 초안',
+      optional: {'supersetGroup'},
+    );
     return DetailedExerciseDraft(
       id: _text(json, 'id'),
       name: _text(json, 'name'),
       mainLift: _lift(json['mainLift']),
+      supersetGroup: json.containsKey('supersetGroup')
+          ? _text(json, 'supersetGroup')
+          : '',
       sets: _children(json, 'sets').map(DetailedSetDraft.fromJson).toList(),
     );
   }
@@ -253,6 +287,21 @@ final class DetailedRoutineDraft {
     );
   }
 
+  bool get hasAdvancedPrescriptions => weeks.any(
+    (week) => week.sessions.any(
+      (session) => session.exercises.any(
+        (exercise) =>
+            exercise.supersetGroup.isNotEmpty ||
+            exercise.sets.any(
+              (set) =>
+                  set.restSeconds.isNotEmpty ||
+                  set.tempo.isNotEmpty ||
+                  set.isAmrap,
+            ),
+      ),
+    ),
+  );
+
   DetailedRoutineDraft copy() => DetailedRoutineDraft.fromJson(toJson());
 
   String nextSessionId({String prefix = 'session'}) => _nextId(
@@ -356,6 +405,14 @@ TrainingProgram generateDetailedRoutine(DetailedRoutineDraft draft) {
         if (!exerciseIds.add(eid)) {
           throw FormatException('$exerciseContext: 한 세션에서 운동 ID "$eid"가 중복돼요.');
         }
+        final group = exercise.supersetGroup.isEmpty
+            ? null
+            : exercise.supersetGroup;
+        if (group != null && (group.trim() != group || group.length > 40)) {
+          throw FormatException(
+            '$exerciseContext 슈퍼세트 그룹: 앞뒤 공백 없이 1~40자로 입력해 주세요.',
+          );
+        }
         final identity = (name, exercise.mainLift);
         if (identities.containsKey(eid) && identities[eid] != identity) {
           throw FormatException(
@@ -385,6 +442,22 @@ TrainingProgram generateDetailedRoutine(DetailedRoutineDraft draft) {
               (rir == null || !rir.isFinite || rir < 0 || rir > 10)) {
             throw FormatException('$setContext RIR: 0~10 또는 빈 값으로 입력해 주세요.');
           }
+          final restText = set.restSeconds.trim();
+          final restSeconds = restText.isEmpty ? null : int.tryParse(restText);
+          if (restText.isNotEmpty &&
+              (restSeconds == null || restSeconds < 0 || restSeconds > 3600)) {
+            throw FormatException(
+              '$setContext 휴식: 0~3600초 정수 또는 빈 값으로 입력해 주세요.',
+            );
+          }
+          final tempoText = set.tempo.trim();
+          final tempo = tempoText.isEmpty ? null : tempoText;
+          if (tempo != null &&
+              !RegExp(r'^[0-9]-[0-9]-[0-9X]-[0-9]$').hasMatch(tempo)) {
+            throw FormatException(
+              '$setContext 템포: 3-1-X-0처럼 네 구간을 입력해 주세요. X는 세 번째 구간만 가능해요.',
+            );
+          }
           LoadPrescription load;
           if (set.loadKind == LoadKind.manual) {
             load = const LoadPrescription.manual();
@@ -409,6 +482,9 @@ TrainingProgram generateDetailedRoutine(DetailedRoutineDraft draft) {
               rir: rir,
               load: load,
               isRequired: set.isRequired,
+              restSeconds: restSeconds,
+              tempo: tempo,
+              isAmrap: set.isAmrap,
             ),
           );
         }
@@ -417,9 +493,24 @@ TrainingProgram generateDetailedRoutine(DetailedRoutineDraft draft) {
             id: eid,
             name: name,
             mainLift: exercise.mainLift,
+            supersetGroup: group,
             sets: sets,
           ),
         );
+      }
+      final groups = <String, List<int>>{};
+      for (var ei = 0; ei < exercises.length; ei++) {
+        final group = exercises[ei].supersetGroup;
+        if (group != null) groups.putIfAbsent(group, () => []).add(ei);
+      }
+      for (final entry in groups.entries) {
+        final positions = entry.value;
+        if (positions.length < 2 ||
+            positions.last - positions.first + 1 != positions.length) {
+          throw FormatException(
+            '$context 슈퍼세트 ${entry.key}: 같은 그룹 운동을 연속해서 2개 이상 배치해 주세요.',
+          );
+        }
       }
       sessions.add(
         ProgramSession(

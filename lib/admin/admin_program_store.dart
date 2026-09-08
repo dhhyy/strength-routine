@@ -17,21 +17,32 @@ final class AdminWorkspace {
       throw const FormatException('Duplicate program ID');
     }
   }
+  bool get hasAdvancedPrescriptions =>
+      (detailedDraft?.hasAdvancedPrescriptions ?? false) ||
+      programs.any((program) => program.hasAdvancedPrescriptions);
+
   Map<String, Object?> toJson() => {
-    'schemaVersion': 2,
+    'schemaVersion': hasAdvancedPrescriptions ? 3 : 2,
     'draft': draft.toJson(),
     'detailedDraft': detailedDraft?.toJson(),
     'programs': programs.map((p) => p.toJson()).toList(),
   };
   factory AdminWorkspace.fromJson(Map<String, dynamic> json) {
-    if (![1, 2].contains(json['schemaVersion'])) {
+    if (![1, 2, 3].contains(json['schemaVersion'])) {
       throw const FormatException('Unsupported admin schema');
     }
-    if (json['schemaVersion'] == 2 && !json.containsKey('detailedDraft')) {
+    if ([2, 3].contains(json['schemaVersion']) &&
+        !json.containsKey('detailedDraft')) {
       throw const FormatException('Incomplete detailed admin workspace');
     }
     if (json['schemaVersion'] == 1 && json.containsKey('detailedDraft')) {
       throw const FormatException('Unexpected detailed draft in old schema');
+    }
+    if (json['schemaVersion'] != 3 &&
+        containsAdvancedPrescriptionFields(json)) {
+      throw const FormatException(
+        'Advanced prescriptions require admin schema 3',
+      );
     }
     return AdminWorkspace(
       draft: RoutineBlueprint.fromJson(
@@ -51,7 +62,9 @@ final class AdminWorkspace {
     );
   }
   String exportCatalog() => const JsonEncoder.withIndent('  ').convert({
-    'schemaVersion': 1,
+    'schemaVersion': programs.any((program) => program.hasAdvancedPrescriptions)
+        ? 2
+        : 1,
     'programs': programs.map((p) => p.toJson()).toList(),
   });
 }
