@@ -1,8 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import '../data/local_training_store.dart';
+import '../data/rest_timer_store.dart';
+import '../domain/rest_timer.dart';
 import '../domain/training_program.dart';
+import 'rest_timer_controller.dart';
 
 typedef ProgramLoader = Future<List<TrainingProgram>> Function();
 
@@ -10,7 +14,9 @@ Future<List<TrainingProgram>> loadBundledPrograms() async {
   final json =
       jsonDecode(await rootBundle.loadString('assets/programs.json'))
           as Map<String, dynamic>;
-  if (json['schemaVersion'] != 1) {
+  if (![1, 2].contains(json['schemaVersion']) ||
+      (json['schemaVersion'] == 1 &&
+          containsAdvancedPrescriptionFields(json))) {
     throw const FormatException('Unsupported program catalog');
   }
   final programs = (json['programs'] as List)
@@ -26,6 +32,7 @@ class TrainingController extends ChangeNotifier {
   final LocalTrainingStore store;
   final ProgramLoader loadPrograms;
   final DateTime Function() now;
+  late final RestTimerController restTimer;
   TrainingAppState state = TrainingAppState();
   List<TrainingProgram> programs = const [];
   bool loading = true, catalogLoading = false, saving = false;
@@ -39,7 +46,38 @@ class TrainingController extends ChangeNotifier {
     ProgramLoader? loadPrograms,
     DateTime Function()? now,
   }) : loadPrograms = loadPrograms ?? loadBundledPrograms,
-       now = now ?? DateTime.now;
+       now = now ?? DateTime.now {
+    restTimer = RestTimerController(
+      store: RestTimerStore(File('${store.file.path}.rest-timer.json')),
+      now: this.now,
+      isEligible: _isRestEligible,
+    );
+  }
+
+  String restSourceStamp(String sessionId, String setId) => jsonEncode([
+    state.setActuals[setId]?.toJson(),
+    state.sessionEvents.where((e) => e.sessionId == sessionId).length,
+  ]);
+
+  bool _isRestEligible(RestTimerSnapshot timer) {
+    final plan = state.activePlan;
+    if (plan?.id != timer.planId || state.isSessionClosed(timer.sessionId)) {
+      return false;
+    }
+    final session = plan!.sessions
+        .where((s) => s.id == timer.sessionId)
+        .firstOrNull;
+    final entry = session?.executionSets
+        .where((e) => e.set.id == timer.setId)
+        .firstOrNull;
+    return entry != null &&
+        entry.set.restSeconds == timer.durationSeconds &&
+        entry.exercise.name == timer.exerciseName &&
+        entry.number == timer.setNumber &&
+        state.setActuals[timer.setId]?.status == SetActualStatus.completed &&
+        !state.setDrafts.containsKey(timer.setId) &&
+        restSourceStamp(timer.sessionId, timer.setId) == timer.sourceStamp;
+  }
 
   void _emit() {
     if (!_disposed) notifyListeners();
@@ -57,7 +95,10 @@ class TrainingController extends ChangeNotifier {
     }
     loading = false;
     _emit();
-    if (loadError == null) await refreshPrograms();
+    if (loadError == null) {
+      await restTimer.initialize();
+      await refreshPrograms();
+    }
   }
 
   Future<void> refreshPrograms() async {
@@ -163,6 +204,7 @@ class TrainingController extends ChangeNotifier {
   @override
   void dispose() {
     _disposed = true;
+    restTimer.dispose();
     super.dispose();
   }
 }

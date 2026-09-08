@@ -84,7 +84,7 @@ void main() {
     expect(() => DetailedSetDraft.fromJson(unknownKind), throwsFormatException);
     final unknownLift = firstSet(draft).toJson()..['loadLift'] = 'mystery';
     expect(() => DetailedSetDraft.fromJson(unknownLift), throwsFormatException);
-    final newSetField = firstSet(draft).toJson()..['restSeconds'] = '90';
+    final newSetField = firstSet(draft).toJson()..['futureSetField'] = '90';
     expect(() => DetailedSetDraft.fromJson(newSetField), throwsFormatException);
   });
 
