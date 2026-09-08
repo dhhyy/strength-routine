@@ -185,3 +185,11 @@
 Fixed 앱바·Fluid 스크롤·Hybrid 편집 시트/마감 확인창으로 조립한다. 세트 실제값 아래 수행일 또는 미상 안내를 표시한다. 요약은 실제 수행·제외·미기록·초안을 구분하고 마감/재개 행동은 한 곳에 모은다. 저장 실패는 확인창을 유지하고, 완료색은 성공적으로 저장된 상태에만 사용한다. 원래 계획일과 실제 수행일을 캘린더의 이름 있는 선택 버튼으로 구분한다.
 
 새 세트는 보이는 오늘 날짜를 제안하고, 과거 날짜 미상은 사용자가 지정하기 전 미상으로 남긴다. 마감 후 재개 확인 취소는 상태를 바꾸지 않는다. 375×812·큰 글자·키보드에서 날짜 선택/저장/마감/재개 버튼을 확인하고 렌더 비판→수정→재렌더를 기록한다. 상세 상호작용·저장·실패 계약은 [명세](docs/2026-09-08-session-lifecycle.md)를 따른다.
+
+### 수행일·마감 렌더 비판과 최종 반영
+
+큰 글자 1.5배에서 달력의 정사각 셀 안 날짜와 점이 7.9px 넘쳤다. 글자 크기를 유지하고 `AppSize.touch`를 textScaler로 확장한 세로 길이를 사용해 해결했다. 같은 조건의 [수정 전](research/2026-09-08/session-lifecycle/calendar-before-large.png)과 [수정 후](research/2026-09-08/session-lifecycle/calendar-large.png)를 보존했다.
+
+선택 미기록 세트가 마감된 뒤에도 청록색으로 보여 편집 가능성으로 오인할 수 있었다. 비클릭 읽기 전용 행을 muted로 조정하고 재개 버튼만 주요 행동으로 남겼다. 실패 확인창의 중복 보존 안내를 줄였다. [큰 글자 마감](research/2026-09-08/session-lifecycle/closed-large.png), [마감 실패](research/2026-09-08/session-lifecycle/close-error.png), [복수 날짜 검토](research/2026-09-08/session-lifecycle/dated-review.png)를 다시 확인했다.
+
+수행일 카드에는 선택한 날짜의 수행 수와 세션 전체 수를 분리했다. [세션 카드](research/2026-09-08/session-lifecycle/performed-session-large.png)는 1세트/3세트·미상 1세트를 서로 다른 의미로 표시한다. 모두 Flutter headless 위젯 렌더이며 OS 기기 캡처가 아니다. 전체 153개 회귀·정적 분석과 데이터 보존 수정은 [최종 보고서](docs/2026-09-08-session-lifecycle-verification.md)에 기록했다.
