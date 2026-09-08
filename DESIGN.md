@@ -217,3 +217,11 @@ Fixed 앱바·Fluid 스크롤·Hybrid 편집 시트/마감 확인창으로 조�
 휴식은 세트별 처방과 한 개의 명시적 타이머로 연결한다. 완료된 세트에서 사용자가 시작하고, 남은 시간·일시정지·재개·종료를 조작한다. 다른 타이머 교체는 확인한다. 타이머 실패는 운동 기록 저장과 구별하며 원래 타이머 상태와 재시도 행동을 유지한다. 미지정·0초·진행·일시정지·시간 종료·읽기 실패를 구분한다. OS 알림은 이번 범위에 넣지 않는다.
 
 AppType/AppColors/AppSpace/AppSize/GlassPanel/FlowPage를 조립하고 한글 KR·수치 Mono를 유지한다. 1200px 관리자와 375px 사용자 화면, 글자 1.5배 및 키보드 inset 조건에서 실제 headless 위젯 조작·렌더를 관찰하고 수정한다. 시뮬레이터와 실기기 실행은 하지 않는다. 검증 결과는 기능 구현 뒤 별도 기록한다.
+
+### 고급 처방 렌더의 실제 수정과 검증
+
+관리자의 펼친 고급 설정에서 라벨 위가 잘려 상단 여백을 AppSpace.x3로 늘렸고, 큰 글자 AMRAP 설명은 스위치 아래 전체 폭으로 옮겼다. [첫 관리자](research/2026-09-08/advanced-prescriptions/admin-first/advanced-desktop.png) → [최종 관리자](research/2026-09-08/advanced-prescriptions/admin-final/advanced-desktop.png), [큰 글자](research/2026-09-08/advanced-prescriptions/admin-final/advanced-mobile-large.png)를 비교했다.
+
+사용자 AMRAP 처방은 중량 뒤 곱셈 기호를 구분점으로 바꿔 기준 반복을 고정 반복과 구별했다. 타이머 재시도 후 카드가 높아지면서 제목이 가려진 것을 [수정 전](research/2026-09-08/advanced-prescriptions/workout-first/timer-running-before-retry-scroll.png)에서 확인했고 전체 카드로 스크롤해 [최종](research/2026-09-08/advanced-prescriptions/workout-final/timer-running.png)에서 출처와 남은 시간을 함께 보이게 했다. 한글 그룹 이름은 KR로 표시한다.
+
+실제 검증 크기는 관리자 1200×900/375×900, 사용자 375×900, 글자 1.5배·320px keyboard inset이다. [키보드 제약](research/2026-09-08/advanced-prescriptions/workout-final/amrap-keyboard-large.png)은 합성 inset이고 실제 OS 키보드 화면이 아니다. 전체 252개 시험과 정적 분석이 통과했다. 검증 범위와 파일 초기화·만료 경계·처방 출처 검사 수정은 [고급 처방 보고서](docs/2026-09-08-advanced-prescriptions.md)에 남겼다.

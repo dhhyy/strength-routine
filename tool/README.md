@@ -1,5 +1,17 @@
 # 자체 검증과 QA 진입점
 
+**최신 고급 처방:** [휴식·템포·슈퍼세트·AMRAP 명세·수용 기준·검증](../docs/2026-09-08-advanced-prescriptions.md)을 먼저 읽는다. 관리자 고급 처방을 사용자 화면과 저장·복원에 연결했고 휴식은 별도 파일에 명시 시작한 타이머 한 개를 저장한다. 조건부 스키마 승격과 실제 실행/미실행 범위도 이 문서가 우선한다.
+
+고급 기능의 자체 검증 명령 **[macOS zsh · 앱 폴더]**:
+
+```sh
+flutter test test/advanced_prescription_test.dart test/advanced_prescription_store_test.dart test/advanced_catalog_test.dart test/advanced_insights_test.dart test/rest_timer_test.dart --reporter expanded
+flutter test test/advanced_admin_screen_test.dart --reporter expanded --dart-define=ADVANCED_ADMIN_RENDER_DIR=research/2026-09-08/advanced-prescriptions/admin-local
+flutter test test/advanced_workout_screen_test.dart --reporter expanded --dart-define=ADVANCED_WORKOUT_RENDER_DIR=research/2026-09-08/advanced-prescriptions/workout-local
+```
+
+렌더 플래그를 주면 테스트가 실제 번들 폰트를 로드하고 PNG를 남긴다. 테스트 합성 프로그램은 앱 기본 5개 콘텐츠나 실제 기록 파일을 변경하지 않는다. 새 인스턴스의 임시 파일 복원 시험과 실제 기기의 OS 종료/재실행은 구별한다.
+
 **최신 관리자 정밀 편집:** [제어 범위·운영자 확인·검증](../docs/2026-09-08-admin-precise-editor.md)을 먼저 읽는다. 실제 목록에서 기존 프로그램을 열어 한 세트를 바꾸고 새 버전으로 내보내는 경로까지 연결했으며 전체 189개가 통과했다.
 
 **9/8 최신:** [실기기 확인 순서](../docs/2026-09-08-device-test-guide.md)와 [기능 검증](../docs/2026-09-08-feature-verification.md)을 먼저 읽는다. `tool/device_qa.dart`는 오늘 완료→D5→OS 재실행을 위한 별도 합성 저장 파일을 사용하며 최초 한 번만 자료를 만든다. `lib/main_admin.dart`는 운영자의 내부 생성 도구이며 사용자 배포 대상이 아니다.
@@ -23,7 +35,7 @@ git diff --check
 
 ## 수행일·마감의 최신 자체 검증과 기기 인수인계
 
-운동 저장소는 기존 envelope **v1/v2와 현재 v3을 읽고 v3으로 저장**한다. 카탈로그·습관·설정 파일 버전은 별개다. 수행일·최초 입력 시각이 없던 실제값은 미상으로 유지하고, 예전 `completionNotified`를 마감 사건으로 만들지 않는다. 상세한 필드·마감 조건·재시도/경합 계약은 [수명주기 명세](../docs/2026-09-08-session-lifecycle.md)에 있다.
+운동 저장소는 envelope **v1~v4를 읽고 고급 처방이 있을 때 v4, 없을 때 v3으로 저장**한다. 수행일·마감 단위 당시에는 v3이었다. 카탈로그·습관·설정·타이머 파일 버전은 별개다. 수행일·최초 입력 시각이 없던 실제값은 미상으로 유지하고, 예전 `completionNotified`를 마감 사건으로 만들지 않는다. 상세한 필드·마감 조건·재시도/경합 계약은 [수명주기 명세](../docs/2026-09-08-session-lifecycle.md)에 있다.
 
 **[macOS zsh · 앱 폴더 · 명령 안내, 이 문서 작업에서 미실행]**
 

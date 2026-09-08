@@ -1,0 +1,1557 @@
+{
+  "scope": "Local target existence in Markdown changed during this advanced prescription task; external URLs and heading anchors not checked.",
+  "checked": 310,
+  "broken": [],
+  "links": [
+    {
+      "source": "CLAUDE.md",
+      "target": "docs/2026-09-08-advanced-prescriptions.md",
+      "exists": true
+    },
+    {
+      "source": "CLAUDE.md",
+      "target": "docs/2026-09-08-admin-precise-editor.md",
+      "exists": true
+    },
+    {
+      "source": "CLAUDE.md",
+      "target": "docs/2026-09-08-session-lifecycle-verification.md",
+      "exists": true
+    },
+    {
+      "source": "CLAUDE.md",
+      "target": "docs/2026-09-08-session-lifecycle.md",
+      "exists": true
+    },
+    {
+      "source": "CLAUDE.md",
+      "target": "docs/2026-09-08-development-roadmap.md",
+      "exists": true
+    },
+    {
+      "source": "CLAUDE.md",
+      "target": "docs/2026-09-08-remaining-work.md",
+      "exists": true
+    },
+    {
+      "source": "CLAUDE.md",
+      "target": "docs/2026-09-08-interactive-landing-concepts.md",
+      "exists": true
+    },
+    {
+      "source": "CLAUDE.md",
+      "target": "landing/concepts/README.md",
+      "exists": true
+    },
+    {
+      "source": "CLAUDE.md",
+      "target": "docs/2026-09-08-feature-verification.md",
+      "exists": true
+    },
+    {
+      "source": "CLAUDE.md",
+      "target": "docs/2026-09-08-device-test-guide.md",
+      "exists": true
+    },
+    {
+      "source": "CLAUDE.md",
+      "target": "docs/2026-09-08-work-log.md",
+      "exists": true
+    },
+    {
+      "source": "CLAUDE.md",
+      "target": "landing/README.md",
+      "exists": true
+    },
+    {
+      "source": "CLAUDE.md",
+      "target": "docs/2026-09-07-verification.md",
+      "exists": true
+    },
+    {
+      "source": "CLAUDE.md",
+      "target": "docs/2026-09-07-claude-handoff.md",
+      "exists": true
+    },
+    {
+      "source": "CLAUDE.md",
+      "target": "docs/2026-09-07-work-log.md",
+      "exists": true
+    },
+    {
+      "source": "CLAUDE.md",
+      "target": "docs/00-overview.md",
+      "exists": true
+    },
+    {
+      "source": "CLAUDE.md",
+      "target": "docs/2026-09-07-development.md",
+      "exists": true
+    },
+    {
+      "source": "DESIGN.md",
+      "target": "research/2026-09-07/screens/hevy-previous.png",
+      "exists": true
+    },
+    {
+      "source": "DESIGN.md",
+      "target": "research/2026-09-07/screens/boostcamp-programs.png",
+      "exists": true
+    },
+    {
+      "source": "DESIGN.md",
+      "target": "research/2026-09-07/screens/strong-workout.png",
+      "exists": true
+    },
+    {
+      "source": "DESIGN.md",
+      "target": "tool/README.md",
+      "exists": true
+    },
+    {
+      "source": "DESIGN.md",
+      "target": "docs/2026-09-07-development.md",
+      "exists": true
+    },
+    {
+      "source": "DESIGN.md",
+      "target": "research/2026-09-07/qa/next-set-widget.png",
+      "exists": true
+    },
+    {
+      "source": "DESIGN.md",
+      "target": "research/2026-09-07/qa/search-detail-widget.png",
+      "exists": true
+    },
+    {
+      "source": "DESIGN.md",
+      "target": "research/2026-09-07/qa/archived-draft-widget.png",
+      "exists": true
+    },
+    {
+      "source": "DESIGN.md",
+      "target": "research/2026-09-07/qa/habits-widget.png",
+      "exists": true
+    },
+    {
+      "source": "DESIGN.md",
+      "target": "docs/2026-09-07-work-log.md",
+      "exists": true
+    },
+    {
+      "source": "DESIGN.md",
+      "target": "docs/2026-09-07-verification.md",
+      "exists": true
+    },
+    {
+      "source": "DESIGN.md",
+      "target": "research/2026-09-07/screens/strong-workout.png",
+      "exists": true
+    },
+    {
+      "source": "DESIGN.md",
+      "target": "research/2026-09-07/screens/hevy-previous.png",
+      "exists": true
+    },
+    {
+      "source": "DESIGN.md",
+      "target": "research/2026-09-07/screens/boostcamp-programs.png",
+      "exists": true
+    },
+    {
+      "source": "DESIGN.md",
+      "target": "research/2026-09-08/landing/desktop-final.png",
+      "exists": true
+    },
+    {
+      "source": "DESIGN.md",
+      "target": "research/2026-09-08/landing/mobile-step-3.png",
+      "exists": true
+    },
+    {
+      "source": "DESIGN.md",
+      "target": "docs/2026-09-08-work-log.md",
+      "exists": true
+    },
+    {
+      "source": "DESIGN.md",
+      "target": "research/2026-09-08/admin/admin-editor.png",
+      "exists": true
+    },
+    {
+      "source": "DESIGN.md",
+      "target": "research/2026-09-08/admin/admin-review.png",
+      "exists": true
+    },
+    {
+      "source": "DESIGN.md",
+      "target": "research/2026-09-08/insights/strength-insights-review.png",
+      "exists": true
+    },
+    {
+      "source": "DESIGN.md",
+      "target": "research/2026-09-08/insights/strength-insights-trend-large.png",
+      "exists": true
+    },
+    {
+      "source": "DESIGN.md",
+      "target": "research/2026-09-08/settings/settings-default.png",
+      "exists": true
+    },
+    {
+      "source": "DESIGN.md",
+      "target": "research/2026-09-08/settings/subscription-preparation.png",
+      "exists": true
+    },
+    {
+      "source": "DESIGN.md",
+      "target": "docs/2026-09-08-feature-verification.md",
+      "exists": true
+    },
+    {
+      "source": "DESIGN.md",
+      "target": "research/2026-09-08/concepts/visual-references.md",
+      "exists": true
+    },
+    {
+      "source": "DESIGN.md",
+      "target": "docs/2026-09-08-interactive-landing-concepts.md",
+      "exists": true
+    },
+    {
+      "source": "DESIGN.md",
+      "target": "docs/2026-09-08-session-lifecycle.md",
+      "exists": true
+    },
+    {
+      "source": "DESIGN.md",
+      "target": "research/2026-09-08/session-lifecycle/calendar-before-large.png",
+      "exists": true
+    },
+    {
+      "source": "DESIGN.md",
+      "target": "research/2026-09-08/session-lifecycle/calendar-large.png",
+      "exists": true
+    },
+    {
+      "source": "DESIGN.md",
+      "target": "research/2026-09-08/session-lifecycle/closed-large.png",
+      "exists": true
+    },
+    {
+      "source": "DESIGN.md",
+      "target": "research/2026-09-08/session-lifecycle/close-error.png",
+      "exists": true
+    },
+    {
+      "source": "DESIGN.md",
+      "target": "research/2026-09-08/session-lifecycle/dated-review.png",
+      "exists": true
+    },
+    {
+      "source": "DESIGN.md",
+      "target": "research/2026-09-08/session-lifecycle/performed-session-large.png",
+      "exists": true
+    },
+    {
+      "source": "DESIGN.md",
+      "target": "docs/2026-09-08-session-lifecycle-verification.md",
+      "exists": true
+    },
+    {
+      "source": "DESIGN.md",
+      "target": "research/2026-09-08/admin/admin-editor.png",
+      "exists": true
+    },
+    {
+      "source": "DESIGN.md",
+      "target": "research/2026-09-08/admin-precise/first/sets-desktop.png",
+      "exists": true
+    },
+    {
+      "source": "DESIGN.md",
+      "target": "research/2026-09-08/admin-precise/final/sets-desktop.png",
+      "exists": true
+    },
+    {
+      "source": "DESIGN.md",
+      "target": "research/2026-09-08/admin-precise/final/editor-mobile-large.png",
+      "exists": true
+    },
+    {
+      "source": "DESIGN.md",
+      "target": "research/2026-09-08/admin-precise/final/review-mobile-large.png",
+      "exists": true
+    },
+    {
+      "source": "DESIGN.md",
+      "target": "research/2026-09-08/admin-precise/final/save-failure-mobile.png",
+      "exists": true
+    },
+    {
+      "source": "DESIGN.md",
+      "target": "docs/2026-09-08-admin-precise-editor.md",
+      "exists": true
+    },
+    {
+      "source": "DESIGN.md",
+      "target": "research/2026-09-08/advanced-prescriptions/admin-first/advanced-desktop.png",
+      "exists": true
+    },
+    {
+      "source": "DESIGN.md",
+      "target": "research/2026-09-08/advanced-prescriptions/admin-final/advanced-desktop.png",
+      "exists": true
+    },
+    {
+      "source": "DESIGN.md",
+      "target": "research/2026-09-08/advanced-prescriptions/admin-final/advanced-mobile-large.png",
+      "exists": true
+    },
+    {
+      "source": "DESIGN.md",
+      "target": "research/2026-09-08/advanced-prescriptions/workout-first/timer-running-before-retry-scroll.png",
+      "exists": true
+    },
+    {
+      "source": "DESIGN.md",
+      "target": "research/2026-09-08/advanced-prescriptions/workout-final/timer-running.png",
+      "exists": true
+    },
+    {
+      "source": "DESIGN.md",
+      "target": "research/2026-09-08/advanced-prescriptions/workout-final/amrap-keyboard-large.png",
+      "exists": true
+    },
+    {
+      "source": "DESIGN.md",
+      "target": "docs/2026-09-08-advanced-prescriptions.md",
+      "exists": true
+    },
+    {
+      "source": "docs/00-overview.md",
+      "target": "2026-09-08-advanced-prescriptions.md",
+      "exists": true
+    },
+    {
+      "source": "docs/00-overview.md",
+      "target": "2026-09-08-admin-precise-editor.md",
+      "exists": true
+    },
+    {
+      "source": "docs/00-overview.md",
+      "target": "2026-09-08-session-lifecycle-verification.md",
+      "exists": true
+    },
+    {
+      "source": "docs/00-overview.md",
+      "target": "2026-09-08-session-lifecycle.md",
+      "exists": true
+    },
+    {
+      "source": "docs/00-overview.md",
+      "target": "2026-09-08-development-roadmap.md",
+      "exists": true
+    },
+    {
+      "source": "docs/00-overview.md",
+      "target": "2026-09-08-remaining-work.md",
+      "exists": true
+    },
+    {
+      "source": "docs/00-overview.md",
+      "target": "2026-09-08-interactive-landing-concepts.md",
+      "exists": true
+    },
+    {
+      "source": "docs/00-overview.md",
+      "target": "../landing/concepts/README.md",
+      "exists": true
+    },
+    {
+      "source": "docs/00-overview.md",
+      "target": "2026-09-08-feature-verification.md",
+      "exists": true
+    },
+    {
+      "source": "docs/00-overview.md",
+      "target": "2026-09-08-device-test-guide.md",
+      "exists": true
+    },
+    {
+      "source": "docs/00-overview.md",
+      "target": "2026-09-08-work-log.md",
+      "exists": true
+    },
+    {
+      "source": "docs/00-overview.md",
+      "target": "2026-09-07-development.md",
+      "exists": true
+    },
+    {
+      "source": "docs/00-overview.md",
+      "target": "../assets/programs.json",
+      "exists": true
+    },
+    {
+      "source": "docs/00-overview.md",
+      "target": "2026-09-07-verification.md",
+      "exists": true
+    },
+    {
+      "source": "docs/00-overview.md",
+      "target": "../tool/qa_preview.dart",
+      "exists": true
+    },
+    {
+      "source": "docs/00-overview.md",
+      "target": "2026-09-08-admin-precise-editor.md",
+      "exists": true
+    },
+    {
+      "source": "docs/00-overview.md",
+      "target": "2026-09-08-session-lifecycle-verification.md",
+      "exists": true
+    },
+    {
+      "source": "docs/00-overview.md",
+      "target": "2026-09-08-session-lifecycle.md",
+      "exists": true
+    },
+    {
+      "source": "docs/00-overview.md",
+      "target": "2026-09-08-development-roadmap.md",
+      "exists": true
+    },
+    {
+      "source": "docs/00-overview.md",
+      "target": "2026-09-08-feature-verification.md",
+      "exists": true
+    },
+    {
+      "source": "docs/00-overview.md",
+      "target": "2026-09-08-programs.md",
+      "exists": true
+    },
+    {
+      "source": "docs/00-overview.md",
+      "target": "2026-09-08-admin-routine-builder.md",
+      "exists": true
+    },
+    {
+      "source": "docs/00-overview.md",
+      "target": "2026-09-08-training-insights.md",
+      "exists": true
+    },
+    {
+      "source": "docs/00-overview.md",
+      "target": "2026-09-08-subscription-operations.md",
+      "exists": true
+    },
+    {
+      "source": "docs/00-overview.md",
+      "target": "2026-09-08-device-test-guide.md",
+      "exists": true
+    },
+    {
+      "source": "docs/00-overview.md",
+      "target": "2026-09-08-work-log.md",
+      "exists": true
+    },
+    {
+      "source": "docs/00-overview.md",
+      "target": "01-requirements.md",
+      "exists": true
+    },
+    {
+      "source": "docs/00-overview.md",
+      "target": "02-engine-logic.md",
+      "exists": true
+    },
+    {
+      "source": "docs/00-overview.md",
+      "target": "06-engine-spec.md",
+      "exists": true
+    },
+    {
+      "source": "docs/00-overview.md",
+      "target": "03-design-system.md",
+      "exists": true
+    },
+    {
+      "source": "docs/00-overview.md",
+      "target": "04-ui-effect-references.md",
+      "exists": true
+    },
+    {
+      "source": "docs/00-overview.md",
+      "target": "05-design-philosophy.md",
+      "exists": true
+    },
+    {
+      "source": "docs/00-overview.md",
+      "target": "2026-09-07-work-log.md",
+      "exists": true
+    },
+    {
+      "source": "docs/00-overview.md",
+      "target": "2026-09-07-claude-handoff.md",
+      "exists": true
+    },
+    {
+      "source": "docs/00-overview.md",
+      "target": "2026-09-07-fitness-app-analysis.md",
+      "exists": true
+    },
+    {
+      "source": "docs/00-overview.md",
+      "target": "2026-09-07-feature-specification.md",
+      "exists": true
+    },
+    {
+      "source": "docs/00-overview.md",
+      "target": "2026-09-07-development.md",
+      "exists": true
+    },
+    {
+      "source": "docs/00-overview.md",
+      "target": "2026-09-07-verification.md",
+      "exists": true
+    },
+    {
+      "source": "docs/00-overview.md",
+      "target": "../research/2026-09-07/program-candidates.md",
+      "exists": true
+    },
+    {
+      "source": "docs/00-overview.md",
+      "target": "../research/2026-09-07/programs.md",
+      "exists": true
+    },
+    {
+      "source": "docs/00-overview.md",
+      "target": "../research/2026-09-07/fonts.md",
+      "exists": true
+    },
+    {
+      "source": "docs/00-overview.md",
+      "target": "2026-09-08-session-lifecycle-verification.md",
+      "exists": true
+    },
+    {
+      "source": "docs/00-overview.md",
+      "target": "2026-09-08-remaining-work.md",
+      "exists": true
+    },
+    {
+      "source": "docs/00-overview.md",
+      "target": "2026-09-08-development-roadmap.md",
+      "exists": true
+    },
+    {
+      "source": "docs/00-overview.md",
+      "target": "2026-09-08-device-test-guide.md",
+      "exists": true
+    },
+    {
+      "source": "docs/01-requirements.md",
+      "target": "2026-09-08-admin-precise-editor.md",
+      "exists": true
+    },
+    {
+      "source": "docs/01-requirements.md",
+      "target": "2026-09-08-advanced-prescriptions.md",
+      "exists": true
+    },
+    {
+      "source": "docs/01-requirements.md",
+      "target": "2026-09-08-session-lifecycle-verification.md",
+      "exists": true
+    },
+    {
+      "source": "docs/01-requirements.md",
+      "target": "2026-09-08-session-lifecycle.md",
+      "exists": true
+    },
+    {
+      "source": "docs/01-requirements.md",
+      "target": "2026-09-08-development-roadmap.md",
+      "exists": true
+    },
+    {
+      "source": "docs/01-requirements.md",
+      "target": "2026-09-07-work-log.md",
+      "exists": true
+    },
+    {
+      "source": "docs/01-requirements.md",
+      "target": "../research/2026-09-07/program-candidates.md",
+      "exists": true
+    },
+    {
+      "source": "docs/01-requirements.md",
+      "target": "2026-09-07-work-log.md",
+      "exists": true
+    },
+    {
+      "source": "docs/01-requirements.md",
+      "target": "2026-09-08-feature-verification.md",
+      "exists": true
+    },
+    {
+      "source": "docs/03-design-system.md",
+      "target": "../landing/tokens.css",
+      "exists": true
+    },
+    {
+      "source": "docs/03-design-system.md",
+      "target": "../landing/styles.css",
+      "exists": true
+    },
+    {
+      "source": "docs/03-design-system.md",
+      "target": "../research/2026-09-07/fonts.md",
+      "exists": true
+    },
+    {
+      "source": "docs/03-design-system.md",
+      "target": "../landing/tokens.css",
+      "exists": true
+    },
+    {
+      "source": "docs/03-design-system.md",
+      "target": "../landing/styles.css",
+      "exists": true
+    },
+    {
+      "source": "docs/03-design-system.md",
+      "target": "../DESIGN.md",
+      "exists": true
+    },
+    {
+      "source": "docs/03-design-system.md",
+      "target": "2026-09-07-work-log.md",
+      "exists": true
+    },
+    {
+      "source": "docs/03-design-system.md",
+      "target": "../landing/index.html",
+      "exists": true
+    },
+    {
+      "source": "docs/03-design-system.md",
+      "target": "../landing/styles.css",
+      "exists": true
+    },
+    {
+      "source": "docs/03-design-system.md",
+      "target": "../landing/README.md",
+      "exists": true
+    },
+    {
+      "source": "docs/03-design-system.md",
+      "target": "../research/2026-09-08/landing/browser-check.json",
+      "exists": true
+    },
+    {
+      "source": "docs/03-design-system.md",
+      "target": "../landing/README.md",
+      "exists": true
+    },
+    {
+      "source": "docs/03-design-system.md",
+      "target": "2026-09-08-feature-verification.md",
+      "exists": true
+    },
+    {
+      "source": "docs/03-design-system.md",
+      "target": "2026-09-08-interactive-landing-concepts.md",
+      "exists": true
+    },
+    {
+      "source": "docs/03-design-system.md",
+      "target": "2026-09-08-session-lifecycle-verification.md",
+      "exists": true
+    },
+    {
+      "source": "docs/03-design-system.md",
+      "target": "2026-09-08-admin-precise-editor.md#13-구현검증커밋-기록",
+      "exists": true
+    },
+    {
+      "source": "docs/03-design-system.md",
+      "target": "2026-09-08-advanced-prescriptions.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-admin-precise-editor.md",
+      "target": "2026-09-08-advanced-prescriptions.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-admin-precise-editor.md",
+      "target": "2026-09-08-admin-routine-builder.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-admin-precise-editor.md",
+      "target": "2026-09-08-programs.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-admin-precise-editor.md",
+      "target": "2026-09-08-advanced-prescriptions.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-admin-precise-editor.md",
+      "target": "2026-09-08-device-test-guide.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-admin-precise-editor.md",
+      "target": "2026-09-08-advanced-prescriptions.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-admin-precise-editor.md",
+      "target": "2026-09-08-subscription-operations.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-admin-precise-editor.md",
+      "target": "2026-09-08-advanced-prescriptions.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-admin-precise-editor.md",
+      "target": "../research/2026-09-08/admin-precise/domain-tests.txt",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-admin-precise-editor.md",
+      "target": "../research/2026-09-08/admin-precise/workspace-tests.txt",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-admin-precise-editor.md",
+      "target": "../research/2026-09-08/admin-precise/integration-tests.txt",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-admin-precise-editor.md",
+      "target": "../research/2026-09-08/admin-precise/editor-tests.txt",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-admin-precise-editor.md",
+      "target": "../research/2026-09-08/admin-precise/flutter-tests.txt",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-admin-precise-editor.md",
+      "target": "../research/2026-09-08/admin-precise/flutter-analyze.txt",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-admin-precise-editor.md",
+      "target": "../research/2026-09-08/admin-precise/document-links.json",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-admin-precise-editor.md",
+      "target": "../research/2026-09-08/admin-precise/first/sets-desktop.png",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-admin-precise-editor.md",
+      "target": "../research/2026-09-08/admin-precise/final/sets-desktop.png",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-admin-precise-editor.md",
+      "target": "../research/2026-09-08/admin-precise/final/editor-mobile-large.png",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-admin-precise-editor.md",
+      "target": "../research/2026-09-08/admin-precise/final/set-keyboard-mobile-large.png",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-admin-precise-editor.md",
+      "target": "../research/2026-09-08/admin-precise/final/review-mobile-large.png",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-admin-precise-editor.md",
+      "target": "../research/2026-09-08/admin-precise/final/save-failure-mobile.png",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-admin-precise-editor.md",
+      "target": "2026-09-08-advanced-prescriptions.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-admin-precise-editor.md",
+      "target": "2026-09-08-admin-routine-builder.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-admin-routine-builder.md",
+      "target": "2026-09-08-advanced-prescriptions.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-admin-routine-builder.md",
+      "target": "2026-09-08-admin-precise-editor.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-admin-routine-builder.md",
+      "target": "2026-09-08-feature-verification.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-admin-routine-builder.md",
+      "target": "2026-09-08-admin-precise-editor.md#13-구현검증커밋-기록",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-admin-routine-builder.md",
+      "target": "2026-09-08-admin-precise-editor.md#10-운영자가-직접-확인하는-순서",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-advanced-prescriptions.md",
+      "target": "2026-09-08-admin-precise-editor.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-advanced-prescriptions.md",
+      "target": "2026-09-08-session-lifecycle.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-advanced-prescriptions.md",
+      "target": "2026-09-08-development-roadmap.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-advanced-prescriptions.md",
+      "target": "03-design-system.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-advanced-prescriptions.md",
+      "target": "2026-09-08-device-test-guide.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-advanced-prescriptions.md",
+      "target": "2026-09-08-development-roadmap.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-advanced-prescriptions.md",
+      "target": "../lib/domain/training_program.dart",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-advanced-prescriptions.md",
+      "target": "../lib/admin/detailed_routine.dart",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-advanced-prescriptions.md",
+      "target": "../test/advanced_prescription_test.dart",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-advanced-prescriptions.md",
+      "target": "../test/advanced_prescription_store_test.dart",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-advanced-prescriptions.md",
+      "target": "../test/advanced_catalog_test.dart",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-advanced-prescriptions.md",
+      "target": "../test/advanced_admin_screen_test.dart",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-advanced-prescriptions.md",
+      "target": "../research/2026-09-08/advanced-prescriptions/admin-final/widget-tests.txt",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-advanced-prescriptions.md",
+      "target": "../test/advanced_workout_screen_test.dart",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-advanced-prescriptions.md",
+      "target": "../research/2026-09-08/advanced-prescriptions/workout-render-tests.txt",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-advanced-prescriptions.md",
+      "target": "../test/rest_timer_test.dart",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-advanced-prescriptions.md",
+      "target": "../research/2026-09-08/advanced-prescriptions/timer-tests.txt",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-advanced-prescriptions.md",
+      "target": "../test/advanced_insights_test.dart",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-advanced-prescriptions.md",
+      "target": "../research/2026-09-08/advanced-prescriptions/adjustment-regression.txt",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-advanced-prescriptions.md",
+      "target": "../research/2026-09-08/advanced-prescriptions/flutter-tests-first.txt",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-advanced-prescriptions.md",
+      "target": "../research/2026-09-08/advanced-prescriptions/admin-first/advanced-desktop.png",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-advanced-prescriptions.md",
+      "target": "../research/2026-09-08/advanced-prescriptions/admin-final/advanced-desktop.png",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-advanced-prescriptions.md",
+      "target": "../research/2026-09-08/advanced-prescriptions/admin-final/advanced-mobile-large.png",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-advanced-prescriptions.md",
+      "target": "../research/2026-09-08/advanced-prescriptions/admin-final/review-mobile-large.png",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-advanced-prescriptions.md",
+      "target": "../research/2026-09-08/advanced-prescriptions/workout-first/amrap-editor.png",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-advanced-prescriptions.md",
+      "target": "../research/2026-09-08/advanced-prescriptions/workout-final/amrap-editor.png",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-advanced-prescriptions.md",
+      "target": "../research/2026-09-08/advanced-prescriptions/workout-first/timer-running-before-retry-scroll.png",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-advanced-prescriptions.md",
+      "target": "../research/2026-09-08/advanced-prescriptions/workout-final/timer-running.png",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-advanced-prescriptions.md",
+      "target": "../research/2026-09-08/advanced-prescriptions/workout-final/timer-save-failure.png",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-advanced-prescriptions.md",
+      "target": "../research/2026-09-08/advanced-prescriptions/workout-final/amrap-keyboard-large.png",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-advanced-prescriptions.md",
+      "target": "../research/2026-09-08/advanced-prescriptions/flutter-tests.txt",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-advanced-prescriptions.md",
+      "target": "../research/2026-09-08/advanced-prescriptions/flutter-analyze.txt",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-development-roadmap.md",
+      "target": "2026-09-08-session-lifecycle.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-development-roadmap.md",
+      "target": "2026-09-08-session-lifecycle-verification.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-development-roadmap.md",
+      "target": "2026-09-08-admin-precise-editor.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-development-roadmap.md",
+      "target": "2026-09-08-advanced-prescriptions.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-development-roadmap.md",
+      "target": "2026-09-08-remaining-work.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-development-roadmap.md",
+      "target": "2026-09-08-feature-verification.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-development-roadmap.md",
+      "target": "2026-09-08-session-lifecycle.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-development-roadmap.md",
+      "target": "2026-09-08-advanced-prescriptions.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-development-roadmap.md",
+      "target": "2026-09-08-admin-precise-editor.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-development-roadmap.md",
+      "target": "2026-09-08-advanced-prescriptions.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-development-roadmap.md",
+      "target": "../lib/data/local_training_store.dart",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-development-roadmap.md",
+      "target": "../lib/app/training_controller.dart",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-development-roadmap.md",
+      "target": "feature-analysis/2026-09-07-data-reliability.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-development-roadmap.md",
+      "target": "../lib/domain/training_program.dart",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-development-roadmap.md",
+      "target": "feature-analysis/2026-09-07-data-reliability.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-development-roadmap.md",
+      "target": "../lib/workout_screen.dart",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-development-roadmap.md",
+      "target": "../lib/domain/training_insights.dart",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-development-roadmap.md",
+      "target": "feature-analysis/2026-09-07-workout.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-development-roadmap.md",
+      "target": "2026-09-08-advanced-prescriptions.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-development-roadmap.md",
+      "target": "feature-analysis/2026-09-07-workout.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-development-roadmap.md",
+      "target": "../lib/admin/routine_builder.dart",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-development-roadmap.md",
+      "target": "../lib/admin/detailed_routine.dart",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-development-roadmap.md",
+      "target": "../lib/admin/detailed_routine_screen.dart",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-development-roadmap.md",
+      "target": "../lib/admin/admin_screen.dart",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-development-roadmap.md",
+      "target": "2026-09-08-admin-precise-editor.md#13-구현검증커밋-기록",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-development-roadmap.md",
+      "target": "../lib/admin/admin_program_store.dart",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-development-roadmap.md",
+      "target": "2026-09-08-admin-precise-editor.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-development-roadmap.md",
+      "target": "2026-09-08-admin-routine-builder.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-development-roadmap.md",
+      "target": "feature-analysis/2026-09-07-programs.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-development-roadmap.md",
+      "target": "../lib/search_screen.dart",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-development-roadmap.md",
+      "target": "feature-analysis/2026-09-07-programs.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-development-roadmap.md",
+      "target": "../lib/app/training_controller.dart",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-development-roadmap.md",
+      "target": "2026-09-08-admin-routine-builder.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-development-roadmap.md",
+      "target": "feature-analysis/2026-09-07-programs.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-development-roadmap.md",
+      "target": "feature-analysis/2026-09-07-data-reliability.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-development-roadmap.md",
+      "target": "2026-09-08-subscription-operations.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-development-roadmap.md",
+      "target": "../lib/subscription_screen.dart",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-development-roadmap.md",
+      "target": "2026-09-08-subscription-operations.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-development-roadmap.md",
+      "target": "../lib/support_screen.dart",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-development-roadmap.md",
+      "target": "2026-09-08-subscription-operations.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-development-roadmap.md",
+      "target": "../research/2026-09-07/expanded/korean-apps.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-development-roadmap.md",
+      "target": "feature-analysis/2026-09-07-workout.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-development-roadmap.md",
+      "target": "feature-analysis/2026-09-07-programs.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-development-roadmap.md",
+      "target": "2026-09-08-session-lifecycle-verification.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-development-roadmap.md",
+      "target": "2026-09-08-admin-precise-editor.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-development-roadmap.md",
+      "target": "2026-09-08-advanced-prescriptions.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-development-roadmap.md",
+      "target": "2026-09-08-feature-verification.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-development-roadmap.md",
+      "target": "2026-09-08-interactive-landing-concepts.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-development-roadmap.md",
+      "target": "2026-09-08-advanced-prescriptions.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-remaining-work.md",
+      "target": "2026-09-08-advanced-prescriptions.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-remaining-work.md",
+      "target": "2026-09-08-advanced-prescriptions.md#12-구현검증커밋-기록",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-remaining-work.md",
+      "target": "2026-09-08-admin-precise-editor.md#13-구현검증커밋-기록",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-remaining-work.md",
+      "target": "2026-09-08-advanced-prescriptions.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-remaining-work.md",
+      "target": "2026-09-08-development-roadmap.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-remaining-work.md",
+      "target": "feature-analysis/2026-09-07-data-reliability.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-remaining-work.md",
+      "target": "feature-analysis/2026-09-07-workout.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-remaining-work.md",
+      "target": "feature-analysis/2026-09-07-programs.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-remaining-work.md",
+      "target": "2026-09-08-advanced-prescriptions.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-remaining-work.md",
+      "target": "2026-09-08-subscription-operations.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-remaining-work.md",
+      "target": "2026-09-08-admin-routine-builder.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-remaining-work.md",
+      "target": "2026-09-08-device-test-guide.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-remaining-work.md",
+      "target": "../landing/concepts/README.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-remaining-work.md",
+      "target": "2026-09-08-advanced-prescriptions.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-remaining-work.md",
+      "target": "2026-09-08-admin-precise-editor.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-remaining-work.md",
+      "target": "2026-09-08-session-lifecycle-verification.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-remaining-work.md",
+      "target": "2026-09-08-session-lifecycle.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-work-log.md",
+      "target": "../landing/index.html",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-work-log.md",
+      "target": "../landing/tokens.css",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-work-log.md",
+      "target": "../landing/styles.css",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-work-log.md",
+      "target": "../landing/main.js",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-work-log.md",
+      "target": "../landing/demo-state.mjs",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-work-log.md",
+      "target": "../landing/demo-state.test.mjs",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-work-log.md",
+      "target": "../landing/browser-check.cjs",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-work-log.md",
+      "target": "../landing/README.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-work-log.md",
+      "target": "../DESIGN.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-work-log.md",
+      "target": "../research/2026-09-08/landing/desktop-before.png",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-work-log.md",
+      "target": "../research/2026-09-08/landing/mobile-before.png",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-work-log.md",
+      "target": "../research/2026-09-08/landing/desktop-final.png",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-work-log.md",
+      "target": "../research/2026-09-08/landing/mobile-final.png",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-work-log.md",
+      "target": "../research/2026-09-08/landing/mobile-step-1.png",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-work-log.md",
+      "target": "../research/2026-09-08/landing/mobile-step-2.png",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-work-log.md",
+      "target": "../research/2026-09-08/landing/mobile-step-3.png",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-work-log.md",
+      "target": "../research/2026-09-08/landing/record-desktop.png",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-work-log.md",
+      "target": "../research/2026-09-08/landing/state-tests.log",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-work-log.md",
+      "target": "../research/2026-09-08/landing/state-tests-dst.log",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-work-log.md",
+      "target": "../research/2026-09-08/landing/browser-check.json",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-work-log.md",
+      "target": "../research/2026-09-08/landing/flutter-analyze.log",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-work-log.md",
+      "target": "2026-09-07-verification.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-work-log.md",
+      "target": "../landing/README.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-work-log.md",
+      "target": "../DESIGN.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-work-log.md",
+      "target": "03-design-system.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-work-log.md",
+      "target": "00-overview.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-work-log.md",
+      "target": "2026-09-08-feature-verification.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-work-log.md",
+      "target": "2026-09-08-device-test-guide.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-work-log.md",
+      "target": "2026-09-08-interactive-landing-concepts.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-work-log.md",
+      "target": "2026-09-08-remaining-work.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-work-log.md",
+      "target": "2026-09-08-session-lifecycle.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-work-log.md",
+      "target": "2026-09-08-development-roadmap.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-work-log.md",
+      "target": "2026-09-08-session-lifecycle-verification.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-work-log.md",
+      "target": "2026-09-08-device-test-guide.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-work-log.md",
+      "target": "2026-09-08-admin-precise-editor.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-work-log.md",
+      "target": "2026-09-08-advanced-prescriptions.md",
+      "exists": true
+    },
+    {
+      "source": "docs/2026-09-08-work-log.md",
+      "target": "2026-09-08-advanced-prescriptions.md#12-구현검증커밋-기록",
+      "exists": true
+    },
+    {
+      "source": "tool/README.md",
+      "target": "../docs/2026-09-08-advanced-prescriptions.md",
+      "exists": true
+    },
+    {
+      "source": "tool/README.md",
+      "target": "../docs/2026-09-08-admin-precise-editor.md",
+      "exists": true
+    },
+    {
+      "source": "tool/README.md",
+      "target": "../docs/2026-09-08-device-test-guide.md",
+      "exists": true
+    },
+    {
+      "source": "tool/README.md",
+      "target": "../docs/2026-09-08-feature-verification.md",
+      "exists": true
+    },
+    {
+      "source": "tool/README.md",
+      "target": "../docs/2026-09-08-session-lifecycle.md",
+      "exists": true
+    },
+    {
+      "source": "tool/README.md",
+      "target": "../docs/2026-09-07-verification.md",
+      "exists": true
+    },
+    {
+      "source": "tool/README.md",
+      "target": "../docs/2026-09-08-session-lifecycle.md",
+      "exists": true
+    },
+    {
+      "source": "tool/README.md",
+      "target": "../docs/2026-09-08-device-test-guide.md",
+      "exists": true
+    },
+    {
+      "source": "tool/README.md",
+      "target": "../docs/2026-09-07-verification.md",
+      "exists": true
+    },
+    {
+      "source": "tool/README.md",
+      "target": "../docs/2026-09-07-work-log.md",
+      "exists": true
+    },
+    {
+      "source": "tool/README.md",
+      "target": "../docs/2026-09-08-admin-precise-editor.md",
+      "exists": true
+    }
+  ]
+}

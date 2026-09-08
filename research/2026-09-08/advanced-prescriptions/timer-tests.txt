@@ -1,0 +1,15 @@
+00:00 +0: loading /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/rest_timer_test.dart
+00:00 +0: UTC deadline is unchanged by serialization, background delay or expiry
+00:00 +1: pause retains milliseconds and resume makes one new deadline
+00:00 +2: invalid schema fields, impossible dates and ambiguous clock state reject
+00:00 +3: store serializes frozen snapshots and clearing restores null
+00:00 +4: corrupt or future timer envelope preserves exact original bytes
+00:00 +5: start failure retains old timer and retry does not reset the candidate deadline
+00:00 +6: duplicate starts require replacement, failed pause and stop preserve prior timer
+00:00 +7: read failure blocks starting while unrelated workout file stays intact
+00:00 +8: a stale failed candidate cannot be restarted by retry
+00:00 +9: pause uses one clock sample at the expiry boundary
+00:00 +10: timer source must match authored duration, exercise and set ordinal
+00:00 +11: fresh training controller restores timer; closing/reopening never resurrects it
+00:00 +12: editing the source actual, drafting or switching active plan invalidates timer
+00:01 +13: All tests passed!

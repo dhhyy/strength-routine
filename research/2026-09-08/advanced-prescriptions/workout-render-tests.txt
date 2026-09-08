@@ -1,0 +1,8 @@
+00:00 +0: loading /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/advanced_workout_screen_test.dart
+00:00 +0: AMRAP instructions keep actual input empty and permit fewer than reference reps
+00:22 +1: next set follows superset rounds and skips completed sets
+00:31 +2: positive prescribed rest starts explicitly, pauses, resumes and cancels replacement
+00:35 +3: bottom set exposes timer failure and retry without changing workout records
+00:39 +4: program detail shows authored advanced instructions
+00:40 +5: large text and keyboard keep advanced instructions scrollable and archived timer disabled
+00:42 +6: All tests passed!

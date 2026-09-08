@@ -1,0 +1,12 @@
+Command: flutter test test/advanced_admin_screen_test.dart --reporter expanded --dart-define=ADVANCED_ADMIN_RENDER_DIR=research/2026-09-08/advanced-prescriptions/admin-final
+Exit code: 0
+Headless Flutter widget tests; no Simulator or native app launched.
+00:00 +0: loading /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/advanced_admin_screen_test.dart
+00:00 +0: 고급 처방과 슈퍼세트 변경을 검토하고 새 버전으로 저장한다
+00:07 +1: 휴식 미지정과 0을 구별하고 고급 입력 원문을 되돌리고 다시 실행한다
+00:10 +2: 연속 운동이 없는 슈퍼세트를 검토에서 차단하고 수정 후 진행한다
+00:11 +3: 카탈로그 저장 실패와 재시도에서 고급 처방 후보가 유지된다
+00:12 +4: 고급 입력 1200.0 폭에서 큰 글자와 키보드를 포함해 조작한다
+00:15 +5: 고급 입력 375.0 폭에서 큰 글자와 키보드를 포함해 조작한다
+00:16 +6: All tests passed!
+

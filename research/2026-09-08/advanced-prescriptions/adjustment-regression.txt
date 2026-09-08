@@ -1,0 +1,3 @@
+00:00 +0: loading /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/load_adjustment_workout_test.dart
+00:00 +0: 조정된 목표를 운동 화면에서 읽고 되돌리면 원래 목표로 갱신
+00:02 +1: All tests passed!
