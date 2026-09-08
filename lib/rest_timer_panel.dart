@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'app/training_controller.dart';
+import 'app/settings_controller.dart';
 import 'domain/rest_timer.dart';
 import 'domain/training_program.dart';
 import 'flow_components.dart';
@@ -15,9 +16,10 @@ Future<void> startSetRest(
   PlannedSession session,
   PlannedExercise exercise,
   PlannedSet set,
-  int number,
-) async {
-  final seconds = set.restSeconds;
+  int number, {
+  int? defaultRestSeconds,
+}) async {
+  final seconds = resolveRestSeconds(set.restSeconds, defaultRestSeconds);
   if (seconds == null ||
       seconds == 0 ||
       controller.saving ||
@@ -68,10 +70,41 @@ Future<void> startSetRest(
       sourceStamp: controller.restSourceStamp(session.id, set.id),
       setNumber: number,
       durationSeconds: seconds,
+      durationSource: set.restSeconds == null
+          ? RestDurationSource.userDefault
+          : RestDurationSource.prescription,
       endsAt: controller.now().toUtc().add(Duration(seconds: seconds)),
     ),
     replace: replace,
   );
+}
+
+/// Called only once by the set editor after a new completed actual is durable.
+Future<void> autoStartCompletedSetRest(
+  BuildContext context,
+  TrainingController controller,
+  String setId,
+) async {
+  final settings = SettingsScope.maybeOf(context)?.settings;
+  if (settings?.autoStartRestTimer != true) return;
+  final plan = controller.state.activePlan;
+  if (plan == null) return;
+  for (final session in plan.sessions) {
+    for (final entry in session.executionSets) {
+      if (entry.set.id == setId) {
+        await startSetRest(
+          context,
+          controller,
+          session,
+          entry.exercise,
+          entry.set,
+          entry.number,
+          defaultRestSeconds: settings!.defaultRestSeconds,
+        );
+        return;
+      }
+    }
+  }
 }
 
 class RestTimerPanel extends StatefulWidget {
@@ -161,6 +194,13 @@ class _RestTimerPanelState extends State<RestTimerPanel>
                 key: const ValueKey('rest-time'),
                 style: AppType.number,
                 semanticsLabel: '휴식 남은 시간 $seconds초',
+              ),
+              const SizedBox(height: AppSpace.x2),
+              Text(
+                snapshot.durationSource == RestDurationSource.userDefault
+                    ? '시작 당시 사용자 기본값 · ${snapshot.durationSeconds}초'
+                    : '세트 처방 · ${snapshot.durationSeconds}초',
+                style: AppType.caption,
               ),
               const SizedBox(height: AppSpace.x2),
               Text(

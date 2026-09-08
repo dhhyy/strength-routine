@@ -37,6 +37,13 @@ class SettingsController extends ChangeNotifier {
 
   Future<bool> update(AppSettings next) async {
     if (loading || loadError != null || saving) return false;
+    try {
+      next.validate();
+    } catch (_) {
+      saveError = '휴식 시간은 1~3600초의 정수로 입력해 주세요.';
+      _emit();
+      return false;
+    }
     _pendingSettings = next;
     saving = true;
     saveError = null;

@@ -31,12 +31,18 @@ final class LocalSettingsStore {
         throw const FormatException('Settings path is not a file');
       }
       final envelope = jsonDecode(await file.readAsString()) as Map;
-      if (envelope['schemaVersion'] != 1) {
+      if (![1, 2].contains(envelope['schemaVersion'])) {
         throw const FormatException('Unsupported settings schema');
       }
-      return AppSettings.fromJson(
-        Map<String, dynamic>.from(envelope['state'] as Map),
-      );
+      final state = Map<String, dynamic>.from(envelope['state'] as Map);
+      final restKeys = {'defaultRestSeconds', 'autoStartRestTimer'};
+      if ((envelope['schemaVersion'] == 1 &&
+              state.keys.any(restKeys.contains)) ||
+          (envelope['schemaVersion'] == 2 &&
+              !restKeys.every(state.containsKey))) {
+        throw const FormatException('Rest settings require schema 2');
+      }
+      return AppSettings.fromJson(state);
     } catch (error) {
       throw LocalSettingsStoreException(
         '저장된 설정을 읽지 못했어요. 원본 파일은 유지했어요.',
@@ -50,7 +56,8 @@ final class LocalSettingsStore {
       '${file.path}.tmp.$pid.${DateTime.now().microsecondsSinceEpoch}.${_temporaryId++}',
     );
     try {
-      final text = jsonEncode({'schemaVersion': 1, 'state': settings.toJson()});
+      settings.validate();
+      final text = jsonEncode({'schemaVersion': 2, 'state': settings.toJson()});
       await file.parent.create(recursive: true);
       await temporary.writeAsString(text, flush: true);
       await temporary.rename(file.path);

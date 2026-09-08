@@ -1,8 +1,15 @@
+enum RestDurationSource { prescription, userDefault }
+
+/// Explicit zero is a prescription to take no rest, never a missing value.
+int? resolveRestSeconds(int? prescribed, int? defaultSeconds) =>
+    prescribed ?? defaultSeconds;
+
 /// One explicit rest interval. Countdown uses an absolute UTC deadline, so
 /// backgrounding the UI never extends the interval by missed frame ticks.
 final class RestTimerSnapshot {
   final String planId, sessionId, setId, exerciseName, sourceStamp;
   final int setNumber, durationSeconds;
+  final RestDurationSource durationSource;
   final DateTime? endsAt;
   final int? pausedMilliseconds;
 
@@ -14,6 +21,7 @@ final class RestTimerSnapshot {
     required this.sourceStamp,
     required this.setNumber,
     required this.durationSeconds,
+    this.durationSource = RestDurationSource.prescription,
     this.endsAt,
     this.pausedMilliseconds,
   }) {
@@ -70,6 +78,7 @@ final class RestTimerSnapshot {
         sourceStamp: sourceStamp,
         setNumber: setNumber,
         durationSeconds: durationSeconds,
+        durationSource: durationSource,
         endsAt: endsAt,
         pausedMilliseconds: pausedMilliseconds,
       );
@@ -82,6 +91,8 @@ final class RestTimerSnapshot {
     'sourceStamp': sourceStamp,
     'setNumber': setNumber,
     'durationSeconds': durationSeconds,
+    if (durationSource != RestDurationSource.prescription)
+      'durationSource': durationSource.name,
     'endsAt': endsAt?.toIso8601String(),
     'pausedMilliseconds': pausedMilliseconds,
   };
@@ -98,7 +109,8 @@ final class RestTimerSnapshot {
       'endsAt',
       'pausedMilliseconds',
     };
-    if (json.length != keys.length || !json.keys.every(keys.contains)) {
+    final allowed = {...keys, 'durationSource'};
+    if (!keys.every(json.containsKey) || !json.keys.every(allowed.contains)) {
       throw const FormatException('Incomplete rest timer');
     }
     DateTime? endsAt;
@@ -118,6 +130,13 @@ final class RestTimerSnapshot {
       sourceStamp: json['sourceStamp'] as String,
       setNumber: json['setNumber'] as int,
       durationSeconds: json['durationSeconds'] as int,
+      durationSource: !json.containsKey('durationSource')
+          ? RestDurationSource.prescription
+          : switch (json['durationSource']) {
+              'prescription' => RestDurationSource.prescription,
+              'userDefault' => RestDurationSource.userDefault,
+              _ => throw const FormatException('Invalid rest duration source'),
+            },
       endsAt: endsAt,
       pausedMilliseconds: json['pausedMilliseconds'] as int?,
     );

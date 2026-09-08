@@ -126,7 +126,7 @@ void main() {
     () async {
       for (final raw in [
         'broken',
-        '{"schemaVersion":2,"timer":null}',
+        '{"schemaVersion":3,"timer":null}',
         '{"schemaVersion":1}',
       ]) {
         await file.writeAsString(raw);

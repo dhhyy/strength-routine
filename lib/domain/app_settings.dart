@@ -4,23 +4,43 @@ import 'recent_lift_record.dart';
 final class AppSettings {
   final WeightUnit defaultWeightUnit;
   final bool showLoadSuggestions;
+  final int? defaultRestSeconds;
+  final bool autoStartRestTimer;
   const AppSettings({
     this.defaultWeightUnit = WeightUnit.kg,
     this.showLoadSuggestions = true,
+    this.defaultRestSeconds,
+    this.autoStartRestTimer = false,
   });
 
   AppSettings copyWith({
     WeightUnit? defaultWeightUnit,
     bool? showLoadSuggestions,
+    int? defaultRestSeconds,
+    bool clearDefaultRest = false,
+    bool? autoStartRestTimer,
   }) => AppSettings(
     defaultWeightUnit: defaultWeightUnit ?? this.defaultWeightUnit,
     showLoadSuggestions: showLoadSuggestions ?? this.showLoadSuggestions,
+    defaultRestSeconds: clearDefaultRest
+        ? null
+        : defaultRestSeconds ?? this.defaultRestSeconds,
+    autoStartRestTimer: autoStartRestTimer ?? this.autoStartRestTimer,
   );
 
   Map<String, Object?> toJson() => {
     'defaultWeightUnit': defaultWeightUnit.name,
     'showLoadSuggestions': showLoadSuggestions,
+    'defaultRestSeconds': defaultRestSeconds,
+    'autoStartRestTimer': autoStartRestTimer,
   };
+
+  void validate() {
+    if (defaultRestSeconds != null &&
+        (defaultRestSeconds! < 1 || defaultRestSeconds! > 3600)) {
+      throw const FormatException('Rest seconds must be 1 to 3600');
+    }
+  }
 
   factory AppSettings.fromJson(Map<String, dynamic> json) {
     final unit = switch (json['defaultWeightUnit']) {
@@ -31,9 +51,19 @@ final class AppSettings {
     if (json['showLoadSuggestions'] is! bool) {
       throw const FormatException('Invalid suggestion setting');
     }
-    return AppSettings(
+    if ((json.containsKey('autoStartRestTimer') &&
+            json['autoStartRestTimer'] is! bool) ||
+        (json['defaultRestSeconds'] != null &&
+            json['defaultRestSeconds'] is! int)) {
+      throw const FormatException('Invalid rest preference');
+    }
+    final settings = AppSettings(
       defaultWeightUnit: unit,
       showLoadSuggestions: json['showLoadSuggestions'] as bool,
+      defaultRestSeconds: json['defaultRestSeconds'] as int?,
+      autoStartRestTimer: json['autoStartRestTimer'] as bool? ?? false,
     );
+    settings.validate();
+    return settings;
   }
 }

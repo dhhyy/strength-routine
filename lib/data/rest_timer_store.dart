@@ -26,10 +26,15 @@ final class RestTimerStore {
       return null;
     }
     final json = jsonDecode(await file.readAsString()) as Map<String, dynamic>;
-    if (json['schemaVersion'] != 1 ||
+    if (![1, 2].contains(json['schemaVersion']) ||
         !json.containsKey('timer') ||
         json.length != 2) {
       throw const FormatException('Unsupported rest timer state');
+    }
+    if (json['schemaVersion'] == 1 &&
+        json['timer'] is Map &&
+        (json['timer'] as Map).containsKey('durationSource')) {
+      throw const FormatException('Duration source requires timer schema 2');
     }
     return json['timer'] == null
         ? null
@@ -39,7 +44,12 @@ final class RestTimerStore {
   });
 
   Future<void> save(RestTimerSnapshot? timer) {
-    final text = jsonEncode({'schemaVersion': 1, 'timer': timer?.toJson()});
+    final text = jsonEncode({
+      'schemaVersion': timer?.durationSource == RestDurationSource.userDefault
+          ? 2
+          : 1,
+      'timer': timer?.toJson(),
+    });
     return _queue(() async {
       final temporary = File('${file.path}.tmp');
       try {

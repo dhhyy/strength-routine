@@ -136,7 +136,11 @@ void main() {
         {WeightUnit.lb},
       );
       expect(
-        tester.widget<SwitchListTile>(find.byType(SwitchListTile)).value,
+        tester
+            .widget<SwitchListTile>(
+              find.byKey(const ValueKey('show-load-suggestions')),
+            )
+            .value,
         isFalse,
       );
       expect(tester.takeException(), isNull);
@@ -216,6 +220,64 @@ void main() {
     await tester.tap(find.byKey(const ValueKey('show-load-suggestions')));
     await flush(tester);
     expect(controller.settings.showLoadSuggestions, isFalse);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets(
+    'custom duration validation, automatic option and clearing restore',
+    (tester) async {
+      await tester.runAsync(controller.initialize);
+      await pump(tester, SettingsScreen(controller: controller));
+      final field = find.byKey(const ValueKey('default-rest-seconds'));
+      await tester.ensureVisible(field);
+      await tester.enterText(field, '0');
+      await tester.ensureVisible(find.text('기본 휴식 시간 저장'));
+      await tester.tap(find.text('기본 휴식 시간 저장'));
+      await tester.pumpAndSettle();
+      expect(find.text('1~3600초의 정수를 입력하거나 비워 주세요.'), findsOneWidget);
+      expect(controller.settings.defaultRestSeconds, isNull);
+      await tester.enterText(field, '123');
+      await tester.ensureVisible(find.text('기본 휴식 시간 저장'));
+      await tester.tap(find.text('기본 휴식 시간 저장'));
+      await flush(tester);
+      expect(controller.settings.defaultRestSeconds, 123);
+      final automatic = find.byKey(const ValueKey('auto-start-rest-timer'));
+      await tester.ensureVisible(automatic);
+      await tester.tap(automatic);
+      await flush(tester);
+      expect(controller.settings.autoStartRestTimer, isTrue);
+      expect(
+        (await tester.runAsync(
+          () => LocalSettingsStore(file).load(),
+        ))!.defaultRestSeconds,
+        123,
+      );
+      await capture(tester, 'rest-settings-saved');
+      await tester.ensureVisible(field);
+      await tester.enterText(field, '');
+      await tester.ensureVisible(find.text('기본 휴식 시간 저장'));
+      await tester.tap(find.text('기본 휴식 시간 저장'));
+      await flush(tester);
+      expect(controller.settings.defaultRestSeconds, isNull);
+      expect(controller.settings.autoStartRestTimer, isTrue);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets('large text rest settings preserve readable input and switch', (
+    tester,
+  ) async {
+    await tester.runAsync(controller.initialize);
+    await pump(tester, SettingsScreen(controller: controller), scale: 1.8);
+    await tester.ensureVisible(find.text('휴식 타이머'));
+    await capture(tester, 'rest-settings-large');
+    await tester.ensureVisible(
+      find.byKey(const ValueKey('auto-start-rest-timer')),
+    );
+    await tester.tap(find.byKey(const ValueKey('auto-start-rest-timer')));
+    await flush(tester);
+    expect(controller.settings.autoStartRestTimer, isTrue);
+    await capture(tester, 'rest-settings-large-switch');
     expect(tester.takeException(), isNull);
   });
 

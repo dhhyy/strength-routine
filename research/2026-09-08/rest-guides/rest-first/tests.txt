@@ -1,0 +1,16 @@
+00:00 +0: loading /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/rest_preferences_test.dart
+00:00 +0: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/rest_preferences_test.dart: legacy settings read defaults and new preferences restore in schema 2
+00:00 +1: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/rest_preferences_test.dart: legacy envelope rejects new meaning and schema 2 rejects absent preferences
+00:00 +2: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/rest_preferences_test.dart: rest seconds reject invalid values and preserve last stored settings
+00:00 +3: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/rest_preferences_test.dart: failed rest choice is pending only and applies once on successful retry
+00:00 +4: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/rest_preferences_test.dart: prescription including explicit zero has priority over user default
+00:00 +5: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/rest_preferences_test.dart: user default timer source and deadline survive pause, resume and file reload
+00:00 +6: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/rest_preferences_test.dart: custom source restores without consulting new defaults and invalidates on actual edit
+00:00 +7: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/settings_screen_test.dart: loading, unit and suggestion preferences restore into a new controller
+00:01 +8: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/settings_screen_test.dart: failed choice stays visible but not applied until retry, including page re-entry
+00:02 +9: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/settings_screen_test.dart: corrupt settings show retry without editable defaults or overwriting the file
+00:02 +10: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/settings_screen_test.dart: large text settings remain scrollable with reachable controls
+00:02 +11: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/settings_screen_test.dart: custom duration validation, automatic option and clearing restore
+00:03 +12: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/settings_screen_test.dart: large text rest settings preserve readable input and switch
+00:03 +13: /Users/yudongheon/Documents/vibe-design/apps/strength_routine/test/settings_screen_test.dart: subscription preparation opens truthful local FAQ without payment or request actions
+00:03 +14: All tests passed!
