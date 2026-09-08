@@ -1,0 +1,33 @@
+@import url('../tokens.css');
+/* Route Latin letters and digits to Mono without widening Korean spaces or punctuation. */
+@font-face { font-family:'Strength Latin'; src:url('../../assets/fonts/IBMPlexMono-Regular.ttf') format('truetype'); font-weight:400; font-display:swap; unicode-range:U+0030-0039,U+0041-005A,U+0061-007A; }
+@font-face { font-family:'Strength Latin'; src:url('../../assets/fonts/IBMPlexMono-Medium.ttf') format('truetype'); font-weight:500; font-display:swap; unicode-range:U+0030-0039,U+0041-005A,U+0061-007A; }
+@font-face { font-family:'Strength Latin'; src:url('../../assets/fonts/IBMPlexMono-Bold.ttf') format('truetype'); font-weight:600 700; font-display:swap; unicode-range:U+0030-0039,U+0041-005A,U+0061-007A; }
+:root {
+  --font-copy: 'Strength Latin', 'IBM Plex Sans KR', sans-serif;
+  --concept-width: 1320px;
+  --concept-gutter: clamp(var(--s5), 4vw, var(--s16));
+  --concept-title: clamp(2.5rem, 5.4vw, 5.25rem);
+  --concept-title-wide: clamp(2.5rem, 6.7vw, 6.5rem);
+  --concept-title-small: clamp(2rem, 3.5vw, 3.5rem);
+  --concept-number: clamp(5rem, 10vw, 9rem);
+  --concept-card-title: clamp(1.5rem, 2.2vw, 2rem);
+  --concept-leading: 1.12;
+  --concept-tracking: -.06em;
+  --concept-scene: 520px;
+  --concept-scene-small: 380px;
+  --concept-scene-mobile: 340px;
+  --concept-scene-compact: 280px;
+  --concept-scene-load: 440px;
+  --concept-scene-load-mobile: 240px;
+  --concept-load-overlap: 216px;
+  --concept-hero: 860px;
+  --concept-summary: 280px;
+  --concept-side: 320px;
+  --concept-orbit-size: 400px;
+  --concept-rule: var(--stroke) solid var(--hair-strong);
+  --concept-surface: linear-gradient(145deg, var(--bg-lift), var(--bg));
+}
+@media(max-width:760px) {
+  :root { --concept-title: clamp(2.4rem, 10vw, 3.4rem); --concept-title-wide: var(--concept-title); --concept-title-small: 2.25rem; --concept-number: 6rem; }
+}
