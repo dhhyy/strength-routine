@@ -1,30 +1,47 @@
 import 'dart:convert';
 import 'dart:io';
 import '../domain/training_program.dart';
+import 'detailed_routine.dart';
 import 'routine_builder.dart';
 
 final class AdminWorkspace {
   final RoutineBlueprint draft;
+  final DetailedRoutineDraft? detailedDraft;
   final List<TrainingProgram> programs;
-  AdminWorkspace({required this.draft, required List<TrainingProgram> programs})
-    : programs = List.unmodifiable(programs) {
+  AdminWorkspace({
+    required this.draft,
+    required List<TrainingProgram> programs,
+    this.detailedDraft,
+  }) : programs = List.unmodifiable(programs) {
     if (programs.map((p) => p.id).toSet().length != programs.length) {
       throw const FormatException('Duplicate program ID');
     }
   }
   Map<String, Object?> toJson() => {
-    'schemaVersion': 1,
+    'schemaVersion': 2,
     'draft': draft.toJson(),
+    'detailedDraft': detailedDraft?.toJson(),
     'programs': programs.map((p) => p.toJson()).toList(),
   };
   factory AdminWorkspace.fromJson(Map<String, dynamic> json) {
-    if (json['schemaVersion'] != 1) {
+    if (![1, 2].contains(json['schemaVersion'])) {
       throw const FormatException('Unsupported admin schema');
+    }
+    if (json['schemaVersion'] == 2 && !json.containsKey('detailedDraft')) {
+      throw const FormatException('Incomplete detailed admin workspace');
+    }
+    if (json['schemaVersion'] == 1 && json.containsKey('detailedDraft')) {
+      throw const FormatException('Unexpected detailed draft in old schema');
     }
     return AdminWorkspace(
       draft: RoutineBlueprint.fromJson(
         Map<String, dynamic>.from(json['draft'] as Map),
       ),
+      detailedDraft: json['detailedDraft'] == null
+          ? null
+          : DetailedRoutineDraft.fromJson(
+              Map<String, dynamic>.from(json['detailedDraft'] as Map),
+            ),
       programs: (json['programs'] as List)
           .map(
             (p) =>
