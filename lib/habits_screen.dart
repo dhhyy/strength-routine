@@ -1,7 +1,6 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 import 'components.dart';
+import 'data/app_storage.dart';
 import 'data/local_habit_store.dart';
 import 'domain/habit_record.dart';
 import 'flow_components.dart';
@@ -93,11 +92,7 @@ class _HabitsScreenState extends State<HabitsScreen>
     try {
       _store ??=
           widget.store ??
-          LocalHabitStore(
-            File(
-              '${(await getApplicationSupportDirectory()).path}/habits-state.json',
-            ),
-          );
+          LocalHabitStore.blobs((await AppStorage.open()).habits);
       final state = await _store!.load();
       if (mounted) setState(() => _state = state);
     } catch (_) {

@@ -1,16 +1,20 @@
 import 'dart:convert';
-import 'dart:io';
+
+import '../data/file_text_store.dart';
+import '../data/text_store.dart';
 import 'auth_session.dart';
 
 /// 테스트(우회) 세션만 기기에 보관. Supabase 세션과 섞지 않는다.
 final class LocalBypassAuthStore {
-  final File file;
-  LocalBypassAuthStore(this.file);
+  final TextStore blobs;
+
+  LocalBypassAuthStore(Object file) : blobs = FileTextStore(file);
+  LocalBypassAuthStore.blobs(this.blobs);
 
   Future<AuthSession?> load() async {
-    if (!await file.exists()) return null;
+    if (!await blobs.exists()) return null;
     try {
-      final map = jsonDecode(await file.readAsString()) as Map;
+      final map = jsonDecode(await blobs.read()) as Map;
       final id = map['userId'] as String?;
       if (id == null || id.isEmpty) return null;
       return AuthSession(
@@ -25,8 +29,7 @@ final class LocalBypassAuthStore {
   }
 
   Future<void> save(AuthSession session) async {
-    await file.parent.create(recursive: true);
-    await file.writeAsString(
+    await blobs.write(
       jsonEncode({
         'userId': session.userId,
         'displayName': session.displayName,
@@ -36,6 +39,6 @@ final class LocalBypassAuthStore {
   }
 
   Future<void> clear() async {
-    if (await file.exists()) await file.delete();
+    await blobs.delete();
   }
 }

@@ -1,5 +1,7 @@
 import 'dart:convert';
-import 'dart:io';
+
+import 'file_text_store.dart';
+import 'text_store.dart';
 
 /// 세션 안 종목을 다음으로 미룬 큐. 운동 스키마와 분리.
 final class DeferredExercise {
@@ -87,17 +89,19 @@ final class DeferredExerciseState {
 }
 
 final class LocalDeferredExerciseStore {
-  final File file;
-  LocalDeferredExerciseStore(this.file);
+  final TextStore blobs;
+  LocalDeferredExerciseStore(Object file) : blobs = FileTextStore(file);
+  LocalDeferredExerciseStore.blobs(this.blobs);
 
   Future<DeferredExerciseState> load() async {
-    if (!await file.exists()) return const DeferredExerciseState();
-    final raw = jsonDecode(await file.readAsString());
+    if (!await blobs.exists()) return const DeferredExerciseState();
+    final raw = jsonDecode(await blobs.read());
     return DeferredExerciseState.fromJson(Map<String, dynamic>.from(raw as Map));
   }
 
   Future<void> save(DeferredExerciseState state) async {
-    await file.parent.create(recursive: true);
-    await file.writeAsString(const JsonEncoder.withIndent('  ').convert(state.toJson()));
+    await blobs.write(
+      const JsonEncoder.withIndent('  ').convert(state.toJson()),
+    );
   }
 }

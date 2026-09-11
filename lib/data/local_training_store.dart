@@ -1,6 +1,7 @@
 import 'dart:convert';
-import 'dart:io';
 
+import 'file_text_store.dart';
+import 'text_store.dart';
 import '../domain/training_program.dart';
 
 final class LocalTrainingStoreException implements Exception {
@@ -13,11 +14,24 @@ final class LocalTrainingStoreException implements Exception {
 
 /// 한 인스턴스의 읽기/쓰기를 직렬화한다. 앱에서 하나의 저장소를 공유한다.
 final class LocalTrainingStore {
-  final File file;
+  final TextStore blobs;
   Future<void>? _pending;
   String restorationGeneration = '';
-  static int _temporaryId = 0;
-  LocalTrainingStore(this.file);
+
+  /// VM/테스트용 파일 경로. 웹 부트는 [LocalTrainingStore.blobs]만 쓴다.
+  LocalTrainingStore(Object file) : blobs = FileTextStore(file);
+  LocalTrainingStore.blobs(this.blobs);
+
+  /// 파일 백엔드(VM)에서만. 웹 Prefs에서는 호출하지 않는다.
+  dynamic get file {
+    final backend = blobs;
+    if (backend is FileTextStore) {
+      return (backend as dynamic).file;
+    }
+    throw UnsupportedError(
+      'LocalTrainingStore.file is only available on file storage',
+    );
+  }
 
   Future<T> _enqueue<T>(Future<T> Function() operation) {
     final previous = _pending;
@@ -31,16 +45,12 @@ final class LocalTrainingStore {
   /// 파일이 없을 때만 빈 상태를 반환한다. 손상·스키마 오류는 원본을 보존한다.
   Future<TrainingAppState> load() => _enqueue(() async {
     try {
-      final type = await FileSystemEntity.type(file.path);
-      if (type == FileSystemEntityType.notFound) {
+      if (!await blobs.exists()) {
         restorationGeneration = '';
         return TrainingAppState();
       }
-      if (type != FileSystemEntityType.file) {
-        throw const FormatException('State path is not a file');
-      }
       final envelope =
-          jsonDecode(await file.readAsString()) as Map<String, dynamic>;
+          jsonDecode(await blobs.read()) as Map<String, dynamic>;
       final state = decodeEnvelope(envelope);
       restorationGeneration =
           envelope['restorationGeneration'] as String? ?? '';
@@ -53,7 +63,6 @@ final class LocalTrainingStore {
     }
   });
 
-  /// 같은 디렉토리에 기록을 끝낸 뒤 rename한다. 실패 시 호출자가 재시도한다.
   static TrainingAppState decodeEnvelope(Map<String, dynamic> envelope) {
     final version = envelope['schemaVersion'];
     if (![1, 2, 3, 4, 5, 6].contains(version)) {
@@ -118,29 +127,18 @@ final class LocalTrainingStore {
     TrainingAppState state, {
     String? restoredGeneration,
   }) => _enqueue(() async {
-    final temporary = File(
-      '${file.path}.tmp.$pid.${DateTime.now().microsecondsSinceEpoch}.${_temporaryId++}',
-    );
     try {
       final generation = restoredGeneration ?? restorationGeneration;
       final text = jsonEncode(
         encodeEnvelope(state, restorationGeneration: generation),
       );
-      await file.parent.create(recursive: true);
-      await temporary.writeAsString(text, flush: true);
-      await temporary.rename(file.path);
+      await blobs.write(text);
       restorationGeneration = generation;
     } catch (error) {
       throw LocalTrainingStoreException(
         '운동 데이터를 저장하지 못했습니다. 입력을 유지하고 재시도하세요.',
         error,
       );
-    } finally {
-      try {
-        if (await temporary.exists()) await temporary.delete();
-      } catch (_) {
-        /* 저장 실패 원인을 덮지 않는다. */
-      }
     }
   });
 }

@@ -1,17 +1,26 @@
 import 'dart:convert';
-import 'dart:io';
 
+import 'file_text_store.dart';
+import 'text_store.dart';
 import '../domain/rest_timer.dart';
 
 /// Timer failures do not roll back or overwrite workout records.
 final class RestTimerStore {
-  final File file;
+  final TextStore blobs;
   Future<void>? _pending;
-  RestTimerStore(this.file);
+
+  RestTimerStore(Object file) : blobs = FileTextStore(file);
+  RestTimerStore.blobs(this.blobs);
+
+  dynamic get file {
+    final backend = blobs;
+    if (backend is FileTextStore) return (backend as dynamic).file;
+    throw UnsupportedError(
+      'RestTimerStore.file is only available on file storage',
+    );
+  }
 
   Future<T> _queue<T>(Future<T> Function() action) {
-    // Start the first operation in its caller's zone. An eagerly created
-    // Future.value() can strand the first read across widget fake/real zones.
     final previous = _pending;
     final next = previous == null
         ? Future<T>.sync(action)
@@ -21,11 +30,10 @@ final class RestTimerStore {
   }
 
   Future<RestTimerSnapshot?> load() => _queue(() async {
-    if (await FileSystemEntity.type(file.path) ==
-        FileSystemEntityType.notFound) {
+    if (!await blobs.exists()) {
       return null;
     }
-    final json = jsonDecode(await file.readAsString()) as Map<String, dynamic>;
+    final json = jsonDecode(await blobs.read()) as Map<String, dynamic>;
     if (![1, 2].contains(json['schemaVersion']) ||
         !json.containsKey('timer') ||
         json.length != 2) {
@@ -51,18 +59,7 @@ final class RestTimerStore {
       'timer': timer?.toJson(),
     });
     return _queue(() async {
-      final temporary = File('${file.path}.tmp');
-      try {
-        await file.parent.create(recursive: true);
-        await temporary.writeAsString(text, flush: true);
-        await temporary.rename(file.path);
-      } finally {
-        try {
-          if (await temporary.exists()) await temporary.delete();
-        } catch (_) {
-          /* Keep the original write failure. */
-        }
-      }
+      await blobs.write(text);
     });
   }
 }

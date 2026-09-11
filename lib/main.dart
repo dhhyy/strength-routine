@@ -1,9 +1,7 @@
-import 'dart:io';
-import 'package:flutter/material.dart';
 import 'backup_screen.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:path_provider/path_provider.dart';
 import 'app/training_controller.dart';
 import 'app/settings_controller.dart';
 import 'app/working_max_controller.dart';
@@ -18,6 +16,7 @@ import 'auth/login_screen.dart';
 import 'auth/signup_screen.dart';
 import 'app/cloud_snapshot_controller.dart';
 import 'app/cloud_snapshot_scope.dart';
+import 'data/app_storage.dart';
 import 'data/cloud_snapshot_store.dart';
 import 'data/supabase_cloud_snapshot_store.dart';
 import 'data/local_settings_store.dart';
@@ -25,6 +24,8 @@ import 'data/local_training_store.dart';
 import 'data/local_working_max_store.dart';
 import 'data/local_deferred_exercise_store.dart';
 import 'data/local_habit_store.dart';
+import 'data/rest_timer_store.dart';
+import 'data/text_store.dart';
 import 'flow_components.dart';
 import 'theme.dart';
 import 'tokens.dart';
@@ -94,6 +95,8 @@ class _RootGateState extends State<RootGate> {
   DeferredExerciseController? _deferred;
   CloudSnapshotController? _cloud;
   AuthController? _auth;
+  LocalHabitStore? _habitStore;
+  TextStore? _trialStore;
   bool _opening = true;
   String? _error;
 
@@ -109,46 +112,46 @@ class _RootGateState extends State<RootGate> {
       _error = null;
     });
     try {
-      _auth ??= widget.auth ?? AuthController();
+      final needsStorage =
+          widget.controller == null ||
+          widget.auth == null ||
+          widget.habitStore == null;
+      final storage = needsStorage ? await AppStorage.open() : null;
+
+      _auth ??=
+          widget.auth ??
+          AuthController(bypassBlobs: storage!.authBypass);
       if (!_auth!.ready) await _auth!.initialize();
       if (_controller == null) {
         if (widget.controller != null) {
           _controller = widget.controller;
         } else {
-          final directory = await getApplicationSupportDirectory();
           _controller = TrainingController(
             now: widget.now,
-            store: LocalTrainingStore(
-              File('${directory.path}/training-state.json'),
-            ),
+            store: LocalTrainingStore.blobs(storage!.training),
+            restTimerStore: RestTimerStore.blobs(storage.restTimer),
           );
         }
       }
       _settings ??= SettingsController(
-        store: LocalSettingsStore(
-          File(
-            widget.controller == null
-                ? '${_controller!.store.file.parent.path}/app-settings.json'
-                : '${_controller!.store.file.path}.settings.json',
-          ),
+        store: LocalSettingsStore.blobs(
+          widget.controller == null
+              ? storage!.settings
+              : _controller!.store.blobs.sibling('.settings.json'),
         ),
       );
       _workingMax ??= WorkingMaxController(
-        store: LocalWorkingMaxStore(
-          File(
-            widget.controller == null
-                ? '${_controller!.store.file.parent.path}/working-max.json'
-                : '${_controller!.store.file.path}.working-max.json',
-          ),
+        store: LocalWorkingMaxStore.blobs(
+          widget.controller == null
+              ? storage!.workingMax
+              : _controller!.store.blobs.sibling('.working-max.json'),
         ),
       );
       _deferred ??= DeferredExerciseController(
-        store: LocalDeferredExerciseStore(
-          File(
-            widget.controller == null
-                ? '${_controller!.store.file.parent.path}/deferred-exercises.json'
-                : '${_controller!.store.file.path}.deferred-exercises.json',
-          ),
+        store: LocalDeferredExerciseStore.blobs(
+          widget.controller == null
+              ? storage!.deferred
+              : _controller!.store.blobs.sibling('.deferred-exercises.json'),
         ),
       );
       if (_settings!.loading) await _settings!.initialize();
@@ -168,7 +171,11 @@ class _RootGateState extends State<RootGate> {
       if (_auth!.isSignedIn && !_controller!.state.onboarded) {
         await _controller!.update((state) => state.copyWith(onboarded: true));
       }
-    } catch (_) {
+      _habitStore ??=
+          widget.habitStore ?? LocalHabitStore.blobs(storage!.habits);
+      _trialStore ??= storage?.trial;
+    } catch (error, stack) {
+      debugPrint('RootGate._open: $error\n$stack');
       _error = '기록 저장 공간을 열지 못했어요.';
     }
     if (mounted) setState(() => _opening = false);
@@ -280,7 +287,8 @@ class _RootGateState extends State<RootGate> {
                   child: HomeShell(
                     controller: c,
                     now: widget.now,
-                    habitStore: widget.habitStore,
+                    habitStore: _habitStore ?? widget.habitStore,
+                    trialStore: _trialStore,
                   ),
                 ),
               ),
@@ -296,11 +304,13 @@ class HomeShell extends StatefulWidget {
   final TrainingController controller;
   final DateTime Function()? now;
   final LocalHabitStore? habitStore;
+  final TextStore? trialStore;
   const HomeShell({
     super.key,
     required this.controller,
     this.now,
     this.habitStore,
+    this.trialStore,
   });
   @override
   State<HomeShell> createState() => _HomeShellState();

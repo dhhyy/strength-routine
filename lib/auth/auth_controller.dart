@@ -1,7 +1,6 @@
-import 'dart:io';
 import 'package:flutter/foundation.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../data/text_store.dart';
 import 'auth_config.dart';
 import 'auth_session.dart';
 import 'local_bypass_auth_store.dart';
@@ -16,12 +15,14 @@ final class AuthController extends ChangeNotifier {
   bool _initialized = false;
   bool _bypassSession = false;
   LocalBypassAuthStore? _bypassStore;
+  final TextStore? bypassBlobs;
 
-  AuthController();
+  AuthController({this.bypassBlobs});
 
   /// 위젯/통합 테스트용. Supabase 없이 세션 상태를 주입한다.
   AuthController.preview({AuthSession? session})
-    : _session = session,
+    : bypassBlobs = null,
+      _session = session,
       _ready = true,
       _initialized = true,
       _bypassSession = session != null;
@@ -39,14 +40,15 @@ final class AuthController extends ChangeNotifier {
     _initialized = true;
 
     if (AuthConfig.allowBypass) {
-      final directory = await getApplicationSupportDirectory();
-      _bypassStore = LocalBypassAuthStore(
-        File('${directory.path}/auth-bypass-session.json'),
-      );
-      final saved = await _bypassStore!.load();
-      if (saved != null) {
-        _session = saved;
-        _bypassSession = true;
+      if (bypassBlobs != null) {
+        _bypassStore = LocalBypassAuthStore.blobs(bypassBlobs!);
+        final saved = await _bypassStore!.load();
+        if (saved != null) {
+          _session = saved;
+          _bypassSession = true;
+        } else if (AuthConfig.bypassAuth) {
+          await signInBypass(displayName: '테스트');
+        }
       } else if (AuthConfig.bypassAuth) {
         await signInBypass(displayName: '테스트');
       }
@@ -114,12 +116,10 @@ final class AuthController extends ChangeNotifier {
       signedInAt: DateTime.now(),
     );
     _bypassSession = true;
-    _bypassStore ??= LocalBypassAuthStore(
-      File(
-        '${(await getApplicationSupportDirectory()).path}/auth-bypass-session.json',
-      ),
-    );
-    await _bypassStore!.save(_session!);
+    if (bypassBlobs != null) {
+      _bypassStore ??= LocalBypassAuthStore.blobs(bypassBlobs!);
+      await _bypassStore!.save(_session!);
+    }
     _busy = false;
     notifyListeners();
   }

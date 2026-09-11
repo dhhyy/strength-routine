@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import '../data/local_training_store.dart';
@@ -48,10 +47,13 @@ class TrainingController extends ChangeNotifier {
     required this.store,
     ProgramLoader? loadPrograms,
     DateTime Function()? now,
+    RestTimerStore? restTimerStore,
   }) : loadPrograms = loadPrograms ?? loadBundledPrograms,
        now = now ?? DateTime.now {
     restTimer = RestTimerController(
-      store: RestTimerStore(File('${store.file.path}.rest-timer.json')),
+      store:
+          restTimerStore ??
+          RestTimerStore.blobs(store.blobs.sibling('.rest-timer.json')),
       now: this.now,
       isEligible: _isRestEligible,
     );
