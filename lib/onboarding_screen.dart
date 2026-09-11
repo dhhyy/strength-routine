@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'tokens.dart';
 
-/// 첫 실행 소개 5장. 마지막에서만 가입/로그인. 게스트 없음(결제·세션 강제).
+/// 첫 실행 소개 5장. 마지막에서 가입/로그인.
+/// 스테이징·로컬은 [onBypass]로 가입 없이 홈 진입 가능.
 class OnboardingScreen extends StatefulWidget {
   final VoidCallback onSignup;
   final VoidCallback onLogin;
@@ -91,8 +92,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           const SizedBox(height: 14),
                           GestureDetector(
                             onTap: widget.onBypass,
-                            child: Text('테스트로 시작 (인증 없음)',
-                                style: kr(size: 12, color: AppColors.muted)),
+                            child: Text(
+                              '가입 없이 둘러보기',
+                              style: kr(size: 13, color: AppColors.accent),
+                            ),
                           ),
                         ],
                       ] else

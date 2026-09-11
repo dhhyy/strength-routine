@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import '../app/app_environment.dart';
 
 /// Compile-time auth config. Pass with --dart-define.
 abstract final class AuthConfig {
@@ -18,8 +19,12 @@ abstract final class AuthConfig {
   static bool get isConfigured =>
       supabaseUrl.isNotEmpty && supabaseAnonKey.isNotEmpty;
 
-  /// 키가 없거나 명시적 우회일 때 테스트 로그인 UI/경로를 연다.
-  static bool get allowBypass => bypassAuth || !isConfigured;
+  /// 로컬·스테이징 미리보기, 또는 키 없음/명시 우회일 때 가입 없이 홈 진입.
+  /// 프로덕션(APP_ENV=production)에서는 키가 있을 때 우회 불가.
+  static bool get allowBypass =>
+      bypassAuth ||
+      !isConfigured ||
+      !AppEnvironment.current.isProduction;
 
   /// 네이티브는 딥링크, 웹은 현재 origin(+ path)으로 돌아온다.
   static String get redirectTo {
