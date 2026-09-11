@@ -1,0 +1,34 @@
+# Supabase local/CLI skeleton for strength_routine staging.
+# Secrets stay in env / .local — do not commit real keys here.
+
+[project]
+id = "strength-routine-staging"
+name = "strength_routine_staging"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "storage", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54322
+major_version = 15
+
+[auth]
+enabled = true
+# Staging web URL can replace site_url after hosting is live.
+site_url = "http://localhost:3000"
+additional_redirect_urls = [
+  "tech.vibe.strengthroutine://login-callback",
+  "http://localhost:*",
+  "http://127.0.0.1:*",
+]
+enable_signup = true
+
+[auth.external.kakao]
+enabled = true
+client_id = "env(KAKAO_CLIENT_ID)"
+secret = "env(KAKAO_CLIENT_SECRET)"
+skip_nonce_check = false

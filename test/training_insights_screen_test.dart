@@ -99,8 +99,8 @@ void main() {
   }
 
   Future<void> tap(WidgetTester tester, String text) async {
-    await tester.ensureVisible(find.text(text).last);
-    await tester.tap(find.text(text).last);
+    await tester.ensureVisible(find.text(text, skipOffstage: false).last);
+    await tester.tap(find.text(text, skipOffstage: false).last);
     // 대화상자 전환만 진행한다. 실제 파일 I/O는 flush의 runAsync에서 기다린다.
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 300));
@@ -186,6 +186,7 @@ void main() {
     await flush(tester, controller);
     expect(controller.saveError, isNotNull);
     expect(controller.state.loadAdjustments.length, 1);
+    await tester.pumpAndSettle();
     expect(find.text('저장 다시 시도'), findsOneWidget);
     await tester.runAsync(() => Directory(file.path).delete());
     await tap(tester, '저장 다시 시도');
@@ -206,6 +207,7 @@ void main() {
     await flush(tester, controller);
     expect(controller.saveError, isNotNull);
     expect(controller.state.loadAdjustments.single.isUndone, isTrue);
+    await tester.pumpAndSettle();
     await tester.runAsync(() => Directory(file.path).delete());
     await tap(tester, '저장 다시 시도');
     await flush(tester, controller);
@@ -232,7 +234,7 @@ void main() {
     );
     await pump(tester, controller, showSuggestions: false, scale: 1.5);
     expect(find.text('변경 내용 확인'), findsNothing);
-    await tester.ensureVisible(find.text('조정 되돌리기'));
+    await tester.ensureVisible(find.text('조정 되돌리기', skipOffstage: false));
     await tester.pumpAndSettle();
     expect(
       tester
@@ -243,7 +245,9 @@ void main() {
       isNotNull,
     );
     await capture(tester, 'history-large');
-    await tester.ensureVisible(find.text('평균 RIR 1 · 2세트 입력').first);
+    await tester.ensureVisible(
+      find.text('평균 RIR 1 · 2세트 입력', skipOffstage: false).first,
+    );
     await tester.pumpAndSettle();
     await capture(tester, 'trend-large');
     expect(tester.takeException(), isNull);
@@ -265,7 +269,7 @@ void main() {
       ),
     );
     await pump(tester, controller);
-    await tester.ensureVisible(find.text('조정 되돌리기'));
+    await tester.ensureVisible(find.text('조정 되돌리기', skipOffstage: false));
     expect(
       tester
           .widget<OutlinedButton>(

@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'app/training_controller.dart';
+import 'cloud_sync_screen.dart';
 import 'backup_screen.dart';
 import 'schedule_screen.dart';
 import 'app/settings_controller.dart';
+import 'app/working_max_scope.dart';
+import 'app/deferred_exercise_scope.dart';
+import 'data/local_deferred_exercise_store.dart';
+import 'domain/postpone.dart';
 import 'domain/recent_lift_record.dart';
+import 'domain/routine_match.dart';
 import 'settings_screen.dart';
 import 'support_screen.dart';
 import 'subscription_screen.dart';
@@ -11,23 +17,125 @@ import 'training_insights_screen.dart';
 import 'domain/training_program.dart';
 import 'flow_components.dart';
 import 'program_screen.dart';
+import 'routine_generator_screen.dart';
 import 'tokens.dart';
 import 'widgets.dart';
 import 'workout_screen.dart';
 
+List<DeferredExercise> _deferredItems(
+  TrainingController controller,
+  BuildContext context,
+) {
+  final deferred = DeferredExerciseScope.maybeOf(context);
+  final plan = controller.state.activePlan;
+  if (deferred == null || plan == null) return const [];
+  return [
+    for (final item in deferred.state.forPlan(plan.id))
+      if (_stillDeferred(controller, plan, item)) item,
+  ];
+}
+
+bool _stillDeferred(
+  TrainingController controller,
+  ActiveTrainingPlan plan,
+  DeferredExercise item,
+) {
+  PlannedSession? session;
+  for (final s in plan.sessions) {
+    if (s.id == item.sessionId) session = s;
+  }
+  if (session == null) return false;
+  PlannedExercise? exercise;
+  for (final e in session.exercises) {
+    if (e.id == item.exerciseId) exercise = e;
+  }
+  if (exercise == null) return false;
+  for (final set in exercise.sets.where((s) => s.isRequired)) {
+    final actual = controller.state.setActuals[set.id];
+    if (actual == null || actual.status == SetActualStatus.skipped) {
+      return true;
+    }
+  }
+  return false;
+}
+
+Future<void> _postponeSession(
+  BuildContext context,
+  TrainingController controller,
+  PlannedSession session,
+) async {
+  final asOf = calendarDate(controller.now());
+  final confirmed = await showDialog<bool>(
+    context: context,
+    builder: (context) => AlertDialog(
+      backgroundColor: AppColors.bgLift,
+      title: Text('일정 미루기', style: AppType.heading),
+      content: Text(
+        '기록이 없는 이 세션을 다음 훈련 요일로 옮길까요? 뒤의 빈 세션도 순서를 맞춰 밀어요.',
+        style: AppType.body,
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context, false),
+          child: Text('취소', style: AppType.action),
+        ),
+        TextButton(
+          onPressed: () => Navigator.pop(context, true),
+          child: Text('미루기', style: AppType.action),
+        ),
+      ],
+    ),
+  );
+  if (confirmed != true || !context.mounted) return;
+  try {
+    final saved = await controller.update(
+      (state) => state.withPostponedSession(session.id, asOf: asOf),
+    );
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          saved
+              ? '다음 훈련일로 옮겼어요.'
+              : (controller.saveError ?? '일정을 저장하지 못했어요.'),
+          style: AppType.body,
+        ),
+      ),
+    );
+  } on FormatException catch (error) {
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(error.message, style: AppType.body)),
+    );
+  } catch (_) {
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('일정을 바꾸지 못했어요.', style: AppType.body)),
+    );
+  }
+}
+
 Future<void> openPrograms(
   BuildContext context,
   TrainingController controller,
-) => Navigator.of(context).push(
-  MaterialPageRoute(
-    builder: (_) => ProgramScreen(
-      controller: controller,
-      defaultUnit:
-          SettingsScope.maybeOf(context)?.settings.defaultWeightUnit ??
-          WeightUnit.kg,
+) {
+  final workingMax = WorkingMaxScope.maybeOf(context);
+  final workingMaxKg = <MainLift, double>{
+    if (workingMax != null)
+      for (final e in workingMax.state.byLift.entries) e.key: e.value.kilograms,
+  };
+  return Navigator.of(context).push(
+    MaterialPageRoute(
+      builder: (_) => ProgramScreen(
+        controller: controller,
+        defaultUnit:
+            SettingsScope.maybeOf(context)?.settings.defaultWeightUnit ??
+            WeightUnit.kg,
+        workingMaxKg: workingMaxKg,
+      ),
     ),
-  ),
-);
+  );
+}
 
 class ActiveTodayScreen extends StatelessWidget {
   final TrainingController controller;
@@ -46,9 +154,24 @@ class ActiveTodayScreen extends StatelessWidget {
         children: [
           Text('${today.month}월 ${today.day}일', style: AppType.caption),
           const StatePanel(
-            title: '첫 프로그램을 선택해 주세요',
-            message: '트레이너의 프로그램을 선택하면 오늘 할 운동을 확인하고 기록할 수 있어요.',
+            title: '첫 루틴을 만들어 주세요',
+            message: '목표만 고르면 코치 템플릿에 맞춰 오늘 할 운동을 만들 수 있어요. 목록에서 직접 고를 수도 있어요.',
           ),
+          if (generatorFeatureFlag)
+            PrimaryAction(
+              label: '루틴 만들기',
+              onPressed: () async {
+                await Navigator.of(context).push<bool>(
+                  MaterialPageRoute(
+                    builder: (_) => RoutineGeneratorScreen(
+                      controller: controller,
+                      workingMax: WorkingMaxScope.maybeOf(context),
+                      now: () => today,
+                    ),
+                  ),
+                );
+              },
+            ),
           PrimaryAction(
             label: '프로그램 선택하기',
             onPressed: () => openPrograms(context, controller),
@@ -93,6 +216,50 @@ class ActiveTodayScreen extends StatelessWidget {
           icon: const Icon(Icons.edit_calendar_outlined),
           label: Text('남은 일정 편집', style: AppType.action),
         ),
+        if (_deferredItems(controller, context).isNotEmpty) ...[
+          Text('이월한 종목', style: AppType.heading),
+          for (final item in _deferredItems(controller, context))
+            GlassPanel(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(item.exerciseName, style: AppType.body),
+                  Text('세션에서 이어서 기록하세요.', style: AppType.caption),
+                  TextButton(
+                    onPressed: () {
+                      final plan = controller.state.activePlan;
+                      if (plan == null) return;
+                      final matches = plan.sessions
+                          .where((s) => s.id == item.sessionId)
+                          .toList();
+                      if (matches.isEmpty) return;
+                      final session = matches.first;
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => _inheritSettings(
+                            context,
+                            WorkoutScreen(
+                              controller: controller,
+                              session: session,
+                              workingMax: WorkingMaxScope.maybeOf(context),
+                              deferred:
+                                  DeferredExerciseScope.maybeOf(context),
+                              defaultUnit:
+                                  SettingsScope.maybeOf(
+                                    context,
+                                  )?.settings.defaultWeightUnit ??
+                                  WeightUnit.kg,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                    child: Text('이어서 기록', style: AppType.action),
+                  ),
+                ],
+              ),
+            ),
+        ],
         if (todaySessions.isEmpty)
           StatePanel(
             title: future.isEmpty ? '예정된 운동이 끝났어요' : '오늘은 예정된 운동이 없어요',
@@ -231,6 +398,20 @@ class _SessionCard extends StatelessWidget {
           ],
           if (summary.unknownDateSets > 0)
             Text('수행일 미상 ${summary.unknownDateSets}세트', style: AppType.caption),
+          if (!readOnly &&
+              postponeProtectionReason(
+                    controller.state,
+                    session,
+                    asOf: calendarDate(controller.now()),
+                  ) ==
+                  null) ...[
+            const SizedBox(height: AppSpace.x2),
+            TextButton(
+              key: ValueKey('postpone-${session.id}'),
+              onPressed: () => _postponeSession(context, controller, session),
+              child: Text('다음 훈련일로 미루기', style: AppType.action),
+            ),
+          ],
           const SizedBox(height: AppSpace.x4),
           PrimaryAction(
             label: readOnly
@@ -252,6 +433,8 @@ class _SessionCard extends StatelessWidget {
                     controller: controller,
                     session: session,
                     readOnly: readOnly,
+                    workingMax: WorkingMaxScope.maybeOf(context),
+                    deferred: DeferredExerciseScope.maybeOf(context),
                     defaultUnit:
                         SettingsScope.maybeOf(
                           context,
@@ -345,6 +528,7 @@ class _SavedRecordsScreenState extends State<SavedRecordsScreen> {
             MaterialPageRoute(
               builder: (_) => TrainingInsightsScreen(
                 controller: c,
+                workingMax: WorkingMaxScope.maybeOf(context),
                 now: widget.now,
                 showSuggestions:
                     SettingsScope.maybeOf(
@@ -555,6 +739,18 @@ class CurrentProfileScreen extends StatelessWidget {
           onPressed: () => openPrograms(context, controller),
         ),
       ),
+      if (generatorFeatureFlag)
+        PrimaryAction(
+          label: '루틴 만들기',
+          onPressed: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => RoutineGeneratorScreen(
+                controller: controller,
+                workingMax: WorkingMaxScope.maybeOf(context),
+              ),
+            ),
+          ),
+        ),
       if (SettingsScope.maybeOf(context) != null)
         PrimaryAction(
           label: '앱 설정',
@@ -573,6 +769,12 @@ class CurrentProfileScreen extends StatelessWidget {
           ),
         ),
       ),
+      PrimaryAction(
+        label: '서버 기록 저장·불러오기',
+        onPressed: () => Navigator.of(context).push(
+          MaterialPageRoute(builder: (_) => const CloudSyncScreen()),
+        ),
+      ),
       TextButton(
         onPressed: () => Navigator.of(
           context,
@@ -584,6 +786,35 @@ class CurrentProfileScreen extends StatelessWidget {
           context,
         ).push(MaterialPageRoute(builder: (_) => const SubscriptionScreen())),
         child: Text('구독 안내', style: AppType.action),
+      ),
+      TextButton(
+        onPressed: () => showDialog<void>(
+          context: context,
+          builder: (context) => AlertDialog(
+            backgroundColor: AppColors.bgLift,
+            title: Text('커뮤니티', style: AppType.heading),
+            content: Text(
+              '자유게시판·코치 Q&A는 서버·계정·모더레이션이 필요해요. 지금은 도움말 FAQ만 로컬로 제공해요. 하단 5탭(습관)은 유지합니다.',
+              style: AppType.body,
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('확인', style: AppType.action),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const SupportScreen()),
+                  );
+                },
+                child: Text('FAQ 열기', style: AppType.action),
+              ),
+            ],
+          ),
+        ),
+        child: Text('커뮤니티 (준비 중)', style: AppType.action),
       ),
       Text('최근 리프트 기록', style: AppType.heading),
       if (controller.state.recentRecords.isEmpty)

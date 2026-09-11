@@ -37,7 +37,13 @@
 | [설정·구독 운영](2026-09-08-subscription-operations.md) | 현재 로컬 설정·FAQ와 미채택 결제 운영 제안 구분 |
 | [디자인 시스템](03-design-system.md) / [철학](05-design-philosophy.md) | 앱 토큰·컴포넌트와 디자인 원칙 |
 | [상세 로드맵](2026-09-08-development-roadmap.md) | 최초 제안과 실제 채택 범위·미채택 조건의 대조 |
-| [랜딩 5개 시안](2026-09-08-interactive-landing-concepts.md) | 독립 Three.js 체험·검증·미배포 경계 |
+| [인증·가입](2026-09-10-auth-kakao-flow.md) / [인증 UI 원칙](2026-09-10-auth-design-principles.md) | 카카오·세션·테스트 우회 |
+| [원문 브리프 vs 현재 갭](2026-09-10-brief-vs-current-gap-analysis.md) | 재요청 생성기 요구와 선택형 앱 계약의 겹침·괴리·미포함 |
+| [생성기·e1RM 계획](2026-09-10-generator-e1rm-implementation-plan.md) | Phase 1–4 MVP: working max · 생성(회복/블록) · 라이브 재필 · postpone/이월 |
+| [트레이너 공유(쉬운 안내)](2026-09-10-coach-share-easy.md) | 코치에게 전달용 · 앱 역할·추정 규칙·확인 질문 |
+| [스테이징·백엔드 로드맵](2026-09-10-staging-backend-roadmap.md) | 스토어 전 서버 배포·Supabase·CI |
+| [트레이너 스테이징 보는 법](2026-09-10-trainer-staging-how-to.md) | URL 미리보기 피드백용 한 장 |
+| [상품 백엔드·스냅샷](2026-09-11-product-backend.md) | 스냅샷 의미·구현 순서·동기화 시작 |
 
 랜딩은 [실행 안내](../landing/concepts/README.md)에 따라 로컬 서버를 열어 확인한다. `127.0.0.1`은 해당 컴퓨터의 주소이며 집의 다른 컴퓨터에서 접속할 공유 주소가 아니다. 앱 기록·가입·결제 연결과 공개 배포는 별도다.
 

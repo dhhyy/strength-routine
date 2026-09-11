@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'tokens.dart';
 
-/// 첫 실행 온보딩 인트로 — 소개 5장 (PageView). 끝에서 onDone() 호출.
-/// 가벼운 소개 성격. 코치 박민재의 원칙이 로직에 녹아 있다는 담백한 귀속만.
+/// 첫 실행 소개 5장. 마지막에서만 가입/로그인. 게스트 없음(결제·세션 강제).
 class OnboardingScreen extends StatefulWidget {
-  final VoidCallback onDone;
-  const OnboardingScreen({super.key, required this.onDone});
+  final VoidCallback onSignup;
+  final VoidCallback onLogin;
+  final VoidCallback? onBypass;
+  const OnboardingScreen({
+    super.key,
+    required this.onSignup,
+    required this.onLogin,
+    this.onBypass,
+  });
 
   @override
   State<OnboardingScreen> createState() => _OnboardingScreenState();
@@ -24,11 +30,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   void _next() {
-    if (_isLast) {
-      widget.onDone();
-    } else {
-      _pc.nextPage(duration: const Duration(milliseconds: 320), curve: Curves.easeOutCubic);
-    }
+    _pc.nextPage(duration: const Duration(milliseconds: 320), curve: Curves.easeOutCubic);
+  }
+
+  void _jumpToAuthHub() {
+    _pc.animateToPage(
+      _count - 1,
+      duration: const Duration(milliseconds: 320),
+      curve: Curves.easeOutCubic,
+    );
   }
 
   @override
@@ -50,7 +60,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         opacity: _isLast ? 0 : 1,
                         duration: const Duration(milliseconds: 200),
                         child: GestureDetector(
-                          onTap: _isLast ? null : widget.onDone,
+                          onTap: _isLast ? null : _jumpToAuthHub,
                           child: Text('건너뛰기', style: kr(size: 12, color: AppColors.muted)),
                         ),
                       ),
@@ -70,14 +80,23 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   padding: const EdgeInsets.fromLTRB(24, 4, 24, 22),
                   child: Column(
                     children: [
-                      _cta(_isLast ? '루틴 만들기' : '다음', _next),
                       if (_isLast) ...[
-                        const SizedBox(height: 12),
+                        _cta('간단하게 가입하기', widget.onSignup),
+                        const SizedBox(height: 14),
                         GestureDetector(
-                          onTap: widget.onDone,
-                          child: Text('이미 계정이 있어요', style: kr(size: 13, color: AppColors.muted)),
+                          onTap: widget.onLogin,
+                          child: Text('로그인하기', style: kr(size: 13, color: AppColors.muted)),
                         ),
-                      ],
+                        if (widget.onBypass != null) ...[
+                          const SizedBox(height: 14),
+                          GestureDetector(
+                            onTap: widget.onBypass,
+                            child: Text('테스트로 시작 (인증 없음)',
+                                style: kr(size: 12, color: AppColors.muted)),
+                          ),
+                        ],
+                      ] else
+                        _cta('다음', _next),
                     ],
                   ),
                 ),
@@ -89,7 +108,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
-  // ---- slides ----
   Widget _slide1() => _pad(Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -149,11 +167,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         children: [
           _miniTabs(),
           const SizedBox(height: 24),
-          _titleSub('기록·추세·습관까지,\n한곳에서.', '이제 당신의 첫 루틴을 만들어봐요. 몇 가지만 물어볼게요.'),
+          _titleSub('기록·추세·습관까지,\n한곳에서.', '이미 계정이 있으면 로그인하고, 없으면 간단한 가입으로 시작해요.'),
         ],
       ));
 
-  // ---- helpers ----
   Widget _pad(Widget child) => Padding(padding: const EdgeInsets.symmetric(horizontal: 24), child: child);
 
   Widget _centerSlide({required IconData badge, required String title, required String sub}) => _pad(Column(

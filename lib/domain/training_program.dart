@@ -6,7 +6,7 @@ enum ProgramSetKind { work, warmup, drop }
 
 enum LoadKind { manual, fixedKg, percentOfBaseline }
 
-enum BaselineSource { userEntered, recordedWeight }
+enum BaselineSource { userEntered, recordedWeight, workingMax }
 
 enum SetActualStatus { completed, skipped }
 
@@ -491,6 +491,69 @@ final class ActiveTrainingPlan {
     ),
   );
 
+  /// 기준 중량만 바꾼다. 이미 박제한 목표 kg(sessionDates/targets)는 그대로다.
+  ActiveTrainingPlan withBaseline(LiftBaseline baseline) {
+    final next = Map<MainLift, LiftBaseline>.of(baselines);
+    next[baseline.lift] = baseline;
+    return ActiveTrainingPlan._(
+      id: id,
+      program: program,
+      startDate: startDate,
+      weekdays: weekdays,
+      incrementKg: incrementKg,
+      baselines: next,
+      sessionDates: sessionDates,
+      targetKgBySetId: targetKgBySetId,
+    );
+  }
+
+  /// Phase 3: baseline을 갱신하고 **미래·미기록** `%` 목표만 다시 채운다.
+  /// 오늘·과거 세션과 [blockedSetIds](기록·초안)는 건드리지 않는다.
+  ActiveTrainingPlan refillFuturePercentTargets({
+    required MainLift lift,
+    required double baselineKg,
+    required DateTime asOf,
+    required Set<String> blockedSetIds,
+    BaselineSource source = BaselineSource.workingMax,
+  }) {
+    _positive(baselineKg);
+    final nextTargets = Map<String, double?>.of(targetKgBySetId);
+    final nextBaselines = Map<MainLift, LiftBaseline>.of(baselines);
+    nextBaselines[lift] = LiftBaseline(
+      lift: lift,
+      kilograms: baselineKg,
+      source: source,
+    );
+    final today = calendarDate(asOf);
+    for (final session in program.orderedSessions) {
+      final sessionKey = _path([id, session.id]);
+      final date = sessionDates[sessionKey]!;
+      if (!date.isAfter(today)) continue;
+      for (final exercise in session.exercises) {
+        for (final set in exercise.sets) {
+          final setKey = _path([id, session.id, exercise.id, set.id]);
+          if (blockedSetIds.contains(setKey)) continue;
+          final load = set.load;
+          if (load.kind != LoadKind.percentOfBaseline || load.lift != lift) {
+            continue;
+          }
+          final weight = baselineKg * load.value! / 100;
+          nextTargets[setKey] = (weight / incrementKg).round() * incrementKg;
+        }
+      }
+    }
+    return ActiveTrainingPlan._(
+      id: id,
+      program: program,
+      startDate: startDate,
+      weekdays: weekdays,
+      incrementKg: incrementKg,
+      baselines: nextBaselines,
+      sessionDates: sessionDates,
+      targetKgBySetId: nextTargets,
+    );
+  }
+
   /// 명시적 일정 편집만 허용한다. 오늘/과거 세션의 날짜는 보존한다.
   ActiveTrainingPlan rescheduleFuture(
     Map<String, DateTime> changes, {
@@ -507,6 +570,11 @@ final class ActiveTrainingPlan {
       );
       dates[entry.key] = next;
     }
+    return replaceSessionDates(dates);
+  }
+
+  /// 세션 날짜 맵을 통째로 교체한다. 순서·요일·시작일 불변식은 생성자가 검증한다.
+  ActiveTrainingPlan replaceSessionDates(Map<String, DateTime> dates) {
     return ActiveTrainingPlan._(
       id: id,
       program: program,
@@ -1252,6 +1320,24 @@ final class TrainingAppState {
     sessionEvents: sessionEvents,
     legacySessionIds: legacySessionIds,
   );
+
+  /// 활성 계획만 교체한다. 보관함으로 보내지 않는다(baseline 갱신 등).
+  TrainingAppState replaceActivePlan(ActiveTrainingPlan plan) {
+    _check(activePlan?.id == plan.id, 'Active plan id mismatch');
+    return TrainingAppState(
+      onboarded: onboarded,
+      recentRecords: recentRecords,
+      activePlan: plan,
+      planHistory: planHistory,
+      setActuals: setActuals,
+      setDrafts: setDrafts,
+      sessionNotes: sessionNotes,
+      completionNotified: completionNotified,
+      loadAdjustments: loadAdjustments,
+      sessionEvents: sessionEvents,
+      legacySessionIds: legacySessionIds,
+    );
+  }
   TrainingAppState withSetActual(String plannedSetId, SetActual? actual) {
     _check(
       activePlan?.targetKgBySetId.containsKey(plannedSetId) ?? false,

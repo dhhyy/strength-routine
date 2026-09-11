@@ -254,6 +254,29 @@ class TrainingController extends ChangeNotifier {
     }
   }
 
+  /// 서버 스냅샷용: 로컬 엔벨로프 JSON.
+  Map<String, dynamic> exportEnvelope() {
+    final raw = LocalTrainingStore.encodeEnvelope(
+      state,
+      restorationGeneration: store.restorationGeneration,
+    );
+    return Map<String, dynamic>.from(jsonDecode(jsonEncode(raw)) as Map);
+  }
+
+  /// 서버에서 받은 엔벨로프를 검토 없이 기기에 반영한다(복원 세대 갱신).
+  Future<bool> importEnvelope(Map<String, dynamic> envelope) async {
+    final next = LocalTrainingStore.decodeEnvelope(envelope);
+    final generation =
+        envelope['restorationGeneration'] as String? ??
+        'cloud-${DateTime.now().toUtc().microsecondsSinceEpoch}';
+    return commitReviewedState(
+      next,
+      expectedRevision: revision,
+      restoredGeneration: generation,
+      allowUnreadableRecovery: true,
+    );
+  }
+
   @override
   void dispose() {
     _disposed = true;

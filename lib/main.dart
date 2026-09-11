@@ -6,8 +6,24 @@ import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'app/training_controller.dart';
 import 'app/settings_controller.dart';
+import 'app/working_max_controller.dart';
+import 'app/working_max_scope.dart';
+import 'app/deferred_exercise_controller.dart';
+import 'app/deferred_exercise_scope.dart';
+import 'app/app_environment.dart';
+import 'auth/auth_controller.dart';
+import 'auth/auth_config.dart';
+import 'auth/auth_scope.dart';
+import 'auth/login_screen.dart';
+import 'auth/signup_screen.dart';
+import 'app/cloud_snapshot_controller.dart';
+import 'app/cloud_snapshot_scope.dart';
+import 'data/cloud_snapshot_store.dart';
+import 'data/supabase_cloud_snapshot_store.dart';
 import 'data/local_settings_store.dart';
 import 'data/local_training_store.dart';
+import 'data/local_working_max_store.dart';
+import 'data/local_deferred_exercise_store.dart';
 import 'data/local_habit_store.dart';
 import 'flow_components.dart';
 import 'theme.dart';
@@ -31,23 +47,42 @@ void main() {
 
 class StrengthApp extends StatelessWidget {
   final TrainingController? controller;
+  final AuthController? auth;
   final DateTime Function()? now;
   final LocalHabitStore? habitStore;
-  const StrengthApp({super.key, this.controller, this.now, this.habitStore});
+  const StrengthApp({
+    super.key,
+    this.controller,
+    this.auth,
+    this.now,
+    this.habitStore,
+  });
   @override
   Widget build(BuildContext context) => MaterialApp(
     title: '오늘 루틴',
     debugShowCheckedModeBanner: false,
     theme: buildConsoleTheme(),
-    home: RootGate(controller: controller, now: now, habitStore: habitStore),
+    home: RootGate(
+      controller: controller,
+      auth: auth,
+      now: now,
+      habitStore: habitStore,
+    ),
   );
 }
 
 class RootGate extends StatefulWidget {
   final TrainingController? controller;
+  final AuthController? auth;
   final DateTime Function()? now;
   final LocalHabitStore? habitStore;
-  const RootGate({super.key, this.controller, this.now, this.habitStore});
+  const RootGate({
+    super.key,
+    this.controller,
+    this.auth,
+    this.now,
+    this.habitStore,
+  });
   @override
   State<RootGate> createState() => _RootGateState();
 }
@@ -55,8 +90,13 @@ class RootGate extends StatefulWidget {
 class _RootGateState extends State<RootGate> {
   TrainingController? _controller;
   SettingsController? _settings;
+  WorkingMaxController? _workingMax;
+  DeferredExerciseController? _deferred;
+  CloudSnapshotController? _cloud;
+  AuthController? _auth;
   bool _opening = true;
   String? _error;
+
   @override
   void initState() {
     super.initState();
@@ -69,6 +109,8 @@ class _RootGateState extends State<RootGate> {
       _error = null;
     });
     try {
+      _auth ??= widget.auth ?? AuthController();
+      if (!_auth!.ready) await _auth!.initialize();
       if (_controller == null) {
         if (widget.controller != null) {
           _controller = widget.controller;
@@ -91,9 +133,40 @@ class _RootGateState extends State<RootGate> {
           ),
         ),
       );
+      _workingMax ??= WorkingMaxController(
+        store: LocalWorkingMaxStore(
+          File(
+            widget.controller == null
+                ? '${_controller!.store.file.parent.path}/working-max.json'
+                : '${_controller!.store.file.path}.working-max.json',
+          ),
+        ),
+      );
+      _deferred ??= DeferredExerciseController(
+        store: LocalDeferredExerciseStore(
+          File(
+            widget.controller == null
+                ? '${_controller!.store.file.parent.path}/deferred-exercises.json'
+                : '${_controller!.store.file.path}.deferred-exercises.json',
+          ),
+        ),
+      );
       if (_settings!.loading) await _settings!.initialize();
+      if (_workingMax!.loading) await _workingMax!.initialize();
+      if (_deferred!.loading) await _deferred!.initialize();
       if (_controller!.loading || _controller!.loadError != null) {
         await _controller!.initialize();
+      }
+      _cloud ??= CloudSnapshotController(
+        auth: _auth!,
+        training: _controller!,
+        workingMax: _workingMax!,
+        store: AuthConfig.isConfigured
+            ? SupabaseCloudSnapshotStore()
+            : MemoryCloudSnapshotStore(),
+      );
+      if (_auth!.isSignedIn && !_controller!.state.onboarded) {
+        await _controller!.update((state) => state.copyWith(onboarded: true));
       }
     } catch (_) {
       _error = '기록 저장 공간을 열지 못했어요.';
@@ -101,10 +174,36 @@ class _RootGateState extends State<RootGate> {
     if (mounted) setState(() => _opening = false);
   }
 
+  Future<void> _afterAuth() async {
+    final c = _controller;
+    if (c == null) return;
+    if (!c.state.onboarded) {
+      await c.update((state) => state.copyWith(onboarded: true));
+    }
+  }
+
+  void _openSignup() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => SignupScreen(auth: _auth!, onSignedIn: _afterAuth),
+      ),
+    );
+  }
+
+  void _openLogin() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => LoginScreen(auth: _auth!, onSignedIn: _afterAuth),
+      ),
+    );
+  }
+
   @override
   void dispose() {
     if (widget.controller == null) _controller?.dispose();
+    if (widget.auth == null) _auth?.dispose();
     _settings?.dispose();
+    _workingMax?.dispose();
     super.dispose();
   }
 
@@ -119,7 +218,7 @@ class _RootGateState extends State<RootGate> {
         ],
       );
     }
-    if (_error != null || _controller == null) {
+    if (_error != null || _controller == null || _auth == null) {
       return FlowPage(
         title: '오늘 루틴',
         children: [
@@ -132,8 +231,9 @@ class _RootGateState extends State<RootGate> {
       );
     }
     final c = _controller!;
+    final auth = _auth!;
     return ListenableBuilder(
-      listenable: c,
+      listenable: Listenable.merge([c, auth]),
       builder: (context, _) {
         if (c.loadError != null) {
           return FlowPage(
@@ -155,17 +255,36 @@ class _RootGateState extends State<RootGate> {
             ],
           );
         }
-        if (!c.state.onboarded) {
+        if (!auth.isSignedIn) {
           return OnboardingScreen(
-            onDone: () => c.update((state) => state.copyWith(onboarded: true)),
+            onSignup: _openSignup,
+            onLogin: _openLogin,
+            onBypass: auth.canBypass
+                ? () async {
+                    await auth.signInBypass();
+                    await _afterAuth();
+                  }
+                : null,
           );
         }
         return SettingsScope(
           controller: _settings!,
-          child: HomeShell(
-            controller: c,
-            now: widget.now,
-            habitStore: widget.habitStore,
+          child: AuthScope(
+            controller: _auth!,
+            child: WorkingMaxScope(
+              controller: _workingMax!,
+              child: DeferredExerciseScope(
+                controller: _deferred!,
+                child: CloudSnapshotScope(
+                  controller: _cloud!,
+                  child: HomeShell(
+                    controller: c,
+                    now: widget.now,
+                    habitStore: widget.habitStore,
+                  ),
+                ),
+              ),
+            ),
           ),
         );
       },
@@ -213,6 +332,23 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
     return Scaffold(
       body: Column(
         children: [
+          if (AppEnvironment.current.isStaging)
+            Material(
+              color: AppColors.accentSoft,
+              child: SafeArea(
+                bottom: false,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpace.x4,
+                    vertical: AppSpace.x2,
+                  ),
+                  child: Text(
+                    appEnvironmentLabel,
+                    style: AppType.caption.copyWith(color: AppColors.accent),
+                  ),
+                ),
+              ),
+            ),
           if (c.saveError != null)
             SafeArea(
               bottom: false,

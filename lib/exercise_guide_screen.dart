@@ -6,8 +6,12 @@ import 'tokens.dart';
 import 'widgets.dart';
 
 typedef GuideSourceOpener = Future<bool> Function(Uri uri);
-Future<bool> _openGuideSource(Uri uri) =>
-    launchUrl(uri, mode: LaunchMode.externalApplication);
+Future<bool> _openGuideSource(Uri uri) async {
+  try {
+    if (await launchUrl(uri, mode: LaunchMode.inAppBrowserView)) return true;
+  } catch (_) {}
+  return launchUrl(uri, mode: LaunchMode.externalApplication);
+}
 
 /// Plain instructions remain on device; only an explicit source action opens a URL.
 class ExerciseGuideScreen extends StatefulWidget {

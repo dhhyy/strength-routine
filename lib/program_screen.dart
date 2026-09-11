@@ -11,10 +11,12 @@ import 'widgets.dart';
 class ProgramScreen extends StatefulWidget {
   final TrainingController controller;
   final WeightUnit defaultUnit;
+  final Map<MainLift, double> workingMaxKg;
   const ProgramScreen({
     super.key,
     required this.controller,
     this.defaultUnit = WeightUnit.kg,
+    this.workingMaxKg = const {},
   });
   @override
   State<ProgramScreen> createState() => _ProgramScreenState();
@@ -99,6 +101,7 @@ class _ProgramScreenState extends State<ProgramScreen> {
                               controller: c,
                               program: program,
                               defaultUnit: widget.defaultUnit,
+                              workingMaxKg: widget.workingMaxKg,
                             ),
                           ),
                         );
@@ -121,11 +124,13 @@ class ProgramDetailScreen extends StatelessWidget {
   final TrainingController controller;
   final TrainingProgram program;
   final WeightUnit defaultUnit;
+  final Map<MainLift, double> workingMaxKg;
   const ProgramDetailScreen({
     super.key,
     required this.controller,
     required this.program,
     this.defaultUnit = WeightUnit.kg,
+    this.workingMaxKg = const {},
   });
   @override
   Widget build(BuildContext context) => FlowPage(
@@ -187,6 +192,7 @@ class ProgramDetailScreen extends StatelessWidget {
                 controller: controller,
                 program: program,
                 defaultUnit: defaultUnit,
+                workingMaxKg: workingMaxKg,
               ),
             ),
           );
@@ -204,12 +210,14 @@ class ProgramSetupScreen extends StatefulWidget {
   final TrainingProgram program;
   final DateTime Function()? now;
   final WeightUnit defaultUnit;
+  final Map<MainLift, double> workingMaxKg;
   const ProgramSetupScreen({
     super.key,
     required this.controller,
     required this.program,
     this.now,
     this.defaultUnit = WeightUnit.kg,
+    this.workingMaxKg = const {},
   });
   @override
   State<ProgramSetupScreen> createState() => _ProgramSetupScreenState();
@@ -242,6 +250,12 @@ class _ProgramSetupScreenState extends State<ProgramSetupScreen> {
       if (load.lift != null) {
         _requiredLifts.add(load.lift!);
         _baselines.putIfAbsent(load.lift!, TextEditingController.new);
+      }
+    }
+    for (final entry in widget.workingMaxKg.entries) {
+      final field = _baselines[entry.key];
+      if (field != null && field.text.isEmpty) {
+        field.text = formatNumber(entry.value);
       }
     }
     for (final record in widget.controller.state.recentRecords) {
@@ -453,7 +467,8 @@ class _ProgramSetupScreenState extends State<ProgramSetupScreen> {
                 ),
                 const SizedBox(height: AppSpace.x2),
                 Text(
-                  '프로그램이 사용하는 기준 중량을 입력해 주세요. 최근 기록에서 자동 추정하지 않아요.',
+                  '프로그램이 사용하는 기준 중량을 입력해 주세요.'
+                  '${widget.workingMaxKg.containsKey(lift) ? ' 채택한 working max를 미리 넣었어요.' : ' 최근 기록에서 자동 추정하지 않아요.'}',
                   style: AppType.caption,
                 ),
               ],

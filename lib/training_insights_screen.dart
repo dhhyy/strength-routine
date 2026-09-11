@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'app/training_controller.dart';
+import 'app/working_max_controller.dart';
+import 'app/working_max_scope.dart';
+import 'domain/e1rm.dart';
+import 'domain/e1rm_proposals.dart';
 import 'domain/training_insights.dart';
 import 'domain/training_program.dart';
 import 'flow_components.dart';
@@ -9,11 +13,13 @@ import 'widgets.dart';
 
 class TrainingInsightsScreen extends StatefulWidget {
   final TrainingController controller;
+  final WorkingMaxController? workingMax;
   final DateTime Function()? now;
   final bool showSuggestions;
   const TrainingInsightsScreen({
     super.key,
     required this.controller,
+    this.workingMax,
     this.now,
     this.showSuggestions = true,
   });
@@ -24,8 +30,29 @@ class TrainingInsightsScreen extends StatefulWidget {
 class _TrainingInsightsScreenState extends State<TrainingInsightsScreen> {
   String? _planId, _error, _message;
   bool _busy = false;
+  final _statusKey = GlobalKey();
+  final _scrollController = ScrollController();
   DateTime get _today => widget.now?.call() ?? DateTime.now();
   bool get _saving => _busy || widget.controller.saving;
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _revealStatus() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      if (_scrollController.hasClients) {
+        _scrollController.jumpTo(0);
+      }
+      final context = _statusKey.currentContext;
+      if (context != null) {
+        Scrollable.ensureVisible(context, alignment: 0);
+      }
+    });
+  }
 
   Future<void> _save(TrainingAppState Function(TrainingAppState) change) async {
     setState(() {
@@ -40,8 +67,12 @@ class _TrainingInsightsScreenState extends State<TrainingInsightsScreen> {
         _error = saved ? null : widget.controller.saveError ?? '저장을 완료하지 못했어요.';
         _message = saved ? '기기에 저장했어요.' : null;
       });
+      if (!saved) _revealStatus();
     } on FormatException catch (error) {
-      if (mounted) setState(() => _error = error.message);
+      if (mounted) {
+        setState(() => _error = error.message);
+        _revealStatus();
+      }
     } finally {
       if (mounted) setState(() => _busy = false);
     }
@@ -158,10 +189,129 @@ class _TrainingInsightsScreenState extends State<TrainingInsightsScreen> {
     }
   }
 
+  Future<void> _adoptE1rm(
+    WorkingMaxController workingMax,
+    E1rmProposal proposal,
+  ) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        scrollable: true,
+        backgroundColor: AppColors.bgLift,
+        surfaceTintColor: AppColors.bgLift,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.panel),
+          side: const BorderSide(color: AppColors.hairStrong),
+        ),
+        title: Text('추정 1RM을 채택할까요?', style: AppType.heading),
+        content: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(liftLabel(proposal.lift), style: AppType.body),
+            const SizedBox(height: AppSpace.x4),
+            Text(
+              '${_number(proposal.sourceWeightKg)} kg × ${proposal.sourceRepetitions}회 → '
+              '추정 ${_number(proposal.estimatedKg)} kg',
+              style: AppType.number,
+            ),
+            const SizedBox(height: AppSpace.x4),
+            Text(
+              '이미 끝난 세트의 목표 중량은 바꾸지 않아요. '
+              '채택하면 working max와 진행 중 계획의 기준 중량만 갱신해요.',
+              style: AppType.caption,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text('취소', style: AppType.action),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text('채택하기', style: AppType.action),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) return;
+    setState(() {
+      _busy = true;
+      _error = null;
+      _message = null;
+    });
+    try {
+      await workingMax.adoptEstimated(
+        lift: proposal.lift,
+        estimatedKg: proposal.estimatedKg,
+        sourceWeightKg: proposal.sourceWeightKg,
+        sourceRepetitions: proposal.sourceRepetitions,
+        note: proposal.exerciseName,
+        now: _today.toUtc(),
+      );
+      final plan = widget.controller.state.activePlan;
+      if (plan != null) {
+        final blocked = <String>{
+          ...widget.controller.state.setActuals.keys,
+          ...widget.controller.state.setDrafts.keys,
+        };
+        final saved = await widget.controller.update(
+          (state) => state.replaceActivePlan(
+            plan.refillFuturePercentTargets(
+              lift: proposal.lift,
+              baselineKg: roundE1rmKg(proposal.estimatedKg),
+              asOf: _today,
+              blockedSetIds: blocked,
+            ),
+          ),
+        );
+        if (!mounted) return;
+        if (!saved) {
+          setState(() {
+            _error =
+                widget.controller.saveError ??
+                'working max는 저장했지만 계획 기준 중량 저장에 실패했어요.';
+          });
+          _revealStatus();
+          return;
+        }
+      }
+      if (!mounted) return;
+      setState(
+        () => _message =
+            '${liftLabel(proposal.lift)} working max·기준 중량을 저장했어요.',
+      );
+    } catch (_) {
+      if (mounted) setState(() => _error = 'working max를 저장하지 못했어요.');
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
   @override
-  Widget build(BuildContext context) => ListenableBuilder(
-    listenable: widget.controller,
-    builder: (context, _) {
+  Widget build(BuildContext context) {
+    // push된 라우트는 HomeShell의 InheritedScope 밖이다. 생성자로 받은 컨트롤러를 우선한다.
+    final workingMax =
+        widget.workingMax ?? WorkingMaxScope.maybeOf(context);
+    return ListenableBuilder(
+      listenable: widget.controller,
+      builder: (context, _) {
+        if (workingMax == null) {
+          return _buildBody(context, workingMax: null);
+        }
+        return ListenableBuilder(
+          listenable: workingMax,
+          builder: (context, _) =>
+              _buildBody(context, workingMax: workingMax),
+        );
+      },
+    );
+  }
+
+  Widget _buildBody(
+    BuildContext context, {
+    required WorkingMaxController? workingMax,
+  }) {
       final controller = widget.controller;
       final state = controller.state;
       if (controller.loading) {
@@ -216,8 +366,16 @@ class _TrainingInsightsScreenState extends State<TrainingInsightsScreen> {
           .where((a) => a.planId == plan.id)
           .toList()
           .reversed;
+      final proposals = e1rmFeatureFlag
+          ? buildE1rmProposals(state, planId: plan.id, asOf: _today)
+          : const <E1rmProposal>[];
+      final offered = [
+        for (final p in proposals)
+          if (p.shouldOffer(workingMax?.state[p.lift])) p,
+      ];
       return FlowPage(
         title: '기록 추세',
+        scrollController: _scrollController,
         children: [
           DropdownButtonFormField<String>(
             key: const ValueKey('insights-plan'),
@@ -255,17 +413,22 @@ class _TrainingInsightsScreenState extends State<TrainingInsightsScreen> {
             style: AppType.caption,
           ),
           if (_error != null || controller.saveError != null)
-            StatePanel(
-              title: '변경을 확인해 주세요',
-              message: _error ?? controller.saveError!,
-              icon: Icons.info_outline,
-              action: controller.saveError == null
-                  ? null
-                  : PrimaryAction(
-                      label: '저장 다시 시도',
-                      busy: _saving,
-                      onPressed: () => _save((state) => state),
-                    ),
+            KeyedSubtree(
+              key: _statusKey,
+              child: StatePanel(
+                title: '변경을 확인해 주세요',
+                message: _error ?? controller.saveError!,
+                icon: Icons.info_outline,
+                action: controller.saveError == null
+                    ? null
+                    : PrimaryAction(
+                        label: '저장 다시 시도',
+                        // 저장 중에도 라벨을 유지해 화면·테스트가 재시도 CTA를 놓치지 않게 한다.
+                        onPressed: _saving
+                            ? null
+                            : () => _save((state) => state),
+                      ),
+              ),
             ),
           if (_saving) const LinearProgressIndicator(),
           if (_message != null)
@@ -273,6 +436,82 @@ class _TrainingInsightsScreenState extends State<TrainingInsightsScreen> {
               liveRegion: true,
               child: Text(_message!, style: AppType.caption),
             ),
+          if (e1rmFeatureFlag) ...[
+            Text('추정 1RM (working max)', style: AppType.heading),
+            Text(
+              'Epley 공식으로 추정해요. 실제 1RM이 아니며, 채택해도 지난 세트 목표는 그대로예요.',
+              style: AppType.caption,
+            ),
+            if (workingMax != null)
+              for (final entry in workingMax.state.byLift.entries)
+                GlassPanel(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(liftLabel(entry.key), style: AppType.heading),
+                      const SizedBox(height: AppSpace.x2),
+                      Text(
+                        '${_number(entry.value.kilograms)} kg',
+                        style: AppType.number,
+                      ),
+                      Text(
+                        '채택 · ${isoDate(entry.value.adoptedAt)}',
+                        style: AppType.caption,
+                      ),
+                    ],
+                  ),
+                ),
+            if (workingMax == null)
+              Text(
+                'working max 저장소를 연결하지 못했어요. 앱을 다시 실행해 주세요.',
+                style: AppType.caption,
+              )
+            else if (offered.isEmpty)
+              Text(
+                '채택할 새 추정이 없어요. mainLift가 있는 작업 세트와 1–12회 기록이 필요해요.',
+                style: AppType.caption,
+              )
+            else
+              for (final proposal in offered)
+                GlassPanel(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(liftLabel(proposal.lift), style: AppType.heading),
+                      const SizedBox(height: AppSpace.x2),
+                      Text(
+                        '${_number(proposal.sourceWeightKg)} kg × ${proposal.sourceRepetitions}회',
+                        style: AppType.body,
+                      ),
+                      Text(
+                        '추정 ${_number(proposal.estimatedKg)} kg · ${proposal.exerciseName}',
+                        style: AppType.number,
+                      ),
+                      Text(
+                        '근거 세션 · ${isoDate(proposal.plannedDate)}',
+                        style: AppType.caption,
+                      ),
+                      const SizedBox(height: AppSpace.x4),
+                      PrimaryAction(
+                        label: 'working max로 채택',
+                        busy: _saving,
+                        onPressed: () => _adoptE1rm(workingMax, proposal),
+                      ),
+                    ],
+                  ),
+                ),
+            ExpansionTile(
+              title: Text('추정 1RM 기준', style: AppType.body),
+              childrenPadding: const EdgeInsets.all(AppSpace.x4),
+              children: [
+                Text(
+                  'e1RM = 무게 × (1 + 반복/30). 12회 초과·RIR 4 초과 세트는 제외해요. '
+                  '정책 id: $e1rmPolicyId',
+                  style: AppType.caption,
+                ),
+              ],
+            ),
+          ],
           Text('중량 조정', style: AppType.heading),
           if (!widget.showSuggestions)
             Text(
@@ -338,8 +577,7 @@ class _TrainingInsightsScreenState extends State<TrainingInsightsScreen> {
             for (final trend in trends) _trendCard(trend),
         ],
       );
-    },
-  );
+  }
 
   Widget _historyCard(TargetLoadAdjustment adjustment) {
     final reason = adjustment.isUndone ? null : _undoReason(adjustment);

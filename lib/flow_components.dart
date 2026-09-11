@@ -7,11 +7,13 @@ class FlowPage extends StatelessWidget {
   final String title;
   final List<Widget> children;
   final Widget? trailing;
+  final ScrollController? scrollController;
   const FlowPage({
     super.key,
     required this.title,
     required this.children,
     this.trailing,
+    this.scrollController,
   });
 
   @override
@@ -28,6 +30,7 @@ class FlowPage extends StatelessWidget {
       child: SafeArea(
         top: false,
         child: ListView(
+          controller: scrollController,
           padding: const EdgeInsets.all(AppSpace.x4),
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           children: [

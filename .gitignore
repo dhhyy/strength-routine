@@ -33,6 +33,13 @@ migrate_working_dir/
 .pub/
 /build/
 
+# Secrets / local env (never commit)
+.env
+.env.*
+!.env.example
+supabase/.temp/
+supabase/.branches/
+
 # Symbolication related
 app.*.symbols
 
@@ -43,3 +50,6 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Local secrets / machine-only
+.local/

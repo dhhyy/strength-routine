@@ -4,12 +4,16 @@ import 'package:flutter/material.dart';
 
 import 'app/training_controller.dart';
 import 'app/settings_controller.dart';
+import 'app/working_max_controller.dart';
+import 'app/deferred_exercise_controller.dart';
+import 'data/local_deferred_exercise_store.dart';
 import 'domain/previous_record.dart';
 import 'domain/rest_timer.dart';
 import 'previous_record_dialog.dart';
 import 'domain/recent_lift_record.dart';
 import 'domain/training_program.dart';
 import 'flow_components.dart';
+import 'live_working_max_offer.dart';
 import 'prescription_widgets.dart';
 import 'rest_timer_panel.dart';
 import 'tokens.dart';
@@ -18,6 +22,97 @@ import 'widgets.dart';
 enum _SetEditorResult { saved, savedAndNext, closed }
 
 typedef _SessionSet = ({PlannedExercise exercise, PlannedSet set, int number});
+
+bool _exerciseHasRecords(
+  TrainingController controller,
+  PlannedExercise exercise,
+) {
+  return exercise.sets.any(
+    (set) =>
+        controller.state.setActuals.containsKey(set.id) ||
+        controller.state.setDrafts.containsKey(set.id),
+  );
+}
+
+Future<void> _deferExercise(
+  BuildContext context, {
+  required DeferredExerciseController deferred,
+  required TrainingController controller,
+  required String planId,
+  required PlannedSession session,
+  required PlannedExercise exercise,
+}) async {
+  final confirmed = await showDialog<bool>(
+    context: context,
+    builder: (context) => AlertDialog(
+      backgroundColor: AppColors.bgLift,
+      title: Text('종목 이월', style: AppType.heading),
+      content: Text(
+        '${exercise.name}을(를) 다음에 이어서 할까요? 오늘은 이월로 표시하고 나중에 같은 세션에서 기록할 수 있어요.',
+        style: AppType.body,
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context, false),
+          child: Text('취소', style: AppType.action),
+        ),
+        TextButton(
+          onPressed: () => Navigator.pop(context, true),
+          child: Text('다음에 하기', style: AppType.action),
+        ),
+      ],
+    ),
+  );
+  if (confirmed != true || !context.mounted) return;
+  try {
+    final saved = await controller.update((state) {
+      var next = state;
+      for (final set in exercise.sets.where((s) => s.isRequired)) {
+        if (next.setActuals.containsKey(set.id) ||
+            next.setDrafts.containsKey(set.id)) {
+          continue;
+        }
+        next = next.withSetActual(
+          set.id,
+          SetActual.skipped(note: '이월'),
+        );
+      }
+      return next;
+    });
+    if (!saved) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            controller.saveError ?? '이월 표시를 저장하지 못했어요.',
+            style: AppType.body,
+          ),
+        ),
+      );
+      return;
+    }
+    await deferred.defer(
+      DeferredExercise(
+        planId: planId,
+        sessionId: session.id,
+        exerciseId: exercise.id,
+        exerciseName: exercise.name,
+        deferredAt: DateTime.now().toUtc(),
+      ),
+    );
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('오늘 탭 이월 목록에서 이어서 할 수 있어요.', style: AppType.body),
+      ),
+    );
+  } catch (_) {
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('이월에 실패했어요.', style: AppType.body)),
+    );
+  }
+}
 
 _SessionSet? _nextUnrecordedSet(
   List<_SessionSet> sets,
@@ -38,6 +133,8 @@ class WorkoutScreen extends StatelessWidget {
   final PlannedSession session;
   final bool readOnly;
   final WeightUnit defaultUnit;
+  final WorkingMaxController? workingMax;
+  final DeferredExerciseController? deferred;
 
   const WorkoutScreen({
     super.key,
@@ -45,6 +142,8 @@ class WorkoutScreen extends StatelessWidget {
     required this.session,
     this.readOnly = false,
     this.defaultUnit = WeightUnit.kg,
+    this.workingMax,
+    this.deferred,
   });
 
   bool get _readOnly =>
@@ -172,6 +271,23 @@ class WorkoutScreen extends StatelessWidget {
                     '${exercise.sets.length}세트 · 목표는 프로그램 기준',
                     style: AppType.caption,
                   ),
+                  if (!readOnly &&
+                      deferred != null &&
+                      controller.state.activePlan != null &&
+                      !_exerciseHasRecords(controller, exercise)) ...[
+                    const SizedBox(height: AppSpace.x2),
+                    TextButton(
+                      onPressed: () => _deferExercise(
+                        context,
+                        deferred: deferred!,
+                        controller: controller,
+                        planId: controller.state.activePlan!.id,
+                        session: session,
+                        exercise: exercise,
+                      ),
+                      child: Text('이 종목 다음에 하기', style: AppType.action),
+                    ),
+                  ],
                   const SizedBox(height: AppSpace.x4),
                   for (
                     var index = 0;
@@ -428,6 +544,18 @@ class WorkoutScreen extends StatelessWidget {
           saved ||
           result == _SetEditorResult.saved ||
           result == _SetEditorResult.savedAndNext;
+      if ((result == _SetEditorResult.saved ||
+              result == _SetEditorResult.savedAndNext) &&
+          context.mounted) {
+        await maybeOfferLiveWorkingMaxUpdate(
+          context,
+          controller: controller,
+          workingMax: workingMax,
+          session: session,
+          exercise: editing.exercise,
+          set: editing.set,
+        );
+      }
       if (!context.mounted || result != _SetEditorResult.savedAndNext) break;
       final next = _nextUnrecordedSet(
         orderedSets,
