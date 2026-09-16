@@ -32,4 +32,6 @@ const kRegisteredRules = <String>{
   'd5_inspect',
   'd5_apply',
   'd5_undo',
+  'review_schedule',
+  'postpone_session',
 };

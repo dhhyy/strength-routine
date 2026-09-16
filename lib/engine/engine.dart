@@ -1,7 +1,9 @@
 import '../domain/live_working_max.dart';
+import '../domain/postpone.dart';
 import '../domain/recent_lift_record.dart';
 import '../domain/recovery_block.dart';
 import '../domain/routine_match.dart';
+import '../domain/schedule_edit.dart';
 import '../domain/training_insights.dart';
 import '../domain/training_program.dart';
 import 'command.dart';
@@ -15,6 +17,12 @@ export 'priority.dart';
 export 'version.dart';
 
 const strengthEngine = StrengthEngine();
+
+TrainingAppState requireEngineState(EngineOutcome outcome) {
+  if (outcome is EngineSuccess && outcome.state != null) return outcome.state!;
+  if (outcome is EngineFailure) throw FormatException(outcome.message);
+  throw const FormatException('적용하지 못했어요.');
+}
 
 /// 화면이 부르는 유일한 훈련 판단 입구. Flutter를 import하지 않는다.
 final class StrengthEngine {
@@ -30,6 +38,8 @@ final class StrengthEngine {
         InspectTrendsCommand c => _inspect(c),
         ApplyLoadAdjustmentCommand c => _applyAdjustment(c),
         UndoLoadAdjustmentCommand c => _undoAdjustment(c),
+        ReviewScheduleCommand c => _reviewSchedule(c),
+        PostponeSessionCommand c => _postpone(c),
       };
     } on FormatException catch (error) {
       return EngineFailure(
@@ -223,6 +233,42 @@ final class StrengthEngine {
         FiredRule(
           id: 'd5_undo',
           reason: '아직 보호되지 않은 감량을 되돌린다.',
+          priority: EnginePriority.recovery,
+        ),
+      ],
+      state: state,
+    );
+  }
+
+  EngineOutcome _reviewSchedule(ReviewScheduleCommand command) {
+    final state = command.state.withReviewedSchedule(
+      command.changes,
+      asOf: command.asOf,
+    );
+    return EngineSuccess(
+      version: kEngineVersion,
+      fired: const [
+        FiredRule(
+          id: 'review_schedule',
+          reason: '오늘·과거·기록이 있는 세션은 두고 미래 날짜만 옮긴다.',
+          priority: EnginePriority.volume,
+        ),
+      ],
+      state: state,
+    );
+  }
+
+  EngineOutcome _postpone(PostponeSessionCommand command) {
+    final state = command.state.withPostponedSession(
+      command.sessionId,
+      asOf: command.asOf,
+    );
+    return EngineSuccess(
+      version: kEngineVersion,
+      fired: const [
+        FiredRule(
+          id: 'postpone_session',
+          reason: '기록 없는 세션을 다음 훈련 요일로 민다.',
           priority: EnginePriority.recovery,
         ),
       ],

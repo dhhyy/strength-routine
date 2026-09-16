@@ -10,6 +10,7 @@ import 'data/local_deferred_exercise_store.dart';
 import 'domain/postpone.dart';
 import 'domain/recent_lift_record.dart';
 import 'domain/routine_match.dart';
+import 'engine/engine.dart';
 import 'settings_screen.dart';
 import 'support_screen.dart';
 import 'subscription_screen.dart';
@@ -89,7 +90,15 @@ Future<void> _postponeSession(
   if (confirmed != true || !context.mounted) return;
   try {
     final saved = await controller.update(
-      (state) => state.withPostponedSession(session.id, asOf: asOf),
+      (state) => requireEngineState(
+        strengthEngine.run(
+          PostponeSessionCommand(
+            state: state,
+            sessionId: session.id,
+            asOf: asOf,
+          ),
+        ),
+      ),
     );
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(

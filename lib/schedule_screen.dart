@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'app/training_controller.dart';
 import 'domain/schedule_edit.dart';
 import 'domain/training_program.dart';
+import 'engine/engine.dart';
 import 'flow_components.dart';
 import 'tokens.dart';
 import 'widgets.dart';
@@ -79,9 +80,14 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   void _prepare() {
     try {
       if (_stale) throw const FormatException('기록이 바뀌었어요. 최신 일정을 다시 불러와 주세요.');
-      final next = _base.withReviewedSchedule(
-        _changes,
-        asOf: widget.controller.now(),
+      final next = requireEngineState(
+        strengthEngine.run(
+          ReviewScheduleCommand(
+            state: _base,
+            changes: _changes,
+            asOf: widget.controller.now(),
+          ),
+        ),
       );
       setState(() {
         _review = next;
@@ -99,7 +105,15 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     if (_busy || _review == null) return;
     // Revalidate today's boundary and protected records just before saving.
     try {
-      _base.withReviewedSchedule(_changes, asOf: widget.controller.now());
+      requireEngineState(
+        strengthEngine.run(
+          ReviewScheduleCommand(
+            state: _base,
+            changes: _changes,
+            asOf: widget.controller.now(),
+          ),
+        ),
+      );
     } on FormatException catch (error) {
       setState(() {
         _review = null;

@@ -44,7 +44,7 @@
 
 구 envelope에 지원하지 않는 새 필드를 넣은 자료는 거부하고 원본을 보존한다. 형식 숫자를 낮추어 자료를 이행하지 않는다. 기본5개 번들 파일은 기존 형식이며 관리자/모델 확장을 이유로 기존 계획 스냅샷을 소급 변경하지 않는다. 운동 백업은 전체 앱 백업이 아니다.
 
-근거: [운동 저장소](../lib/data/local_training_store.dart), [관리자 저장/내보내기](../lib/admin/admin_program_store.dart), [설정 저장소](../lib/data/local_settings_store.dart), [백업 명세](2026-09-08-local-completion.md), [타이머·설정 명세](2026-09-08-rest-guides.md).
+근거: [운동 저장소](../lib/data/local_training_store.dart), [관리자 저장/내보내기](../lib/admin/admin_program_store.dart), [설정 저장소](../lib/data/local_settings_store.dart), [백업 명세](2026-09-08-local-completion.md), [타이머·설정 명세](2026-09-08-rest-guides.md). 진행 계획의 `engineVersion`은 envelope를 올리지 않는 선택 필드다. 없으면 `legacy`로 읽고 새 규칙으로 다시 계산하지 않는다.
 
 ## 기능 범위 밖의 별도 개발·운영
 

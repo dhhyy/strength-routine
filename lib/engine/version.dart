@@ -1,6 +1,8 @@
+import '../domain/engine_stamp.dart';
+
 /// 공개 계약 버전. 정책 숫자를 바꾸면 새 id를 낸다.
 const kEngineVersion = EngineVersion(
-  id: 'engine-v1',
+  id: kEngineStampV1,
   policyIds: ['e1rm-epley-v1', 'd5-3x1-5pct-v1'],
 );
 

@@ -50,6 +50,8 @@ run(EngineCommand) → EngineOutcome
 | `InspectTrends` | 계획일순 추세 + D5 제안(적용 전) | `d5_inspect` |
 | `ApplyLoadAdjustment` | D5 감량 적용 | `d5_apply` |
 | `UndoLoadAdjustment` | D5 되돌리기 | `d5_undo` |
+| `ReviewSchedule` | 미래 미기록 세션 날짜만 변경 | `review_schedule` |
+| `PostponeSession` | 기록 없는 세션을 다음 훈련일로 | `postpone_session` |
 
 결과:
 
@@ -83,8 +85,7 @@ Range 자동 증감·같은 날 스쿼트/데드 볼륨은 표가 오기 전에�
 | 시작 중량 | 사용자/생성기 기준 kg. 최근 기록을 자동 TM으로 쓰지 않음 |
 | 구성 | 트레이너 프로그램 스냅샷 보존. 운동·세트 구조를 엔진이 새로 만들지 않음 |
 
-정책 숫자(D5 3회·1 RIR·5%, Epley)를 바꾸면 **새 `engine-v*`** 를 낸다.  
-운동 JSON envelope 버전(1~6)과 엔진 버전은 다르다. 저장 계약은 [상태표](2026-09-08-remaining-work.md#현재-저장-계약)가 정본이다.
+운동 JSON envelope 버전(1~6)과 엔진 버전은 다르다. 새 계획은 `engineVersion: engine-v1`을 스냅샷에 박제한다. 필드가 없는 옛 계획은 `legacy`로 읽고 **다시 계산하지 않는다**. 저장 envelope는 [상태표](2026-09-08-remaining-work.md#현재-저장-계약)가 정본이다.
 
 ---
 
@@ -99,7 +100,7 @@ Range 자동 증감·같은 날 스쿼트/데드 볼륨은 표가 오기 전에�
 ## `engine-v1`에 없는 것
 
 [일부러 안 한 항목](2026-09-16-deferred-scope.md): Range 자동, 미래 세트 수 변경, 코치 볼륨/강도 충돌 표, 보조 자유 추가.  
-등록 위치는 `lib/engine/rules.dart`의 `kRegisteredRules`다. 표가 오면 **규칙 하나**로 붙인다.
+등록 위치는 `lib/engine/priority.dart`의 `kRegisteredRules`다. 표가 오면 **규칙 하나**로 붙인다.
 
 ---
 

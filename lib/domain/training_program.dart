@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'engine_stamp.dart';
 import 'recent_lift_record.dart';
 
 enum ProgramSetKind { work, warmup, drop }
@@ -410,6 +411,7 @@ final class ActiveTrainingPlan {
   final Map<MainLift, LiftBaseline> baselines;
   final Map<String, DateTime> sessionDates;
   final Map<String, double?> targetKgBySetId;
+  final String engineVersion;
   ActiveTrainingPlan._({
     required this.id,
     required this.program,
@@ -419,12 +421,14 @@ final class ActiveTrainingPlan {
     required Map<MainLift, LiftBaseline> baselines,
     required Map<String, DateTime> sessionDates,
     required Map<String, double?> targetKgBySetId,
+    this.engineVersion = kEngineStampV1,
   }) : startDate = calendarDate(startDate),
        weekdays = List.unmodifiable(weekdays),
        baselines = Map.unmodifiable(baselines),
        sessionDates = Map.unmodifiable(sessionDates),
        targetKgBySetId = Map.unmodifiable(targetKgBySetId) {
     _id(id);
+    _id(engineVersion);
     _positive(incrementKg);
     _weekdays(weekdays, program.sessionsPerWeek);
     _check(
@@ -504,6 +508,7 @@ final class ActiveTrainingPlan {
       baselines: next,
       sessionDates: sessionDates,
       targetKgBySetId: targetKgBySetId,
+      engineVersion: engineVersion,
     );
   }
 
@@ -551,6 +556,7 @@ final class ActiveTrainingPlan {
       baselines: nextBaselines,
       sessionDates: sessionDates,
       targetKgBySetId: nextTargets,
+      engineVersion: engineVersion,
     );
   }
 
@@ -584,6 +590,7 @@ final class ActiveTrainingPlan {
       baselines: baselines,
       sessionDates: dates,
       targetKgBySetId: targetKgBySetId,
+      engineVersion: engineVersion,
     );
   }
 
@@ -598,6 +605,7 @@ final class ActiveTrainingPlan {
       (key, value) => MapEntry(key, isoDate(value)),
     ),
     'targets': targetKgBySetId,
+    'engineVersion': engineVersion,
   };
   factory ActiveTrainingPlan.fromJson(Map<String, dynamic> j) {
     final baselineList = (j['baselines'] as List)
@@ -606,6 +614,11 @@ final class ActiveTrainingPlan {
     _check(
       baselineList.map((b) => b.lift).toSet().length == baselineList.length,
       'Duplicate baseline',
+    );
+    final stamped = j['engineVersion'];
+    _check(
+      stamped == null || (stamped is String && stamped.trim().isNotEmpty),
+      'Invalid engine version',
     );
     return ActiveTrainingPlan._(
       id: j['id'] as String,
@@ -620,6 +633,7 @@ final class ActiveTrainingPlan {
       targetKgBySetId: _map(
         j['targets'],
       ).map((key, value) => MapEntry(key, (value as num?)?.toDouble())),
+      engineVersion: stamped as String? ?? kEngineStampLegacy,
     );
   }
 }
@@ -675,6 +689,7 @@ ActiveTrainingPlan createActivePlan({
     baselines: baselines,
     sessionDates: dates,
     targetKgBySetId: targets,
+    engineVersion: kEngineStampV1,
   );
 }
 

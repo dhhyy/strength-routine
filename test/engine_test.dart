@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:strength_routine/domain/engine_stamp.dart';
 import 'package:strength_routine/domain/recent_lift_record.dart';
 import 'package:strength_routine/domain/routine_match.dart';
 import 'package:strength_routine/domain/training_insights.dart';
@@ -86,5 +87,36 @@ void main() {
     );
     expect(outcome, isA<EngineBlocked>());
     expect((outcome as EngineBlocked).fired.single.id, 'conflict_recovery');
+  });
+
+  test('새 계획은 engine-v1을 박제하고 옛 JSON은 legacy로 읽는다', () {
+    final plan = fixturePlan();
+    expect(plan.engineVersion, kEngineStampV1);
+    expect(plan.toJson()['engineVersion'], kEngineStampV1);
+    final json = Map<String, dynamic>.from(plan.toJson())..remove('engineVersion');
+    expect(
+      ActiveTrainingPlan.fromJson(json).engineVersion,
+      kEngineStampLegacy,
+    );
+  });
+
+  test('이월은 엔진이 다음 훈련일로 민다', () {
+    final plan = fixturePlan();
+    final asOf = plan.startDate;
+    final first = plan.sessions.first;
+    final outcome = strengthEngine.run(
+      PostponeSessionCommand(
+        state: TrainingAppState(onboarded: true, activePlan: plan),
+        sessionId: first.id,
+        asOf: asOf,
+      ),
+    );
+    expect(outcome, isA<EngineSuccess>());
+    expect(
+      (outcome as EngineSuccess).state!.activePlan!.sessions.first.date
+          .isAfter(first.date),
+      isTrue,
+    );
+    expect(outcome.fired.map((r) => r.id), contains('postpone_session'));
   });
 }

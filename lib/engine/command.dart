@@ -109,3 +109,25 @@ final class UndoLoadAdjustmentCommand extends EngineCommand {
     required this.asOf,
   });
 }
+
+final class ReviewScheduleCommand extends EngineCommand {
+  final TrainingAppState state;
+  final Map<String, DateTime> changes;
+  final DateTime asOf;
+  const ReviewScheduleCommand({
+    required this.state,
+    required this.changes,
+    required this.asOf,
+  });
+}
+
+final class PostponeSessionCommand extends EngineCommand {
+  final TrainingAppState state;
+  final String sessionId;
+  final DateTime asOf;
+  const PostponeSessionCommand({
+    required this.state,
+    required this.sessionId,
+    required this.asOf,
+  });
+}
