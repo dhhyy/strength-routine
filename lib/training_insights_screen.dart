@@ -7,6 +7,7 @@ import 'domain/e1rm.dart';
 import 'domain/e1rm_proposals.dart';
 import 'domain/training_insights.dart';
 import 'domain/training_program.dart';
+import 'engine/engine.dart';
 import 'flow_components.dart';
 import 'tokens.dart';
 import 'widgets.dart';
@@ -118,11 +119,29 @@ class _TrainingInsightsScreenState extends State<TrainingInsightsScreen> {
       ),
     );
     if (confirmed != true || !mounted) return;
-    await _save(
-      (state) => undo
-          ? state.undoLoadAdjustment(adjustment.id, asOf: _today)
-          : state.withLoadAdjustment(adjustment, asOf: _today),
-    );
+    await _save((state) {
+      final outcome = undo
+          ? strengthEngine.run(
+              UndoLoadAdjustmentCommand(
+                state: state,
+                adjustmentId: adjustment.id,
+                asOf: _today,
+              ),
+            )
+          : strengthEngine.run(
+              ApplyLoadAdjustmentCommand(
+                state: state,
+                adjustment: adjustment,
+                asOf: _today,
+              ),
+            );
+      if (outcome is EngineSuccess && outcome.state != null) {
+        return outcome.state!;
+      }
+      throw FormatException(
+        outcome is EngineFailure ? outcome.message : '조정을 적용하지 못했어요.',
+      );
+    });
   }
 
   List<Widget> _changes(TargetLoadAdjustment adjustment, {bool undo = false}) {
@@ -181,12 +200,16 @@ class _TrainingInsightsScreenState extends State<TrainingInsightsScreen> {
   }
 
   String? _undoReason(TargetLoadAdjustment adjustment) {
-    try {
-      widget.controller.state.undoLoadAdjustment(adjustment.id, asOf: _today);
-      return null;
-    } on FormatException catch (error) {
-      return error.message;
-    }
+    final outcome = strengthEngine.run(
+      UndoLoadAdjustmentCommand(
+        state: widget.controller.state,
+        adjustmentId: adjustment.id,
+        asOf: _today,
+      ),
+    );
+    if (outcome is EngineSuccess) return null;
+    if (outcome is EngineFailure) return outcome.message;
+    return '지금은 되돌릴 수 없어요.';
   }
 
   Future<void> _adoptE1rm(
@@ -353,11 +376,12 @@ class _TrainingInsightsScreenState extends State<TrainingInsightsScreen> {
       }
       final plan =
           plans.where((p) => p.id == _planId).firstOrNull ?? plans.first;
-      final trends = buildTrainingInsights(
-        state,
-        planId: plan.id,
-        asOf: _today,
+      final inspected = strengthEngine.run(
+        InspectTrendsCommand(state: state, planId: plan.id, asOf: _today),
       );
+      final trends = inspected is EngineSuccess
+          ? inspected.trends ?? const <ExerciseTrend>[]
+          : const <ExerciseTrend>[];
       final suggestions = trends
           .map((t) => t.suggestion)
           .whereType<TargetLoadAdjustment>()

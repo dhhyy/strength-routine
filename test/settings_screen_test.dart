@@ -126,11 +126,18 @@ void main() {
       addTearDown(reopened.dispose);
       expect(reopened.settings.defaultWeightUnit, WeightUnit.lb);
       expect(reopened.settings.showLoadSuggestions, isFalse);
+      expect(reopened.loadError, isNull);
       await pump(tester, SettingsScreen(controller: reopened));
+      await tester.ensureVisible(
+        find.text('기본 중량 단위', skipOffstage: false),
+      );
       expect(
         tester
             .widget<SegmentedButton<WeightUnit>>(
-              find.byType(SegmentedButton<WeightUnit>),
+              find.byType(
+                SegmentedButton<WeightUnit>,
+                skipOffstage: false,
+              ),
             )
             .selected,
         {WeightUnit.lb},
@@ -138,7 +145,10 @@ void main() {
       expect(
         tester
             .widget<SwitchListTile>(
-              find.byKey(const ValueKey('show-load-suggestions')),
+              find.byKey(
+                const ValueKey('show-load-suggestions'),
+                skipOffstage: false,
+              ),
             )
             .value,
         isFalse,
@@ -246,6 +256,11 @@ void main() {
       await tester.tap(automatic);
       await flush(tester);
       expect(controller.settings.autoStartRestTimer, isTrue);
+      final autoWm = find.byKey(const ValueKey('auto-apply-working-max'));
+      await tester.ensureVisible(autoWm);
+      await tester.tap(autoWm);
+      await flush(tester);
+      expect(controller.settings.autoApplyWorkingMax, isTrue);
       expect(
         (await tester.runAsync(
           () => LocalSettingsStore(file).load(),
@@ -269,6 +284,7 @@ void main() {
   ) async {
     await tester.runAsync(controller.initialize);
     await pump(tester, SettingsScreen(controller: controller), scale: 1.8);
+    await tester.scrollUntilVisible(find.text('휴식 타이머'), 200);
     await tester.ensureVisible(find.text('휴식 타이머'));
     await capture(tester, 'rest-settings-large');
     await tester.ensureVisible(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'app/training_controller.dart';
 import 'domain/recent_lift_record.dart';
 import 'domain/training_program.dart';
+import 'engine/engine.dart';
 import 'flow_components.dart';
 import 'exercise_guide_screen.dart';
 import 'prescription_widgets.dart';
@@ -281,6 +282,28 @@ class _ProgramSetupScreenState extends State<ProgramSetupScreen> {
         : null;
   }
 
+  ActiveTrainingPlan _startedPlan() {
+    final outcome = strengthEngine.run(
+      StartPlanCommand(
+        id: DateTime.now().microsecondsSinceEpoch.toString(),
+        program: widget.program,
+        startDate: _start,
+        weekdays: _days.toList()..sort(),
+        incrementKg: double.parse(_increment.text),
+        baselines: {
+          for (final entry in _baselines.entries)
+            entry.key: LiftBaseline(
+              lift: entry.key,
+              kilograms: double.parse(entry.value.text),
+              source: BaselineSource.userEntered,
+            ),
+        },
+      ),
+    );
+    if (outcome is EngineSuccess && outcome.plan != null) return outcome.plan!;
+    throw const FormatException('계획을 만들지 못했어요.');
+  }
+
   Future<void> _startProgram() async {
     if (!_form.currentState!.validate()) return;
     if (_days.length != widget.program.sessionsPerWeek) {
@@ -298,21 +321,7 @@ class _ProgramSetupScreenState extends State<ProgramSetupScreen> {
       _error = null;
     });
     try {
-      _pendingPlan ??= createActivePlan(
-        id: DateTime.now().microsecondsSinceEpoch.toString(),
-        program: widget.program,
-        startDate: _start,
-        weekdays: _days.toList()..sort(),
-        incrementKg: double.parse(_increment.text),
-        baselines: {
-          for (final entry in _baselines.entries)
-            entry.key: LiftBaseline(
-              lift: entry.key,
-              kilograms: double.parse(entry.value.text),
-              source: BaselineSource.userEntered,
-            ),
-        },
-      );
+      _pendingPlan ??= _startedPlan();
       final saved = await Navigator.of(context).push<bool>(
         MaterialPageRoute(
           builder: (_) => PlanReviewScreen(

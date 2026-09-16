@@ -6,11 +6,12 @@ import 'domain/recent_lift_record.dart';
 import 'domain/recovery_block.dart';
 import 'domain/routine_match.dart';
 import 'domain/training_program.dart';
+import 'engine/engine.dart';
 import 'flow_components.dart';
 import 'tokens.dart';
 import 'widgets.dart';
 
-/// Phase 2 MVP: 목표·일수·요일 → 템플릿 매칭 → createActivePlan.
+/// Phase 2 MVP: 목표·일수·요일 → 템플릿 매칭 → StartPlan.
 class RoutineGeneratorScreen extends StatefulWidget {
   final TrainingController controller;
   final WorkingMaxController? workingMax;
@@ -70,11 +71,14 @@ class _RoutineGeneratorScreenState extends State<RoutineGeneratorScreen> {
   }
 
   void _selectDays(int days) {
-    final program = matchProgram(
-      goal: _goal!,
-      daysPerWeek: days,
-      programs: widget.controller.programs,
+    final matched = strengthEngine.run(
+      MatchTemplateCommand(
+        goal: _goal!,
+        daysPerWeek: days,
+        catalog: widget.controller.programs,
+      ),
     );
+    final program = matched is EngineSuccess ? matched.program : null;
     setState(() {
       _daysPerWeek = days;
       _weekdays.clear();
@@ -110,16 +114,6 @@ class _RoutineGeneratorScreenState extends State<RoutineGeneratorScreen> {
         : null;
   }
 
-  TrainingProgram _materialize(TrainingProgram program) {
-    var next = program;
-    final weeks = _block.weekLimit;
-    if (weeks != null) next = takeFirstWeeks(next, weeks);
-    if (_recoveryDrop > 0) {
-      next = applyAccessorySetCap(next, dropCount: _recoveryDrop);
-    }
-    return next;
-  }
-
   Future<void> _startPlan() async {
     final program = _matched;
     if (program == null || _daysPerWeek == null) return;
@@ -145,14 +139,24 @@ class _RoutineGeneratorScreenState extends State<RoutineGeneratorScreen> {
         lifts: _baselineFields.keys.toSet(),
         kilograms: kilograms,
       );
-      final plan = createActivePlan(
-        id: DateTime.now().microsecondsSinceEpoch.toString(),
-        program: _materialize(program),
-        startDate: _start,
-        weekdays: _weekdays.toList()..sort(),
-        incrementKg: increment,
-        baselines: baselines,
+      final started = strengthEngine.run(
+        StartPlanCommand(
+          id: DateTime.now().microsecondsSinceEpoch.toString(),
+          program: program,
+          startDate: _start,
+          weekdays: _weekdays.toList()..sort(),
+          incrementKg: increment,
+          baselines: baselines,
+          accessoryDropCount: _recoveryDrop,
+          blockWeeks: _block.weekLimit,
+        ),
       );
+      if (started is! EngineSuccess || started.plan == null) {
+        throw FormatException(
+          started is EngineFailure ? started.message : '루틴을 만들지 못했어요.',
+        );
+      }
+      final plan = started.plan!;
       final saved = await widget.controller.update(
         (state) => state.withActivePlan(plan),
       );

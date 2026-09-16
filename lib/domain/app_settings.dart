@@ -6,11 +6,14 @@ final class AppSettings {
   final bool showLoadSuggestions;
   final int? defaultRestSeconds;
   final bool autoStartRestTimer;
+  /// 기본 끔. 켜면 working max 제안을 묻지 않고 적용하고, 스낵바로 되돌릴 수 있다.
+  final bool autoApplyWorkingMax;
   const AppSettings({
     this.defaultWeightUnit = WeightUnit.kg,
     this.showLoadSuggestions = true,
     this.defaultRestSeconds,
     this.autoStartRestTimer = false,
+    this.autoApplyWorkingMax = false,
   });
 
   AppSettings copyWith({
@@ -19,6 +22,7 @@ final class AppSettings {
     int? defaultRestSeconds,
     bool clearDefaultRest = false,
     bool? autoStartRestTimer,
+    bool? autoApplyWorkingMax,
   }) => AppSettings(
     defaultWeightUnit: defaultWeightUnit ?? this.defaultWeightUnit,
     showLoadSuggestions: showLoadSuggestions ?? this.showLoadSuggestions,
@@ -26,6 +30,7 @@ final class AppSettings {
         ? null
         : defaultRestSeconds ?? this.defaultRestSeconds,
     autoStartRestTimer: autoStartRestTimer ?? this.autoStartRestTimer,
+    autoApplyWorkingMax: autoApplyWorkingMax ?? this.autoApplyWorkingMax,
   );
 
   Map<String, Object?> toJson() => {
@@ -33,6 +38,7 @@ final class AppSettings {
     'showLoadSuggestions': showLoadSuggestions,
     'defaultRestSeconds': defaultRestSeconds,
     'autoStartRestTimer': autoStartRestTimer,
+    'autoApplyWorkingMax': autoApplyWorkingMax,
   };
 
   void validate() {
@@ -53,6 +59,8 @@ final class AppSettings {
     }
     if ((json.containsKey('autoStartRestTimer') &&
             json['autoStartRestTimer'] is! bool) ||
+        (json.containsKey('autoApplyWorkingMax') &&
+            json['autoApplyWorkingMax'] is! bool) ||
         (json['defaultRestSeconds'] != null &&
             json['defaultRestSeconds'] is! int)) {
       throw const FormatException('Invalid rest preference');
@@ -62,6 +70,7 @@ final class AppSettings {
       showLoadSuggestions: json['showLoadSuggestions'] as bool,
       defaultRestSeconds: json['defaultRestSeconds'] as int?,
       autoStartRestTimer: json['autoStartRestTimer'] as bool? ?? false,
+      autoApplyWorkingMax: json['autoApplyWorkingMax'] as bool? ?? false,
     );
     settings.validate();
     return settings;

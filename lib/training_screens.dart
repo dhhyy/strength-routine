@@ -155,7 +155,8 @@ class ActiveTodayScreen extends StatelessWidget {
           Text('${today.month}월 ${today.day}일', style: AppType.caption),
           const StatePanel(
             title: '첫 루틴을 만들어 주세요',
-            message: '목표만 고르면 코치 템플릿에 맞춰 오늘 할 운동을 만들 수 있어요. 목록에서 직접 고를 수도 있어요.',
+            message:
+                '가입 없이 목표만 고르면 코치 템플릿으로 오늘 할 운동을 만들 수 있어요. 목록에서 직접 고를 수도 있어요.',
           ),
           if (generatorFeatureFlag)
             PrimaryAction(

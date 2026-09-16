@@ -7,6 +7,8 @@ import 'app/settings_controller.dart';
 import 'app/working_max_controller.dart';
 import 'app/deferred_exercise_controller.dart';
 import 'data/local_deferred_exercise_store.dart';
+import 'domain/deferrable_exercise.dart';
+import 'domain/live_working_max.dart';
 import 'domain/previous_record.dart';
 import 'domain/rest_timer.dart';
 import 'previous_record_dialog.dart';
@@ -42,6 +44,12 @@ Future<void> _deferExercise(
   required PlannedSession session,
   required PlannedExercise exercise,
 }) async {
+  if (!isDeferrableExercise(
+    name: exercise.name,
+    lift: mainLiftForExercise(controller.state.activePlan!, exercise),
+  )) {
+    return;
+  }
   final confirmed = await showDialog<bool>(
     context: context,
     builder: (context) => AlertDialog(
@@ -274,7 +282,14 @@ class WorkoutScreen extends StatelessWidget {
                   if (!readOnly &&
                       deferred != null &&
                       controller.state.activePlan != null &&
-                      !_exerciseHasRecords(controller, exercise)) ...[
+                      !_exerciseHasRecords(controller, exercise) &&
+                      isDeferrableExercise(
+                        name: exercise.name,
+                        lift: mainLiftForExercise(
+                          controller.state.activePlan!,
+                          exercise,
+                        ),
+                      )) ...[
                     const SizedBox(height: AppSpace.x2),
                     TextButton(
                       onPressed: () => _deferExercise(
@@ -554,6 +569,9 @@ class WorkoutScreen extends StatelessWidget {
           session: session,
           exercise: editing.exercise,
           set: editing.set,
+          autoApply:
+              SettingsScope.maybeOf(context)?.settings.autoApplyWorkingMax ??
+              false,
         );
       }
       if (!context.mounted || result != _SetEditorResult.savedAndNext) break;

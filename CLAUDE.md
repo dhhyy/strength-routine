@@ -6,7 +6,7 @@
 
 1. [현재 구현·남은 작업 정본](docs/2026-09-08-remaining-work.md) → [안정화 명세·결과](docs/2026-09-08-review-fixes.md).
 2. [여섯 로컬 기능](docs/2026-09-08-local-completion.md) → [일정·이전 값](docs/2026-09-08-schedule-previous.md) → [관리자 확장](docs/2026-09-08-local-admin.md) → [휴식·가이드](docs/2026-09-08-rest-guides.md).
-3. [요구사항](docs/01-requirements.md) → [엔진 계약](docs/06-engine-spec.md) → 변경할 기능 명세와 실제 코드.
+3. [요구사항](docs/01-requirements.md) → [엔진 공개 계약](docs/2026-09-16-engine-contract.md) → [엔진 명세](docs/06-engine-spec.md) → 변경할 기능 명세와 실제 코드.
 4. [기기 확인 자료·절차](docs/2026-09-08-device-test-guide.md). 실제 OS/파일 공급자/서명/접근성/결제는 자동 시험과 구분한다.
 
 ## 유지할 제품·데이터 계약

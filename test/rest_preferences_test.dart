@@ -32,6 +32,7 @@ void main() {
       final old = await LocalSettingsStore(file).load();
       expect(old.defaultRestSeconds, isNull);
       expect(old.autoStartRestTimer, isFalse);
+      expect(old.autoApplyWorkingMax, isFalse);
       final next = old.copyWith(
         defaultRestSeconds: 123,
         autoStartRestTimer: true,

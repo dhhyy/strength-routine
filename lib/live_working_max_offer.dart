@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'app/training_controller.dart';
 import 'app/working_max_controller.dart';
 import 'domain/e1rm.dart';
+import 'domain/e1rm_proposals.dart';
 import 'domain/live_working_max.dart';
 import 'domain/recent_lift_record.dart';
 import 'domain/training_program.dart';
 import 'domain/working_max.dart';
+import 'engine/engine.dart';
 import 'flow_components.dart';
 import 'tokens.dart';
 
@@ -18,6 +20,7 @@ Future<void> maybeOfferLiveWorkingMaxUpdate(
   required PlannedSession session,
   required PlannedExercise exercise,
   required PlannedSet set,
+  bool autoApply = false,
 }) async {
   if (!e1rmFeatureFlag || workingMax == null || !context.mounted) return;
   final plan = controller.state.activePlan;
@@ -25,83 +28,77 @@ Future<void> maybeOfferLiveWorkingMaxUpdate(
   final actual = controller.state.setActuals[set.id];
   if (actual == null) return;
   final lift = mainLiftForExercise(plan, exercise);
-  final proposal = liveWorkingMaxProposal(
-    lift: lift,
-    exerciseName: exercise.name,
-    sessionId: session.id,
-    plannedDate: session.date,
-    actual: actual,
-    current: lift == null ? null : workingMax.state[lift],
-    setKind: set.kind,
+  final proposed = strengthEngine.run(
+    ProposeWorkingMaxCommand(
+      plan: plan,
+      state: controller.state,
+      lift: lift,
+      exerciseName: exercise.name,
+      sessionId: session.id,
+      plannedDate: session.date,
+      actual: actual,
+      current: lift == null ? null : workingMax.state[lift],
+      setKind: set.kind,
+    ),
   );
-  if (proposal == null || !context.mounted) return;
-
-  // D5 감량 조정이 살아 있으면 회복·감량 우선 — working max 제안 숨김.
-  final hasActiveDeload = controller.state.loadAdjustments.any((a) {
-    if (a.isUndone || a.planId != plan.id) return false;
-    return a.afterKg.keys.any((setId) {
-      for (final session in plan.sessions) {
-        for (final exercise in session.exercises) {
-          for (final set in exercise.sets) {
-            if (set.id == setId) {
-              return mainLiftForExercise(plan, exercise) == proposal.lift;
-            }
-          }
-        }
-      }
-      return false;
-    });
-  });
-  if (hasActiveDeload) return;
+  if (proposed is! EngineSuccess || proposed.workingMaxProposal == null) {
+    return;
+  }
+  if (!context.mounted) return;
+  final proposal = proposed.workingMaxProposal!;
 
   final previousWm = workingMax.state[proposal.lift];
   final previousPlan = plan;
   final fromText = previousWm == null
       ? '없음'
       : '${previousWm.kilograms}';
-  final apply = await showDialog<bool>(
-    context: context,
-    builder: (context) => AlertDialog(
-      backgroundColor: AppColors.bgLift,
-      title: Text('working max 제안', style: AppType.heading),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(liftLabel(proposal.lift), style: AppType.body),
-          const SizedBox(height: AppSpace.x2),
-          Text.rich(
-            TextSpan(
-              children: [
-                TextSpan(text: fromText, style: AppType.number),
-                TextSpan(text: ' → ', style: AppType.body),
-                TextSpan(
-                  text: '${proposal.estimatedKg}',
-                  style: AppType.number,
-                ),
-                TextSpan(text: ' kg', style: AppType.body),
-              ],
+  var apply = autoApply;
+  if (!apply) {
+    apply = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppColors.bgLift,
+        title: Text('working max 제안', style: AppType.heading),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(liftLabel(proposal.lift), style: AppType.body),
+            const SizedBox(height: AppSpace.x2),
+            Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(text: fromText, style: AppType.number),
+                  TextSpan(text: ' → ', style: AppType.body),
+                  TextSpan(
+                    text: '${proposal.estimatedKg}',
+                    style: AppType.number,
+                  ),
+                  TextSpan(text: ' kg', style: AppType.body),
+                ],
+              ),
             ),
+            const SizedBox(height: AppSpace.x2),
+            Text(
+              '이 세트로 추정한 값입니다. 적용하면 이후 미기록 % 목표만 다시 채워요.',
+              style: AppType.caption,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text('나중에', style: AppType.action),
           ),
-          const SizedBox(height: AppSpace.x2),
-          Text(
-            '이 세트로 추정한 값입니다. 적용하면 이후 미기록 % 목표만 다시 채워요.',
-            style: AppType.caption,
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text('적용', style: AppType.action),
           ),
         ],
       ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context, false),
-          child: Text('나중에', style: AppType.action),
-        ),
-        TextButton(
-          onPressed: () => Navigator.pop(context, true),
-          child: Text('적용', style: AppType.action),
-        ),
-      ],
-    ),
-  );
+    ) ??
+        false;
+  }
   if (apply != true || !context.mounted) return;
 
   final blocked = <String>{
@@ -120,10 +117,9 @@ Future<void> maybeOfferLiveWorkingMaxUpdate(
     );
     final saved = await controller.update(
       (state) => state.replaceActivePlan(
-        applyLiveWorkingMax(
+        _appliedWorkingMaxPlan(
           previousPlan,
-          lift: proposal.lift,
-          estimatedKg: proposal.estimatedKg,
+          proposal: proposal,
           asOf: asOf,
           blockedSetIds: blocked,
         ),
@@ -187,4 +183,23 @@ Future<void> _undoLiveWorkingMax({
   } catch (_) {
     // SnackBar 액션에서는 추가 안내는 생략한다.
   }
+}
+
+ActiveTrainingPlan _appliedWorkingMaxPlan(
+  ActiveTrainingPlan previousPlan, {
+  required E1rmProposal proposal,
+  required DateTime asOf,
+  required Set<String> blockedSetIds,
+}) {
+  final outcome = strengthEngine.run(
+    ApplyWorkingMaxCommand(
+      plan: previousPlan,
+      lift: proposal.lift,
+      estimatedKg: proposal.estimatedKg,
+      asOf: asOf,
+      blockedSetIds: blockedSetIds,
+    ),
+  );
+  if (outcome is EngineSuccess && outcome.plan != null) return outcome.plan!;
+  throw const FormatException('계획을 갱신하지 못했어요.');
 }

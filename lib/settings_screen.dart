@@ -120,6 +120,34 @@ class SettingsScreen extends StatelessWidget {
                 ],
               ),
             ),
+            GlassPanel(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SwitchListTile.adaptive(
+                    key: const ValueKey('auto-apply-working-max'),
+                    contentPadding: EdgeInsets.zero,
+                    activeColor: AppColors.accent,
+                    title: Text('추정 무게 자동 적용', style: AppType.heading),
+                    value: value.autoApplyWorkingMax,
+                    onChanged: enabled
+                        ? (apply) => controller.update(
+                            value.copyWith(autoApplyWorkingMax: apply),
+                          )
+                        : null,
+                  ),
+                  Text(
+                    '켜면 추정 제안을 묻지 않고 바로 적용해요. 적용 직후 되돌리기는 한 번 할 수 있어요.',
+                    style: AppType.body,
+                  ),
+                  const SizedBox(height: AppSpace.x2),
+                  Text(
+                    '기본은 꺼져 있어요. 감량(D5)이 살아 있으면 자동 적용도 하지 않아요.',
+                    style: AppType.caption,
+                  ),
+                ],
+              ),
+            ),
             RestSettingsPanel(controller: controller),
             Text('설정은 저장에 성공한 뒤 적용돼요.', style: AppType.caption),
           ],
