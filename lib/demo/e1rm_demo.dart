@@ -17,22 +17,27 @@ final class E1rmDemoBundle {
   final WorkingMaxState workingMax;
 }
 
-/// 스테이징 웹에만 빈 저장소일 때 심는다. 이미 계획이 있으면 덮지 않는다.
+const kDemoPlanId = 'e1rm-demo';
+
+/// 스테이징 웹에서 계획이 없거나 이 데모 계획이면 심는다.
 bool shouldSeedStagingE1rmDemo({
   required bool isStaging,
   required bool isWeb,
   required ActiveTrainingPlan? activePlan,
-}) => isStaging && isWeb && activePlan == null;
+}) =>
+    isStaging &&
+    isWeb &&
+    (activePlan == null || activePlan.id == kDemoPlanId);
 
-/// 오늘 세션은 비워 두고, 지난 세션은 RIR 1로 채워 처방 kg와 D5 제안을 보여 준다.
+/// 6주 전체 세션을 만들고 필수 세트를 모두 기록·마감한다.
 E1rmDemoBundle buildE1rmDemo({required DateTime now}) {
   final today = calendarDate(now);
   final monday = _lastWeekday(today, DateTime.monday);
-  final start = monday.subtract(const Duration(days: 14));
+  final start = monday.subtract(const Duration(days: 7 * 5));
 
   final started = strengthEngine.run(
     StartPlanCommand(
-      id: 'e1rm-demo',
+      id: kDemoPlanId,
       program: demoE1rmProgram(),
       startDate: start,
       weekdays: const [DateTime.monday, DateTime.thursday],
@@ -71,7 +76,6 @@ E1rmDemoBundle buildE1rmDemo({required DateTime now}) {
   );
 
   for (final session in plan.sessions) {
-    if (!session.date.isBefore(today)) continue;
     for (final exercise in session.exercises) {
       for (final set in exercise.sets.where((s) => s.isRequired)) {
         final kg = state.effectiveTargetKg(set);
@@ -83,10 +87,23 @@ E1rmDemoBundle buildE1rmDemo({required DateTime now}) {
             unit: WeightUnit.kg,
             repetitions: set.repetitions,
             rir: 1,
+            performedDate: session.date,
           ),
         );
       }
     }
+  }
+  for (final session in plan.sessions) {
+    state = state.closeSession(
+      session.id,
+      eventId: 'demo-close-${session.id}',
+      at: DateTime.utc(
+        session.date.year,
+        session.date.month,
+        session.date.day,
+        21,
+      ),
+    );
   }
 
   final adopted = DateTime.utc(today.year, today.month, today.day);
@@ -135,7 +152,7 @@ TrainingProgram demoE1rmProgram() {
     trainerName: '데모',
     description:
         '스테이징 확인용. 스쿼트 140·벤치 100·데드 180·OHP 62.5kg working max의 '
-        '70/75/80%가 세트 목표다. 지난 3주는 RIR 1로 기록해 D5 감량 제안이 난다.',
+        '70/75/80%가 세트 목표다. 6주 전체를 RIR 1로 기록해 둔다.',
     weeks: 6,
     sessions: [
       for (var week = 1; week <= 6; week++) ...[
@@ -145,22 +162,22 @@ TrainingProgram demoE1rmProgram() {
           title: '$week주차 · 하체',
           exercises: [
             ProgramExercise(
-              id: 'squat',
+              id: 'w$week-squat',
               name: '바벨 백스쿼트',
               mainLift: MainLift.squat,
               sets: [
-                work('s70', MainLift.squat, 70),
-                work('s75', MainLift.squat, 75),
-                work('s80', MainLift.squat, 80),
+                work('w$week-s70', MainLift.squat, 70),
+                work('w$week-s75', MainLift.squat, 75),
+                work('w$week-s80', MainLift.squat, 80),
               ],
             ),
             ProgramExercise(
-              id: 'deadlift',
+              id: 'w$week-deadlift',
               name: '바벨 데드리프트',
               mainLift: MainLift.deadlift,
               sets: [
-                work('d70', MainLift.deadlift, 70),
-                work('d75', MainLift.deadlift, 75),
+                work('w$week-d70', MainLift.deadlift, 70),
+                work('w$week-d75', MainLift.deadlift, 75),
               ],
             ),
           ],
@@ -171,22 +188,22 @@ TrainingProgram demoE1rmProgram() {
           title: '$week주차 · 상체',
           exercises: [
             ProgramExercise(
-              id: 'bench',
+              id: 'w$week-bench',
               name: '바벨 벤치프레스',
               mainLift: MainLift.benchPress,
               sets: [
-                work('b70', MainLift.benchPress, 70),
-                work('b75', MainLift.benchPress, 75),
-                work('b80', MainLift.benchPress, 80),
+                work('w$week-b70', MainLift.benchPress, 70),
+                work('w$week-b75', MainLift.benchPress, 75),
+                work('w$week-b80', MainLift.benchPress, 80),
               ],
             ),
             ProgramExercise(
-              id: 'ohp',
+              id: 'w$week-ohp',
               name: '오버헤드 프레스',
               mainLift: MainLift.overheadPress,
               sets: [
-                work('o70', MainLift.overheadPress, 70),
-                work('o75', MainLift.overheadPress, 75),
+                work('w$week-o70', MainLift.overheadPress, 70),
+                work('w$week-o75', MainLift.overheadPress, 75),
               ],
             ),
           ],
