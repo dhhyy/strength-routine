@@ -26,6 +26,7 @@ import 'data/local_deferred_exercise_store.dart';
 import 'data/local_habit_store.dart';
 import 'data/rest_timer_store.dart';
 import 'data/text_store.dart';
+import 'demo/e1rm_demo.dart';
 import 'flow_components.dart';
 import 'theme.dart';
 import 'tokens.dart';
@@ -159,6 +160,18 @@ class _RootGateState extends State<RootGate> {
       if (_deferred!.loading) await _deferred!.initialize();
       if (_controller!.loading || _controller!.loadError != null) {
         await _controller!.initialize();
+      }
+      if (widget.controller == null &&
+          shouldSeedStagingE1rmDemo(
+            isStaging: AppEnvironment.current.isStaging,
+            isWeb: kIsWeb,
+            activePlan: _controller!.state.activePlan,
+          )) {
+        final demo = buildE1rmDemo(now: widget.now?.call() ?? DateTime.now());
+        final saved = await _controller!.update((_) => demo.state);
+        if (saved) {
+          await _workingMax!.replaceState(demo.workingMax);
+        }
       }
       _cloud ??= CloudSnapshotController(
         auth: _auth!,
